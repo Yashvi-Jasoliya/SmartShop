@@ -122,10 +122,10 @@ const ProductPage: React.FC = () => {
 
 				<div className="price-container">
 					<span className="current-price">
-						${product.price.toFixed(2)}
+						₹{product.price.toFixed(2)}
 					</span>
 					<span className="original-price">
-						${product.originalPrice.toFixed(2)}
+						$₹{product.originalPrice.toFixed(2)}
 					</span>
 					<span className="discount-badge">
 						{discountPercentage}% OFF

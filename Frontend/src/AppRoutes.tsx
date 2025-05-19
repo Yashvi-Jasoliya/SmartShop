@@ -11,6 +11,8 @@ import ProductPage from './pages/ProductDetails';
 // import AdminReviews from './pages/admin/Reviews';
 import ReviewForm from './pages/ReviewForm';
 import ReviewList from './pages/ReviewList';
+import Category from './pages/Category';
+import DealsPage from './pages/Deals';
 // import { ReviewProvider } from "./context/ReviewContext";
 // import { ProductProvider } from './context/ProductContext';
 
@@ -54,127 +56,115 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 			{/* Header */}
 
 			{!hideHeader && <Header user={user} />}
-            {/* <ProductProvider>
+			{/* <ProductProvider>
 			<ReviewProvider> */}
-				<Suspense fallback={<Loading />}>
-					<Routes>
-						{/* Public Routes */}
-						<Route path="/" element={<Home />} />
-						<Route path="/cart" element={<Cart />} />
-						<Route path="/search" element={<Search />} />
-						<Route path="/product/:id" element={<ProductPage />} />
-						<Route path="/about" element={<AboutUs />} />
+			<Suspense fallback={<Loading />}>
+				<Routes>
+					{/* Public Routes */}
+					<Route path="/" element={<Home />} />
+					<Route path="/cart" element={<Cart />} />
+					<Route path="/search" element={<Search />} />
+					<Route path="/product/:id" element={<ProductPage />} />
+					<Route path="/about" element={<AboutUs />} />
+					<Route path="/categories" element={<Category />} />
+					<Route path="/deals" element={<DealsPage />} />
 
-						{/* Not logged In Route */}
+					{/* Not logged In Route */}
+					<Route
+						path="/login"
+						element={
+							<ProtectedRoute
+								isAuthenticated={user ? false : true}
+							>
+								<Login />
+							</ProtectedRoute>
+						}
+					/>
+
+					{/* Loggedin User Routes */}
+					<Route
+						element={
+							<ProtectedRoute
+								isAuthenticated={user ? true : false}
+							/>
+						}
+					>
+						<Route path="/account" element={<MyAccount />} />
+						<Route path="/wishlist" element={<Wishlist />} />
+						<Route path="/shipping" element={<Shipping />} />
+						<Route path="/pay" element={<Checkout />} />
+						<Route path="/orders" element={<Orders />} />
+						<Route path="/orders/:id" element={<OrderDetails />} />
+					</Route>
+
+					{/* Admin Routes */}
+					<Route
+						element={
+							<ProtectedRoute
+								isAuthenticated={user ? true : false}
+								adminRoute={true}
+								isAdmin={user?.role === "admin" ? true : false}
+							/>
+						}
+					>
 						<Route
-							path="/login"
-							element={
-								<ProtectedRoute
-									isAuthenticated={user ? false : true}
-								>
-									<Login />
-								</ProtectedRoute>
-							}
+							path="/admin/dashboard"
+							element={<Dashboard />}
+						/>
+						<Route
+							path="/admin/customers"
+							element={<Customers />}
+						/>
+						<Route path="/admin/products" element={<Products />} />
+						<Route
+							path="/admin/transaction"
+							element={<Transaction />}
 						/>
 
-						{/* Loggedin User Routes */}
+						<Route path="/admin/review" element={<AdminPanel />} />
+
+						{/* Charts */}
 						<Route
-							element={
-								<ProtectedRoute
-									isAuthenticated={user ? true : false}
-								/>
-							}
-						>
-							<Route path="/account" element={<MyAccount />} />
-							<Route path="/wishlist" element={<Wishlist />} />
-							<Route path="/shipping" element={<Shipping />} />
-							<Route path="/pay" element={<Checkout />} />
-							<Route path="/orders" element={<Orders />} />
-							<Route
-								path="/orders/:id"
-								element={<OrderDetails />}
-							/>
-						</Route>
-
-						{/* Admin Routes */}
+							path="/admin/chart/bar"
+							element={<BarCharts />}
+						/>
 						<Route
-							element={
-								<ProtectedRoute
-									isAuthenticated={user ? true : false}
-									adminRoute={true}
-									isAdmin={
-										user?.role === "admin" ? true : false
-									}
-								/>
-							}
-						>
-							<Route
-								path="/admin/dashboard"
-								element={<Dashboard />}
-							/>
-							<Route
-								path="/admin/customers"
-								element={<Customers />}
-							/>
-							<Route
-								path="/admin/products"
-								element={<Products />}
-							/>
-							<Route
-								path="/admin/transaction"
-								element={<Transaction />}
-							/>
+							path="/admin/chart/pie"
+							element={<PieCharts />}
+						/>
+						<Route
+							path="/admin/chart/line"
+							element={<LineCharts />}
+						/>
 
-							<Route
-								path="/admin/review"
-								element={<AdminPanel />}
-							/>
+						{/* Apps */}
+						<Route
+							path="/admin/app/stopwatch"
+							element={<Stopwatch />}
+						/>
+						<Route path="/admin/app/coupon" element={<Coupon />} />
+						<Route path="/admin/app/toss" element={<Toss />} />
 
-							{/* Charts */}
-							<Route
-								path="/admin/chart/bar"
-								element={<BarCharts />}
-							/>
-							<Route
-								path="/admin/chart/pie"
-								element={<PieCharts />}
-							/>
-							<Route
-								path="/admin/chart/line"
-								element={<LineCharts />}
-							/>
-
-							{/* Apps */}
-							<Route
-								path="/admin/app/stopwatch"
-								element={<Stopwatch />}
-							/>
-							<Route
-								path="/admin/app/coupon"
-								element={<Coupon />}
-							/>
-							<Route path="/admin/app/toss" element={<Toss />} />
-
-							{/* Management */}
-							<Route
-								path="/admin/product/new"
-								element={<NewProduct />}
-							/>
-							<Route
-								path="/admin/product/:id"
-								element={<ProductManagement />}
-							/>
-							<Route
-								path="/admin/transaction/:id"
-								element={<TransactionManagement />}
-							/>
-						</Route>
-						<Route path="*" element={<NotFoundPage />} />
-					</Routes>
-				</Suspense>
+						{/* Management */}
+						<Route
+							path="/admin/product/new"
+							element={<NewProduct />}
+						/>
+						<Route
+							path="/admin/product/:id"
+							element={<ProductManagement />}
+						/>
+						<Route
+							path="/admin/transaction/:id"
+							element={<TransactionManagement />}
+						/>
+					</Route>
+					<Route path="*" element={<NotFoundPage />} />
+				</Routes>
+			</Suspense>
 			{/* </ReviewProvider> */}
-		{/* </ProductProvider> */}
-        </>
+			{/* </ProductProvider> */}
+		</>
 	);
 };
 

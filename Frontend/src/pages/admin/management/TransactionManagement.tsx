@@ -156,22 +156,19 @@ const TransactionManagement = () => {
 };
 
 const ProductCard = ({
-    name,
-    image,
-    price,
-    quantity,
-    productId,
+	name,
+	image,
+	price,
+	quantity,
+	productId,
 }: OrderItem) => (
-    <div className='transactionProductCard'>
-        <img
-            src={image}
-            alt={name}
-        />
-        <Link to={`/products/${productId}`}>{name}</Link>
-        <span>
-            ${price} X {quantity} = ${price * quantity}
-        </span>
-    </div>
+	<div className="transactionProductCard">
+		<img src={image} alt={name} />
+		<Link to={`/products/${productId}`}>{name}</Link>
+		<span>
+			₹{price} X {quantity} = ₹{price * quantity}
+		</span>
+	</div>
 );
 
 export default TransactionManagement;

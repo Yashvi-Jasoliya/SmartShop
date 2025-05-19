@@ -5,6 +5,7 @@ import { getAuth } from 'firebase/auth';
 import dotenv from "dotenv"
 
 
+
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_KEY,
     authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -17,7 +18,10 @@ const firebaseConfig = {
 
 console.log(firebaseConfig.authDomain)
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-export const analytics = getAnalytics(app);
+// Only initialize analytics in production
+const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+
+export { app, auth, analytics };

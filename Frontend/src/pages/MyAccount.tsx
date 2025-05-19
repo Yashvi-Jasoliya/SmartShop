@@ -39,10 +39,8 @@ const MyAccount = () => {
                     src={user.photo}
                     alt={`${user.name}'s profile`}
                     className='profile-pic'
-                    onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                            'https://via.placeholder.com/120';
-                    }}
+                   
+                
                 />
                 <div className='profile-info'>
                     <h2>{user.name}</h2>

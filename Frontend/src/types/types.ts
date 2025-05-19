@@ -49,7 +49,7 @@ export type ShippingInfo = {
     state: string;
     country: string;
     pinCode: string;
-    phoneNo?: string;
+    phoneNo?: string;           
 };
 
 export type CartItem = {
