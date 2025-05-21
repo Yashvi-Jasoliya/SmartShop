@@ -125,7 +125,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 						variant="primary"
 						disabled={isLoading}
 						className="w-full"
-					>
+					>   
 						{isLoading ? "Submitting..." : "Submit Review"}
 					</Button>
 				</form>

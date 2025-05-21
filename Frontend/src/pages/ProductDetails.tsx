@@ -9,6 +9,7 @@ import { CartItem } from '../types/types';
 // import ReviewSystem  from "./Review";
 import ReviewList from './ReviewList';
 import ReviewForm from './ReviewForm';
+import Footer from '../components/Footer';
 
 const ProductPage: React.FC = () => {
     const [selectedColor, setSelectedColor] = useState<string>('Black');
@@ -55,6 +56,7 @@ const ProductPage: React.FC = () => {
     };
 
     return (
+        <>
 		<div className="product-container">
 			<aside className="product-gallery">
 				<div className="main-image-container">
@@ -125,7 +127,7 @@ const ProductPage: React.FC = () => {
 						₹{product.price.toFixed(2)}
 					</span>
 					<span className="original-price">
-						$₹{product.originalPrice.toFixed(2)}
+						    ₹{product.originalPrice.toFixed(2)}
 					</span>
 					<span className="discount-badge">
 						{discountPercentage}% OFF
@@ -137,7 +139,7 @@ const ProductPage: React.FC = () => {
 					</a> */}
 				</div>
 
-				{product.stock < 50 && (
+				{product.stock < 30 && (
 					<div className="availability">
 						<span className={`stock-indicator ${""}`}>
 							{product.stock === 0
@@ -183,14 +185,14 @@ const ProductPage: React.FC = () => {
 				<div className="info-cards">
 					<div className="info-card">
 						<h3 className="section-title">
-							<i className="fas fa-star"></i> Customer Reviews
+							{/* <i className="fas fa-star"></i> Customer Reviews */}
 						</h3>
 
 						{/* Overall rating summary */}
 						<div className="review-summary">
 							<div className="overall-rating">
 								<span className="rating">4.5</span>
-								<span className="stars">
+								{/* <span className="stars">
 									{[...Array(5)].map((_, i) => (
 										<i
 											key={i}
@@ -199,7 +201,7 @@ const ProductPage: React.FC = () => {
 											}`}
 										></i>
 									))}
-								</span>
+								</span> */}
 								<span className="total-reviews">
 									Based on 128 reviews
 								</span>
@@ -249,14 +251,14 @@ const ProductPage: React.FC = () => {
 						<div className="customer-reviews">
 							<div className="review">
 								<div className="review-header">
-									<span className="reviewer-name">
+									{/* <span className="reviewer-name">
 										John D.
 									</span>
 									<span className="review-date">
 										Reviewed on March 15, 2023
-									</span>
-								</div>
-								<div className="review-rating">
+									</span>*/}
+								</div> 
+								{/* <div className="review-rating">
 									{[...Array(5)].map((_, i) => (
 										<i
 											key={i}
@@ -264,9 +266,9 @@ const ProductPage: React.FC = () => {
 												i < 5 ? "filled" : ""
 											}`}
 										></i>
-									))}
-								</div>
-								<h4 className="review-title">Great product!</h4>
+									))} 
+								</div> */}
+								{/* <h4 className="review-title">Great product!</h4>
 								<p className="review-text">
 									This product exceeded my expectations. The
 									quality is outstanding and it arrived
@@ -279,11 +281,11 @@ const ProductPage: React.FC = () => {
 									</button>
 									<button className="helpful-btn">
 										No (2)
-									</button>
-								</div>
+									</button> */}
+								{/* </div> */}
 							</div>
 
-							<div className="review">
+							{/* <div className="review">
 								<div className="review-header">
 									<span className="reviewer-name">
 										Sarah M.
@@ -319,7 +321,7 @@ const ProductPage: React.FC = () => {
 										No (0)
 									</button>
 								</div>
-							</div>
+							</div> */}
 						</div>
 						{/* <ReviewList /> */}
 						<ReviewForm productId={product._id} />
@@ -329,6 +331,8 @@ const ProductPage: React.FC = () => {
 				</div>
 			</main>
 		</div>
+           <Footer />
+                </>
 	);
 };
 

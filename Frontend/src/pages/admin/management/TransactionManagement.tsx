@@ -84,75 +84,76 @@ const TransactionManagement = () => {
     if (isError) return <Navigate to={'/404'} />;
 
     return (
-        <div className='adminContainer'>
-            <AdminSidebar />
-            <main className='productManagementContainer'>
-                <section
-                    style={{ padding: '2rem' }}
-                    className='product-display'
-                >
-                    <div className='product-header'>
-                        <span className='product-id'>
-                            ID: {data?.order._id}
-                        </span>
-                        <button
-                            onClick={deleteHandler}
-                            className='delete-btn'
-                        >
-                            <FaTrash />
-                        </button>
-                    </div>
-                    <h2>Order Items</h2>
+		<div className="adminContainer">
+			<AdminSidebar />
+			<main className="productManagementContainer">
+				<section
+					style={{ padding: "2rem" }}
+					className="product-display"
+				>
+					<div className="product-header">
+						<span className="product-id">
+							ID: {data?.order._id}
+						</span>
+						<button onClick={deleteHandler} className="delete-btn">
+							<FaTrash />
+						</button>
+					</div>
+					<h2>Order Items</h2>
 
-                    {orderItems.map((i) => (
-                        <ProductCard
-                            key={i._id}
-                            name={i.name}
-                            image={i.image}
-                            productId={i.productId}
-                            price={i.price}
-                            quantity={i.quantity}
-                            _id={i._id}
-                        />
-                    ))}
-                </section>
+					{orderItems.map((i) => (
+						<ProductCard
+							key={i._id}
+							name={i.name}
+							image={i.image}
+							productId={i.productId}
+							price={i.price}
+							quantity={i.quantity}
+							_id={i._id}
+						/>
+					))}
+				</section>
 
-                <article className='shippingInfoCard'>
-                    <div>
-                        <h1>Order Info</h1>
-                        <h5>User Info</h5>
-                        <p>Name: {name}</p>
-                        <p>
-                            Address:{' '}
-                            {`${address}, ${city}, ${state}, ${country} ${pinCode}`}
-                        </p>
-                        <h5>Amount Info</h5>
-                        <p>Subtotal: {subTotal}</p>
-                        <p>Shipping Charges: {shippingCharges}</p>
-                        <p>Tax: {tax}</p>
-                        <p>Discount: {discount}</p>
-                        <p>Total: {total}</p>
-                        <h5>Status Info</h5>
-                        <p>
-                            Status:{' '}
-                            <span
-                                className={
-                                    status === 'Delivered'
-                                        ? 'purple'
-                                        : status === 'Shipped'
-                                        ? 'green'
-                                        : 'red'
-                                }
-                            >
-                                {status}
-                            </span>
-                        </p>
-                        <button onClick={updateHander}>Process Status</button>
-                    </div>
-                </article>
-            </main>
-        </div>
-    );
+				<article className="shippingInfoCard">
+					<div>
+						<h1>Order Info</h1>
+						<h5>User Info</h5>
+						<p>Name: {name}</p>
+						<p>
+							Address:{" "}
+							{`${address}, ${city}, ${state}, ${country} ${pinCode}`}
+						</p>
+						<h5>Amount Info</h5>
+						<p>Subtotal: {subTotal}</p>
+						<p>
+							Shipping Charges: {(subTotal ?? 0) >= 1000
+								? "0.00"
+								: (shippingCharges ?? 200)}
+						</p>
+						<p>Tax: {tax}</p>
+						<p>Discount: {discount}</p>
+						<p>Total: {total}</p>
+						<h5>Status Info</h5>
+						<p>
+							Status:{" "}
+							<span
+								className={
+									status === "Delivered"
+										? "purple"
+										: status === "Shipped"
+										? "green"
+										: "red"
+								}
+							>
+								{status}
+							</span>
+						</p>
+						<button onClick={updateHander}>Process Status</button>
+					</div>
+				</article>
+			</main>
+		</div>
+	);
 };
 
 const ProductCard = ({

@@ -17,6 +17,7 @@ import { responseToast } from '../utils/features';
 import { NewOrderRequest } from '../types/api-types';
 import { FiArrowLeft, FiCheck, FiLock } from 'react-icons/fi';
 import Swal from 'sweetalert2';
+import Footer from '../components/Footer';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
@@ -225,6 +226,7 @@ const Checkout = () => {
             }}
         >
             <CheckoutForm />
+            
         </Elements>
     );
 };

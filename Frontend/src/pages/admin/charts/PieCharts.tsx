@@ -168,36 +168,26 @@
 								offset={[0, 40]}
 							/>
 						</div>
+						<h2>Admin-Customer Ratio</h2>
 					</section>
 
-					{/* <section>
+					<section>
 						<div>
-							{pieCharts.Review ? (
-								<>
-									<p>
-										Genuine:{" "}
-										{pieCharts.adminReviews.Genuine}
-									</p>
-									<p>Fake: {pieCharts.adminReviews.Fake}</p>
-									<DoughnutChart
-										labels={["Genuine", "Fake"]}
-										data={[
-											pieCharts.adminReviews?.Genuine ??
-												0,
-											pieCharts.adminReviews?.Fake ?? 0,
-										]}
-										backgroundColor={[
-											"hsl(243, 77%, 58%)",
-											"hsl(0, 83%, 60%)",
-										]}
-										offset={[0, 40]}
-									/>
-								</>
-							) : (
-								<p>Loading review data...</p>
-							)}
+							<DoughnutChart
+								labels={["Genuine", "Fake"]}
+								data={[
+									pieCharts.adminReviews.Genuine,
+									pieCharts.adminReviews.Fake,
+								]}
+								backgroundColor={[
+									"hsl(243, 77%, 58%)",
+									"hsl(0, 83%, 60%)",
+								]}
+								offset={[0, 40]}
+							/>
 						</div>
-					</section> */}
+						<h2>Genuine-Fake Reviews Ratio</h2>
+					</section>
 				</main>
 			</div>
 		);

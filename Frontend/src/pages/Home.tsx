@@ -12,6 +12,7 @@ import {
     useToggleWishlistMutation,
 } from '../redux/api/wishlistAPI';
 import { responseToast } from '../utils/features';
+import Footer from '../components/Footer';
 
 const Home = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
@@ -45,63 +46,58 @@ const Home = () => {
     if (isError) toast.error('Can not fetch products');
 
     return (
-        <div className='home'>
-            {/* Hero Section */}
-            <section className='hero'>
-                <div className='hero-content'>
-                    <h2>Discover Amazing Products</h2>
-                    <p>Shop the latest collection with exclusive deals</p>
-                    <Link
-                        to='/search'
-                        className='shop-now-btn'
-                    >
-                        Shop Now
-                    </Link>
-                </div>
-            </section>
+		<div className="home">
+			{/* Hero Section */}
+			<section className="hero">
+				<div className="hero-content">
+					<h2>Discover Amazing Products</h2>
+					<p>Shop the latest collection with exclusive deals</p>
+					<Link to="/search" className="shop-now-btn">
+						Shop Now
+					</Link>
+				</div>
+			</section>
 
-            {/* Featured Products */}
-            <div className='featured-container'>
-                <div className='section-header'>
-                    <h1 className='section-title'>Latest Products</h1>
-                    <Link
-                        to='/search'
-                        className='findmore'
-                    >
-                        View All →
-                    </Link>
-                </div>
+			{/* Featured Products */}
+			<div className="featured-container">
+				<div className="section-header">
+					<h1 className="section-title">Latest Products</h1>
+					<Link to="/search" className="findmore">
+						View All →
+					</Link>
+				</div>
 
-                <div className='products-grid'>
-                    {isLoading
-                        ? [...Array(4)].map((_, i) => (
-                              <ProductCardSkeleton key={i} />
-                          ))
-                        : !wishlistLoading &&
-                          data?.products.map((product) => (
-                              <ProductCard
-                                  key={product._id}
-                                  productId={product._id}
-                                  name={product.name}
-                                  price={product.price}
-                                  originalPrice={product.originalPrice}
-                                  category={product.category}
-                                  stock={product.stock}
-                                  handler={addToCartHandler}
-                                  image={product.images[0]}
-                                  toggleHandler={toggleHandler}
-                                  isWishlisted={
-                                      wishlistData?.items.some(
-                                          (item) =>
-                                              item.product._id === product._id
-                                      ) || false
-                                  }
-                              />
-                          ))}
-                </div>
-            </div>
-        </div>
-    );
+				<div className="products-grid">
+					{isLoading
+						? [...Array(4)].map((_, i) => (
+								<ProductCardSkeleton key={i} />
+						  ))
+						: !wishlistLoading &&
+						  data?.products.map((product) => (
+								<ProductCard
+									key={product._id}
+									productId={product._id}
+									name={product.name}
+									price={product.price}
+									originalPrice={product.originalPrice}
+									category={product.category}
+									stock={product.stock}
+									handler={addToCartHandler}
+									image={product.images[0]}
+									toggleHandler={toggleHandler}
+									isWishlisted={
+										wishlistData?.items.some(
+											(item) =>
+												item.product._id === product._id
+										) || false
+									}
+								/>
+						  ))}
+				</div>
+			</div>
+			<Footer />
+		</div>
+	);
 };
 
 export default Home;

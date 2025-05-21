@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import {
+    productAPI,
     useCategoriesQuery,
     useSearchProductsQuery,
 } from '../redux/api/productAPI';
@@ -16,6 +17,7 @@ import {
 } from '../redux/api/wishlistAPI';
 import { RootState } from '../redux/store';
 import { responseToast } from '../utils/features';
+import Footer from '../components/Footer';
 
 const Search = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
@@ -84,131 +86,133 @@ const Search = () => {
     }
 
     return (
-        <div className='search-page'>
-            <aside className='filters-sidebar'>
-                <h2 className='filters-title'>Filters</h2>
+        <>
+		<div className="search-page">
+			<aside className="filters-sidebar">
+				<h2 className="filters-title">Filters</h2>
 
-                <div className='filter-group'>
-                    <label>Sort By</label>
-                    <select
-                        value={sort}
-                        onChange={(e) => setSort(e.target.value)}
-                        className='filter-select'
-                    >
-                        <option value=''>Default</option>
-                        <option value='asc'>Price (Low to High)</option>
-                        <option value='dsc'>Price (High to Low)</option>
-                    </select>
-                </div>
+				<div className="filter-group">
+					<label>Sort By</label>
+					<select
+						value={sort}
+						onChange={(e) => setSort(e.target.value)}
+						className="filter-select"
+					>
+						<option value="">Default</option>
+						<option value="asc">Price (Low to High)</option>
+						<option value="dsc">Price (High to Low)</option>
+					</select>
+				</div>
 
-                <div className='filter-group'>
-                    <label>Max Price: ₹{maxPrice || ''}</label>
-                    <input
-                        type='range'
-                        min={100}
-                        max={10000}
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(Number(e.target.value))}
-                        className='price-slider'
-                    />
-                </div>
+				<div className="filter-group">
+					<label>Max Price: ₹{maxPrice || ""}</label>
+					<input
+						type="range"
+						min={100}
+						max={10000}
+						value={maxPrice}
+						onChange={(e) => setMaxPrice(Number(e.target.value))}
+						className="price-slider"
+					/>
+				</div>
 
-                <div className='filter-group'>
-                    <label>Category</label>
-                    <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        className='filter-select'
-                    >
-                        <option value=''>All Categories</option>
-                        {LoadingCategories === false
-                            ? CategoriesResponse?.categories.map((i) => (
-                                  <option
-                                      key={i}
-                                      value={i}
-                                  >
-                                      {i.toUpperCase()}
-                                  </option>
-                              ))
-                            : 'loading'}
-                    </select>
-                </div>
-            </aside>
+				<div className="filter-group">
+					<label>Category</label>
+					<select
+						value={category}
+						onChange={(e) => setCategory(e.target.value)}
+						className="filter-select"
+					>
+						<option value="">All Categories</option>
+						{LoadingCategories === false
+							? CategoriesResponse?.categories.map((i) => (
+									<option key={i} value={i}>
+										{i.toUpperCase()}
+									</option>
+							  ))
+							: "loading"}
+					</select>
+				</div>
+			</aside>
 
-            <main className='products-main'>
-                <div className='search-header'>
-                    <h1 className='page-title'>Products</h1>
-                    <input
-                        type='text'
-                        placeholder='Search by name...'
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className='search-input'
-                    />
-                </div>
+			<main className="products-main">
+				<div className="search-header">
+					<h1 className="page-title">Products</h1>
+					<input
+						type="text"
+						placeholder="Search by name..."
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						className="search-input"
+					/>
+				</div>
 
-                <div className='product-grid'>
-                    {productLoading
-                        ? [...Array(6)].map((_, i) => (
-                              <ProductCardSkeleton key={i} />
-                          ))
-                        : !wishlistLoading &&
-                          searchedData?.products.map((product) => (
-                              <ProductCard
-                                  key={product._id}
-                                  productId={product._id}
-                                  name={product.name}
-                                  price={product.price}
-                                  originalPrice={product.originalPrice}
-                                  category={product.category}
-                                  stock={product.stock}
-                                  handler={addToCartHandler}
-                                  image={product.images[0]}
-                                  toggleHandler={toggleHandler}
-                                  isWishlisted={
-                                      wishlistData?.items.some(
-                                          (item) =>
-                                              item.product._id === product._id
-                                      ) || false
-                                  }
-                              />
-                          ))}
-                </div>
+				<div className="product-grid">
+					{productLoading
+						? [...Array(6)].map((_, i) => (
+								<ProductCardSkeleton key={i} />
+						  ))
+						: !wishlistLoading &&
+						  searchedData?.products.map((product) => (
+								<ProductCard
+									key={product._id}
+									productId={product._id}
+									name={product.name}
+									price={product.price}
+									originalPrice={product.originalPrice}
+									category={product.category}
+									stock={product.stock}
+									handler={addToCartHandler}
+									image={product.images[0]}
+									toggleHandler={toggleHandler}
+									isWishlisted={
+										wishlistData?.items.some(
+											(item) =>
+												item.product._id === product._id
+										) || false
+									}
+								/>
+						  ))}
+				</div>
 
-                {searchedData && searchedData?.totalPage > 1 && (
-                    <div className='pagination'>
-                        <button
-                            className={`pagination-btn ${
-                                !isPrevPage ? 'disabled' : ''
-                            }`}
-                            disabled={!isPrevPage}
-                            onClick={() =>
-                                isPrevPage && setPage((prev) => prev - 1)
-                            }
-                        >
-                            Previous
-                        </button>
+				{searchedData && searchedData?.totalPage > 1 && (
+					<div className="pagination">
+						<button
+							className={`pagination-btn ${
+								!isPrevPage ? "disabled" : ""
+							}`}
+							disabled={!isPrevPage}
+							onClick={() =>
+								isPrevPage && setPage((prev) => prev - 1)
+							}
+						>
+							Previous
+						</button>
 
-                        <span className='page-indicator'>
-                            Page {page} of {searchedData.totalPage}
-                        </span>
+						<span className="page-indicator">
+							Page {page} of {searchedData.totalPage}
+						</span>
 
-                        <button
-                            className={`pagination-btn ${
-                                !isNextPage ? 'disabled' : ''
-                            }`}
-                            disabled={!isNextPage}
-                            onClick={() =>
-                                isNextPage && setPage((prev) => prev + 1)
-                            }
-                        >
-                            Next
-                        </button>
-                    </div>
-                )}
-            </main>
-        </div>
-    );
+						<button
+							className={`pagination-btn ${
+								!isNextPage ? "disabled" : ""
+							}`}
+							disabled={!isNextPage}
+							onClick={() =>
+								isNextPage && setPage((prev) => prev + 1)
+							}
+						>
+							Next
+						</button>
+					</div>
+				)}
+			</main>
+			
+		</div>
+      
+        <Footer />
+        </>
+	);
 };
 
 export default Search;

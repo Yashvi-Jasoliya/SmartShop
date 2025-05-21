@@ -13,6 +13,13 @@ import { useStatsQuery } from '../../redux/api/dashboardAPI';
 import { RootState } from '../../redux/store';
 import { CustomError } from '../../types/api-types';
 import DashboardSkeleton from '../../components/admin/skeleton/DashboardSkeleton';
+// import AdminNotification from '../../components/admin/AdminNotification';
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FiLogOut } from 'react-icons/fi';
+
+
 
 const Dashboard = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
@@ -20,6 +27,22 @@ const Dashboard = () => {
     const { data, isError, error, isLoading } = useStatsQuery(user?._id!);
 
     const stats = data?.Statistics;
+    const navigate = useNavigate();
+    const [showLogoutBox, setShowLogoutBox] = useState(false);
+
+
+	const handleLogout = async () => {
+		const auth = getAuth();
+
+		try {
+			await signOut(auth);
+			navigate("/login");
+		} catch (error) {
+			console.error("Logout failed:", error);
+			toast.error("Failed to logout");
+		}
+	};
+
 
     if (isError && error) {
         const err = error as CustomError;
@@ -31,120 +54,144 @@ const Dashboard = () => {
     if (!stats) return toast.error('Error to fetch Statistics');
 
     return (
-        <div className='adminContainer'>
-            <AdminSidebar />
-            <main className='dashboard'>
-                <div className='bar'>
-                    <div className='searchBar'>
-                        <BsSearch />
-                    </div>
+		<div className="adminContainer">
+			<AdminSidebar />
+			<main className="dashboard">
+				<div className="bar">
+					<div className="searchBar">
+						<BsSearch />
+					</div>
 
-                    <input
-                        type='text'
-                        placeholder='Search for data, users, docs'
-                    />
-                    <div>
-                        <FaRegBell />
-                        <img
-                            src={userImg}
-                            alt=''
-                        />
-                    </div>
-                </div>
+					<input
+						type="text"
+						placeholder="Search for data, users, docs"
+					/>
+					<div className="flex items-center gap-4">
+						{/* <AdminNotification /> */}
+						<div className="relative">
+							<img
+								src={user?.photo || userImg}
+								alt="profile"
+								className="cursor-pointer w-8 h-8 rounded-full object-cover aspect-square border border-gray-300"
+								onClick={() =>
+									setShowLogoutBox((prev) => !prev)
+								}
+							/>
 
-                <section className='widgetContainer'>
-                    <WidgetItem
-                        percent={stats.changePercent.revenue}
-                        amount={true}
-                        value={stats.counts.revenue}
-                        heading='Revenue'
-                        color='rgb(0,115,225)'
-                    />
-                    <WidgetItem
-                        percent={stats.changePercent.users}
-                        amount={false}
-                        value={stats.counts.users}
-                        heading='Users'
-                        color='rgb(0,198,202)'
-                    />
-                    <WidgetItem
-                        percent={stats.changePercent.orders}
-                        amount={false}
-                        value={stats.counts.orders}
-                        heading='Transactions'
-                        color='rgb(255,196,0)'
-                    />
-                    <WidgetItem
-                        percent={stats.changePercent.products}
-                        amount={false}
-                        value={stats.counts.products}
-                        heading='Products'
-                        color='rgb(76,0,255)'
-                    />
-                </section>
+							{showLogoutBox && (
+								<div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-md z-10">
+									<button
+										className="flex items-center gap-10 w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+										onClick={handleLogout}
+									>
+										Logout
+										<FiLogOut />
+									</button>
+									<button
+										className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+										onClick={() => setShowLogoutBox(false)}
+									>
+										Cancel
+									</button>
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
 
-                <section className='graphContainer'>
-                    <div className='revenueChart'>
-                        <h2>Revenue & Transaction</h2>
-                        {/* Graph here */}
-                        <BarChart
-                            data_2={stats.chart.orders.map((val) => val * 10)}
-                            data_1={stats.chart.revenue}
-                            title_1='Revenue'
-                            title_2='Transaction'
-                            bgColor_1='rgb(0,115,255)'
-                            bgColor_2='rgba(53,162,235,0.8)'
-                            // horizontal={true}
-                        />
-                    </div>
-                    <div className='dashboardCategories'>
-                        <h2>Inventory</h2>
-                        <div>
-                            {stats?.categoryCounts.map((i) => {
-                                const [heading, value] = Object.entries(i)[0];
+				<section className="widgetContainer">
+					<WidgetItem
+						percent={stats.changePercent.revenue}
+						amount={true}
+						value={stats.counts.revenue}
+						heading="Revenue"
+						color="rgb(0,115,225)"
+					/>
+					<WidgetItem
+						percent={stats.changePercent.users}
+						amount={false}
+						value={stats.counts.users}
+						heading="Users"
+						color="rgb(0,198,202)"
+					/>
+					<WidgetItem
+						percent={stats.changePercent.orders}
+						amount={false}
+						value={stats.counts.orders}
+						heading="Transactions"
+						color="rgb(255,196,0)"
+					/>
+					<WidgetItem
+						percent={stats.changePercent.products}
+						amount={false}
+						value={stats.counts.products}
+						heading="Products"
+						color="rgb(76,0,255)"
+					/>
+				</section>
 
-                                return (
-                                    <CategoryItem
-                                        key={heading}
-                                        heading={heading}
-                                        value={value}
-                                        color={`hsl(${
-                                            value * 3
-                                        }, ${value}%, 50%)`}
-                                    />
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
+				<section className="graphContainer">
+					<div className="revenueChart">
+						<h2>Revenue & Transaction</h2>
+						{/* Graph here */}
+						<BarChart
+							data_2={stats.chart.orders.map((val) => val * 10)}
+							data_1={stats.chart.revenue}
+							title_1="Revenue"
+							title_2="Transaction"
+							bgColor_1="rgb(0,115,255)"
+							bgColor_2="rgba(53,162,235,0.8)"
+							// horizontal={true}
+						/>
+					</div>
+					<div className="dashboardCategories">
+						<h2>Inventory</h2>
+						<div>
+							{stats?.categoryCounts.map((i) => {
+								const [heading, value] = Object.entries(i)[0];
 
-                <section className='transactionContainer'>
-                    <div className='genderChart'>
-                        <h2>Gender Ratio</h2>
+								return (
+									<CategoryItem
+										key={heading}
+										heading={heading}
+										value={value}
+										color={`hsl(${
+											value * 3
+										}, ${value}%, 50%)`}
+									/>
+								);
+							})}
+						</div>
+					</div>
+				</section>
 
-                        <DoughnutChart
-                            labels={['Female', 'Male']}
-                            data={[
-                                stats.genderRatios.female,
-                                stats.genderRatios.male,
-                            ]}
-                            backgroundColor={[
-                                'hsl(340,82%,56%)',
-                                'rgba(53,162,235,0.8)',
-                            ]}
-                            // cutout={60}
-                            offset={[5, 5]}
-                        />
+				<section className="transactionContainer">
+					<div className="genderChart">
+						<h2>Gender Ratio</h2>
 
-                        <p>
-                            <BiMaleFemale />
-                        </p>
-                    </div>
-                    <Table data={stats.latestTransactions} />
-                </section>
-            </main>
-        </div>
-    );
+						<DoughnutChart
+							labels={["Female", "Male"]}
+							data={[
+								stats.genderRatios.female,
+								stats.genderRatios.male,
+							]}
+							backgroundColor={[
+								"hsl(340,82%,56%)",
+								"rgba(53,162,235,0.8)",
+							]}
+							// cutout={60}
+							offset={[5, 5]}
+						/>
+
+						<p>
+							<BiMaleFemale />
+						</p>
+					</div>
+					<Table data={stats.latestTransactions} />
+				</section>
+			</main>
+		</div>
+	);
 };
 
 //Widget Items
