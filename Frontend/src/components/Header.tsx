@@ -110,7 +110,6 @@ const Header = ({ user }: PropsType) => {
 						<Link to="/about" onClick={() => setIsMenuOpen(false)}>
 							About
 						</Link>
-						
 					</div>
 
 					<div className="user-controls">
@@ -174,10 +173,16 @@ const Header = ({ user }: PropsType) => {
 							className="icon-link"
 						>
 							<FaHeart />
-							<span className="badge">
-								{wishlistData?.items.length}
-							</span>
+							{wishlistData?.items &&
+								wishlistData.items.length > 0 && (
+									<span className="badge">
+										{wishlistData.items.length}
+									</span>
+								)}
 						</Link>
+						{/* <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50">
+							Wishlist
+						</span> */}
 
 						<Link
 							to="/cart"
