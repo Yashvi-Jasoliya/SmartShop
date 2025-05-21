@@ -1,8 +1,10 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    Navigate,
+    redirect,
     BrowserRouter as Router
 } from 'react-router-dom';
 import Loading from './components/Loading';
@@ -12,6 +14,7 @@ import { userExist, userNotExist } from './redux/reducer/userReducer';
 import { UserReducerInitialState } from './types/reducer-types';
 
 import AppRoutes from './AppRoutes';
+import Footer from './components/Footer';
 
 const App = () => {
     const { user, loading } = useSelector(
@@ -34,7 +37,8 @@ const App = () => {
                     }
                 } else {
                     console.log('No user is logged in');
-                    dispatch(userNotExist());
+                    dispatch(userNotExist());       
+                    // Navigate("/login")
                 }
             } catch (error) {
                 console.error('Error during auth state change:', error);
@@ -54,6 +58,7 @@ const App = () => {
         <Router>
             <AppRoutes user={user} />
             <Toaster position='top-center' />
+            {/* <Footer /> */}
         </Router>
     );
 };
