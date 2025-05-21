@@ -13,6 +13,7 @@ import ReviewForm from './pages/ReviewForm';
 import ReviewList from './pages/ReviewList';
 import Category from './pages/Category';
 import DealsPage from './pages/Deals';
+import Footer from './components/Footer';
 // import { ReviewProvider } from "./context/ReviewContext";
 // import { ProductProvider } from './context/ProductContext';
 
@@ -95,6 +96,7 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 						<Route path="/pay" element={<Checkout />} />
 						<Route path="/orders" element={<Orders />} />
 						<Route path="/orders/:id" element={<OrderDetails />} />
+                        
 					</Route>
 
 					{/* Admin Routes */}

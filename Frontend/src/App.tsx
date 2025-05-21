@@ -38,7 +38,7 @@ const App = () => {
                 } else {
                     console.log('No user is logged in');
                     dispatch(userNotExist());       
-                    // Navigate("/login")
+                    
                 }
             } catch (error) {
                 console.error('Error during auth state change:', error);
@@ -58,7 +58,6 @@ const App = () => {
         <Router>
             <AppRoutes user={user} />
             <Toaster position='top-center' />
-            {/* <Footer /> */}
         </Router>
     );
 };

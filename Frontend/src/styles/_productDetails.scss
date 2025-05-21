@@ -292,6 +292,15 @@ $radius-sm: 8px;
 					&.red-color {
 						background-color: #ef4444;
 					}
+                    &.pink-color {
+						background-color: #e285ee;
+					}
+                    &.green-color {
+						background-color: #02c923;
+					}
+                    &.orange-color {
+						background-color: #f39d1b;
+					}
 				}
 			}
 		}
@@ -320,7 +329,7 @@ $radius-sm: 8px;
 				/* Reviews section styles */
 				.review-summary {
 					display: flex;
-					margin-bottom: 20px;
+					// margin-bottom: 20px;
 					padding: 15px;
 					background: #f8f8f8;
 					border-radius: 8px;
@@ -385,8 +394,8 @@ $radius-sm: 8px;
 				}
 
 				.customer-reviews {
-					border-top: 1px solid #e7e7e7;
-					padding-top: 20px;
+					// border-top: 1px solid #e7e7e7;
+					// padding-top: 5px;    
 				}
 
 				.review {
