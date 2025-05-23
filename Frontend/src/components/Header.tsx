@@ -28,7 +28,7 @@ const Header = ({ user }: PropsType) => {
     const { cartItems } = useSelector(
         (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
     );
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+
     const { data: wishlistData } = useGetWishlistQuery(user?._id!);
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -181,9 +181,6 @@ const Header = ({ user }: PropsType) => {
 									</span>
 								)}
 						</Link>
-						{/* <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50">
-							Wishlist
-						</span> */}
 
 						<Link
 							to="/cart"
