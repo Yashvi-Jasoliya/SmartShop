@@ -12,7 +12,7 @@ import {
     FaUser,
 } from 'react-icons/fa';
 import { MdSpaceDashboard } from 'react-icons/md';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { useGetWishlistQuery } from '../redux/api/wishlistAPI';
@@ -24,6 +24,7 @@ interface PropsType {
 }
 
 const Header = ({ user }: PropsType) => {
+
     const { cartItems } = useSelector(
         (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
     );
