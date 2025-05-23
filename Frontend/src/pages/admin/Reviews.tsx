@@ -33,7 +33,7 @@ const AdminPanel: React.FC = () => {
 						Reviews
 					</h1>
 					<p className="mt-2 text-gray-600">
-						Manage reviews for your e-commerce store
+						Manage reviews for e-commerce store
 					</p>
 				</div>
 
