@@ -13,11 +13,18 @@
     import { useGetReviewStatsQuery } from '../../../redux/api/reviewAPI';
 
     const PieCharts = () => {
+
+         
         const { user } = useSelector((state: RootState) => state.userReducer);
         // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         const { data, isError, error, isLoading } = usePieQuery(user?._id!);
 
         const pieCharts = data?.pieCharts;
+        const {
+			data: reviewStats,
+			isLoading: isStatsLoading,
+			error: statsError,
+		} = useGetReviewStatsQuery();
 
         if (isError && error) {
             const err = error as CustomError;
@@ -173,18 +180,24 @@
 
 					<section>
 						<div>
-							<DoughnutChart
-								labels={["Genuine", "Fake"]}
-								data={[
-									pieCharts.adminReviews.Genuine,
-									pieCharts.adminReviews.Fake,
-								]}
-								backgroundColor={[
-									"hsl(243, 77%, 58%)",
-									"hsl(0, 83%, 60%)",
-								]}
-								offset={[0, 40]}
-							/>
+							{isStatsLoading ? (
+								<p>Loading chart...</p>
+							) : statsError || !reviewStats ? (
+								<p>Error loading review stats</p>
+							) : (
+								<DoughnutChart
+									labels={["Genuine", "Fake"]}
+									data={[
+										reviewStats.genuine || 0,
+										reviewStats.fake || 0,
+									]}
+									backgroundColor={[
+										"hsl(243, 77%, 58%)",
+										"hsl(0, 83%, 60%)",
+									]}
+									offset={[0, 40]}
+								/>
+							)}
 						</div>
 						<h2>Genuine-Fake Reviews Ratio</h2>
 					</section>
