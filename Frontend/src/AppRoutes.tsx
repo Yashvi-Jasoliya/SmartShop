@@ -8,14 +8,12 @@ import AboutUs from './pages/AboutUs';
 import Wishlist from './pages/Wishlist';
 import { User } from './types/types';
 import ProductPage from './pages/ProductDetails';
-// import AdminReviews from './pages/admin/Reviews';
-import ReviewForm from './pages/ReviewForm';
-import ReviewList from './pages/ReviewList';
+
 import Category from './pages/Category';
 import DealsPage from './pages/Deals';
-import Footer from './components/Footer';
-// import { ReviewProvider } from "./context/ReviewContext";
-// import { ProductProvider } from './context/ProductContext';
+
+import Signup from './pages/SignUp';
+
 
 const Login = lazy(() => import('./pages/Login'));
 const Home = lazy(() => import('./pages/Home'));
@@ -78,9 +76,13 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 								isAuthenticated={user ? false : true}
 							>
 								<Login />
+                                
 							</ProtectedRoute>
 						}
 					/>
+                    <Route path='/signup' element={<Signup />}>
+
+                    </Route>
 
 					{/* Loggedin User Routes */}
 					<Route

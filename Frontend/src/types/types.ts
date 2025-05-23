@@ -9,7 +9,16 @@ export interface User {
     dob: string;
     _id: string;
     createdAt?: string;
+    password: string;
 }
+
+export interface ManualLoginRequest {
+    email: string;
+    password?: string;
+    
+}
+
+
 
 // export interface Product {
 //     name: string;

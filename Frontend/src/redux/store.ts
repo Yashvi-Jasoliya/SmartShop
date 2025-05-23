@@ -20,6 +20,7 @@ export const store = configureStore({
         [wishlistAPI.reducerPath]: wishlistAPI.reducer,
         [userReducer.name]: userReducer.reducer,
         [cartReducer.name]: cartReducer.reducer,
+       
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -32,3 +33,4 @@ export const store = configureStore({
 });
 
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

@@ -3,21 +3,38 @@ import axios from 'axios';
 import {
     AllUsersResponse,
     DeleteUserRequest,
+    LoginResponse,
     MessageResponse,
     UserResponse,
 } from '../../types/api-types';
-import { User } from '../../types/types';
+import { ManualLoginRequest, User } from '../../types/types';
 
 export const userAPI = createApi({
     reducerPath: 'userApi',
     baseQuery: fetchBaseQuery({
         baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/user/`,
+        credentials: 'include',
     }),
     tagTypes: ['users'],
     endpoints: (builder) => ({
         login: builder.mutation<MessageResponse, User>({
             query: (user) => ({
                 url: 'new',
+                method: 'POST',
+                body: user,
+            }),
+            invalidatesTags: ['users'],
+        }),
+        loginUser: builder.mutation({
+            query: (credentials: { email: string; password: string }) => ({
+                url: "login",
+                method: "POST",
+                body: credentials,
+            }),
+        }),
+        register: builder.mutation<MessageResponse, Partial<User>>({
+            query: (user) => ({
+                url: 'register',
                 method: 'POST',
                 body: user,
             }),
@@ -51,5 +68,5 @@ export const getUser = async (id: string) => {
     }
 };
 
-export const { useLoginMutation, useDeleteUserMutation, useAllUsersQuery } =
+export const { useLoginMutation, useDeleteUserMutation, useAllUsersQuery, useRegisterMutation, useLoginUserMutation} =
     userAPI;

@@ -19,6 +19,11 @@ export type CustomError = {
     };
 };
 
+export interface LoginResponse extends MessageResponse{
+    user: User;
+    message: string;
+}
+
 
 export interface IReview {
     id?: string;
@@ -37,9 +42,17 @@ export interface ReviewResponse extends IReview {
 
 //Response
 
+export interface UserType {
+    _id: string;
+    name: string;
+    email: string;
+}
+
+
 export type MessageResponse = {
     success: boolean;
     message: string;
+    user: UserType;
 };
 
 export type StatsResponse = {
