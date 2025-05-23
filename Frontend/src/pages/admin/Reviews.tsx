@@ -5,7 +5,6 @@ import Button from "../../components/common/Button";
 import ProductTable from "../../components/admin/ProductTable";
 import ReviewTable from "../../components/admin/ReviewTable";
 import { useGetProductStatsQuery } from "../../redux/api/productAPI";
-import Products from "./Products";
 
 const AdminPanel: React.FC = () => {
 	const [activeTab, setActiveTab] = useState<"products" | "reviews">(
@@ -105,7 +104,6 @@ const AdminPanel: React.FC = () => {
 					</div>
 				</div>
 
-				{/* Tab content */}
 				<div className="bg-white shadow rounded-lg overflow-hidden">
 					{activeTab === "products" && <ProductTable />}
 					{activeTab === "reviews" && <ReviewTable />}
