@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase"; // adjust the path as needed
+
 import Button from "../components/common/Button";
 import {
 	useCreateReviewMutation,
@@ -27,18 +31,33 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 
 	const [localReviews, setLocalReviews] = useState<IReview[]>([]);
 
+	const [user] = useAuthState(auth);
+	const navigate = useNavigate();
+	const isLoggedIn = !!user;
+
 	useEffect(() => {
 		if (reviews) {
 			setLocalReviews(reviews);
 		}
 	}, [reviews]);
 
+	useEffect(() => {
+		if (user?.displayName) {
+			setUserName(user.displayName);
+		}
+	}, [user]);
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
+		if (!isLoggedIn) {
+			navigate("/login");
+			return;
+		}
+
 		const reviewData: IReview = {
 			productId,
-			userName,
+			userName: user?.displayName || "Anonymous",
 			rating,
 			comment,
 			date: new Date(),
@@ -47,10 +66,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 		try {
 			const result = await createReview(reviewData).unwrap();
 			setLocalReviews((prev) => [result, ...prev]);
-			setUserName("");
 			setRating(0);
 			setComment("");
-			refetch(); // ensure backend reviews are up to date
+			refetch();
 		} catch (error) {
 			console.error("Failed to submit review:", error);
 		}
@@ -87,6 +105,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 							required
 							value={userName}
 							onChange={(e) => setUserName(e.target.value)}
+							disabled={!!user?.displayName}
 							className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
 						/>
 					</div>
@@ -125,7 +144,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 						variant="primary"
 						disabled={isLoading}
 						className="w-full"
-					>   
+					>
 						{isLoading ? "Submitting..." : "Submit Review"}
 					</Button>
 				</form>
@@ -145,7 +164,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 					<div className="space-y-6">
 						{localReviews.map((review) => (
 							<div
-								key={review.id || review.id || Math.random()}
+								key={review.id || Math.random()}
 								className="border-b border-gray-200 pb-6 last:border-0"
 							>
 								<div className="flex items-center justify-between mb-2">
