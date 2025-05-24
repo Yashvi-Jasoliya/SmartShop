@@ -65,29 +65,29 @@ const Transaction = () => {
     useEffect(() => {
         if (data) {
             setRows(
-                data.orders.map((i) => ({
-                    user: i.user.name,
-                    amount: i.total,
-                    discount: i.discount,
-                    quantity: i.orderItems.length,
-                    status: (
-                        <span
-                            className={
-                                i.status === 'Processing'
-                                    ? 'red'
-                                    : i.status === 'Shipped'
-                                    ? 'green'
-                                    : 'purple'
-                            }
-                        >
-                            {i.status}
-                        </span>
-                    ),
-                    action: (
-                        <Link to={`/admin/transaction/${i._id}`}>Manage</Link>
-                    ),
-                }))
-            );
+				data.orders.map((i) => ({
+					user: i.user?.name || "Unknown User",
+					amount: i.total,
+					discount: i.discount,
+					quantity: i.orderItems.length,
+					status: (
+						<span
+							className={
+								i.status === "Processing"
+									? "red"
+									: i.status === "Shipped"
+									? "green"
+									: "purple"
+							}
+						>
+							{i.status}
+						</span>
+					),
+					action: (
+						<Link to={`/admin/transaction/${i._id}`}>Manage</Link>
+					),
+				}))
+			);
         }
     }, [data]);
 

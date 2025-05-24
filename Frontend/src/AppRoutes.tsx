@@ -13,6 +13,7 @@ import Category from './pages/Category';
 import DealsPage from './pages/Deals';
 
 import Signup from './pages/SignUp';
+import NotificationBell from './components/admin/NotificationBell';
 
 
 const Login = lazy(() => import('./pages/Login'));
@@ -76,13 +77,10 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 								isAuthenticated={user ? false : true}
 							>
 								<Login />
-                                
 							</ProtectedRoute>
 						}
 					/>
-                    <Route path='/signup' element={<Signup />}>
-
-                    </Route>
+					<Route path="/signup" element={<Signup />}></Route>
 
 					{/* Loggedin User Routes */}
 					<Route
@@ -98,7 +96,6 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 						<Route path="/pay" element={<Checkout />} />
 						<Route path="/orders" element={<Orders />} />
 						<Route path="/orders/:id" element={<OrderDetails />} />
-                        
 					</Route>
 
 					{/* Admin Routes */}
@@ -119,6 +116,8 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 							path="/admin/customers"
 							element={<Customers />}
 						/>
+					
+
 						<Route path="/admin/products" element={<Products />} />
 						<Route
 							path="/admin/transaction"

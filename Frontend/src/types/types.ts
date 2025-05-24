@@ -17,7 +17,20 @@ export interface ManualLoginRequest {
     password?: string;
     
 }
-
+export type NotificationType = 'new_review' | 'transaction' | 'user_login' | 'system';
+export interface Notification {
+    id: string;
+    userId: string;
+    type: string;
+    title: string;
+    message: string;
+    metadata?: {
+        userEmail?: string;
+        amount?: number;
+    };
+    isRead: boolean;
+    timestamp: string;
+}
 
 
 // export interface Product {

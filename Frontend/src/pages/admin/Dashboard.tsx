@@ -18,11 +18,13 @@ import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FiLogOut } from 'react-icons/fi';
+import { NotificationBell } from '../../components/admin/NotificationBell';
 
 
 
 const Dashboard = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
+    // const userId = useSelector((state: any) => state.userReducer.user?.uid);
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const { data, isError, error, isLoading } = useStatsQuery(user?._id!);
 
@@ -66,13 +68,14 @@ const Dashboard = () => {
 						type="text"
 						placeholder="Search for data, users, docs"
 					/>
-					<div className="flex items-center gap-4">
-						{/* <AdminNotification /> */}
+					<div className="flex items-center gap-2">
+						{user?._id && <NotificationBell userId={user._id} />}
+
 						<div className="relative">
 							<img
 								src={user?.photo || userImg}
 								alt="profile"
-								className="cursor-pointer w-8 h-8 rounded-full object-cover aspect-square border border-gray-300"
+								className="cursor-pointer w-12 h-8 rounded-full object-cover aspect-square border border-gray-300"
 								onClick={() =>
 									setShowLogoutBox((prev) => !prev)
 								}
