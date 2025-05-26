@@ -13,13 +13,14 @@ interface IUser {
     updatedAt: Date;
     // virtual properties
     age: number;
+    password: string;
 }
 
 const userSchema = new mongoose.Schema(
     {
         _id: {
-            type: String,
-            required: [true, "Please enter user id"],
+            type: String, 
+            default: () => new mongoose.Types.ObjectId().toString(),
         },
         name: {
             type: String,
@@ -34,6 +35,7 @@ const userSchema = new mongoose.Schema(
         photo: {
             type: String,
             required: [true, "Please add user photo"],
+            default: "https://i.ibb.co/5nD1JxG/avatar.png",
         },
         role: {
             type: String,
@@ -48,6 +50,11 @@ const userSchema = new mongoose.Schema(
         dob: {
             type: Date,
             required: [true, "Please enter date of birth"],
+        },
+        password: {
+            type: String,
+            // required: [true, "Please enter a password"],
+           
         },
     },
     {
