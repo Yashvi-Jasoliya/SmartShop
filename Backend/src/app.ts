@@ -1,50 +1,85 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { connect } from 'http2';
 import { connectDB } from './utils/features.js';
 import { errorMiddleware } from './middlewares/error.js';
 import NodeCache from 'node-cache';
 import morgan from 'morgan';
 import Stripe from 'stripe';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import http from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+// import { Server } from 'socket.io';
 
-//importing routes
+// Import routes
 import userRoute from './routes/user.js';
 import productRoute from './routes/products.js';
 import orderRoute from './routes/order.js';
 import paymentRoute from './routes/payment.js';
 import dashboardRoute from './routes/statistics.js';
 import wishlistRoute from './routes/wishlist.js';
-import reviewRoute from "./routes/review.js"
+import reviewRoute from './routes/review.js';
+import notificationRoute from './routes/review.js';
+import { newUser } from './controllers/user.js';
 
+// Load env
 dotenv.config();
+
+const app = express();
+const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+    cors: {
+        origin: 'http://localhost:5173',
+        methods: ['GET', 'POST'],
+        credentials: true,
+    },
+});
 
 const port = process.env.PORT || 3005;
 const mongoURI = process.env.MONGO_URI || '';
 const stripeKey = process.env.STRIPE_KEY || '';
 
-const app = express();
+export const stripe = new Stripe(stripeKey);
+export const myCache = new NodeCache();
+export const socketIO = io;
 
-app.use(express.json());
-app.use(morgan('dev'));
-// app.use(cors());
-
-app.use(cors({
-    origin: "http://localhost:5173", // your frontend domain
-    credentials: true
-}));
-
+// DB connect
 connectDB(mongoURI);
 
-export const stripe = new Stripe(stripeKey);
+// Middleware
+app.use(express.json());
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(
+    cors({
+        origin: 'http://localhost:5173',
+        credentials: true,
+    })
+);
 
-export const myCache = new NodeCache();
+io.on('connection', (socket) => {
+    console.log('Admin connected:', socket.id);
 
-app.get('/', (req, res) => {
-    res.send(`Server is running on http://localhost:${port}`);
+    // Emit test message
+    // socket.emit('notification', {
+    //     type: 'welcome',
+    //     message: 'Check new updates!',
+    //     time: new Date(),
+    //     next();
+    // });
+
+    socket.on('disconnect', () => {
+        console.log('Admin disconnected:', socket.id);
+    });
+    return;
 });
 
-// using routes
+
+// Routes
+app.get('/', (req, res) => {
+    res.send(`Server running at http://localhost:${port}`);
+});
+
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/product', productRoute);
 app.use('/api/v1/order', orderRoute);
@@ -52,10 +87,12 @@ app.use('/api/v1/payment', paymentRoute);
 app.use('/api/v1/dashboard', dashboardRoute);
 app.use('/api/v1/review', reviewRoute);
 app.use('/api/v1/wishlist', wishlistRoute);
-
 app.use('/uploads', express.static('uploads'));
+
+// Error Middleware
 app.use(errorMiddleware);
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// Start server
+server.listen(port, () => {
+    console.log(`✅ Server running at http://localhost:${port}`);
 });
