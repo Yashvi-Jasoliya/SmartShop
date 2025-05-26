@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { IReview, Review } from '../models/review.js';
 import { isGenuineReview } from '../utils/reviewUtils.js';
 import { Product } from '../models/product.js';
+import { socketIO } from '../app.js';
 
 // Get product reviews
 export const getProductReviews = async (req: Request, res: Response) => {
@@ -47,6 +48,12 @@ export const createReview = async (req: Request, res: Response) => {
             comment,
             date: date ? new Date(date) : new Date(),
             isGenuine,
+        });
+
+        socketIO.emit('notification', {
+            type: 'review',
+            message: `New review added by ${userName || 'a user'} on Product ${product.name} ⭐`,
+            time: new Date(),
         });
 
         const savedReview = await newReview.save();

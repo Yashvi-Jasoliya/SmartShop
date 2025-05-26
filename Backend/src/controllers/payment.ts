@@ -3,6 +3,7 @@ import { TryCatch } from "../middlewares/error.js";
 import errorHandler from "../utils/utilityClass.js";
 import { Coupon } from "../models/coupon.js";
 import { stripe } from "../app.js";
+import { socketIO } from '../app.js';
 
 // route "/api/v1/payment/create"
 export const createPaymentIntent = TryCatch(
@@ -19,6 +20,13 @@ export const createPaymentIntent = TryCatch(
         const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(Number(amount) * 100), // Stripe expects amount in paise
             currency: "inr",
+        });
+
+
+        socketIO.emit('notification', {
+            type: 'Transaction',
+            message: `Rs. ${amount} has been received successfully.`,
+            time: new Date(),
         });
 
         return res.status(201).json({
