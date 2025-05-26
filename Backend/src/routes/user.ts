@@ -3,11 +3,17 @@ import {
     deleteUser,
     getAllUsers,
     getUser,
+    loginUser,
     newUser,
+    registerUser,
 } from "../controllers/user.js";
 import { isAdmin } from "../middlewares/auth.js";
 
 const router = express.Router();
+
+router.post("/register", registerUser);
+
+router.post("/login", loginUser);
 
 //route "/api/v1/user/new"
 router.post("/new", newUser);
