@@ -1,60 +1,75 @@
-@use '../variables' as *;
-@use './mixin' as mixin;
-@use 'sass:color';
+@use "../variables" as *;
+@use "./mixin" as mixin;
+@use "sass:color";
 
 .chartContainer {
-    background-color: white;
-    margin: 0 1rem;
-    padding: 3rem;
-    overflow-y: auto;
-    width: 95%;
-    &::-webkit-scrollbar {
-        display: none;
-    }
+	background-color: white;
+	margin: 0 1rem;
+	padding: 3rem;
+	overflow-y: auto;
+	width: 95%;
 
-    > h1 {
-        margin: 0 0 5rem 2rem;
-    }
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
-    > section {
-        width: 80%;
-        margin: 4rem auto;
+	> h1 {
+		margin: 0 0 5rem 2rem;
+	}
 
-        > h2 {
-            margin: 2rem 0;
-            text-align: center;
-            @include mixin.heading(2px);
-        }
-    }
+	> section {
+		width: 80%;
+		margin: 10rem auto;
+
+		> h2 {
+			margin: 2rem 0;
+			text-align: center;
+			@include mixin.heading(2px);
+		}
+	}
 }
 
 .pieChartContainer {
-    background-color: white;
-    margin: 0 1rem;
-    padding: 4rem;
-    overflow-y: auto;
-    width: 95%;
-    &::-webkit-scrollbar {
-        display: none;
-    }
-    > h1 {
-        margin: 0 0 5rem 2rem;
-    }
-    > section {
-        > div {
-            max-width: 20rem;
-            margin: auto;
-            margin-top: 6rem;
-            margin-bottom: -1rem;
-        }
+	background-color: white;
+	margin: 0 1rem;
+	padding: 4rem;
+	overflow-y: auto;
+	width: 95%;
 
-        > h2 {
-            margin: 2rem 0;
-            text-align: center;
-            @include mixin.heading(2px);
-        }
-    }
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	> h1 {
+		margin: 0 0 5rem 2rem;
+	}
+
+	.chart-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10rem;
+		margin-bottom: 4rem;
+		justify-content: center;
+	}
+
+	.chart-col {
+		flex: 1 1 45%;
+		min-width: 280px;
+		max-width: 330px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.chart-wrapper {
+			width: 100%;
+			max-width: 16rem; // Controls pie/doughnut size
+			margin: 2rem auto 0;    
+		}
+
+		h2 {
+			margin-top: 1.5rem;
+			text-align: center;
+			@include mixin.heading(2px);
+		}
+	}
 }
-
-
-
