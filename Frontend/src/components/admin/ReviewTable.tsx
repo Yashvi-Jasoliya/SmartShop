@@ -14,25 +14,20 @@ const ReviewTable: React.FC = () => {
 		(state: { userReducer: UserReducerInitialState }) => state.userReducer
 	);
 
-	// Fetch products for user
 	const { isLoading: productsLoading, data } = useAllProductsQuery(
 		user?._id!
 	);
 
-	// Fetch reviews and also get refetch
 	const {
 		data: reviews = [],
 		isLoading: reviewsLoading,
 		refetch,
 	} = useGetAllReviewsQuery();
 
-	// Mutation hook for deleting reviews
 	const [deleteReview] = useDeleteReviewMutation();
 
-	// Filter state for reviews (all, genuine, fake)
 	const [filter, setFilter] = useState<"all" | "genuine" | "fake">("all");
 
-	// Get the filtered reviews based on the filter state
 	const filteredReviews = reviews.filter((review) => {
 		if (filter === "all") return true;
 		if (filter === "genuine") return review.isGenuine;
@@ -40,7 +35,6 @@ const ReviewTable: React.FC = () => {
 		return true;
 	});
 
-	// Map product IDs to product names
 	const productMap = React.useMemo(() => {
 		const map: Record<string, string> = {};
 		data?.products.forEach((product) => {
@@ -49,16 +43,14 @@ const ReviewTable: React.FC = () => {
 		return map;
 	}, [data?.products]);
 
-	// Get product name by productId
 	const getProductName = (productId: string) =>
 		productMap[productId] || "Unknown Product";
 
-	// Handle review deletion
 	const handleDelete = async (id: string) => {
 		if (window.confirm("Are you sure you want to delete this review?")) {
 			try {
 				await deleteReview(id).unwrap();
-				await refetch(); // refresh reviews list after delete
+				await refetch();
 			} catch (error) {
 				console.error("Failed to delete review:", error);
 				alert("Failed to delete review.");
@@ -66,14 +58,33 @@ const ReviewTable: React.FC = () => {
 		}
 	};
 
-	// Loading state for products or reviews
+	const handleDeleteAllFake = async () => {
+		if (
+			window.confirm("Are you sure you want to delete all fake reviews?")
+		) {
+			const fakeReviews = reviews.filter((r) => !r.isGenuine);
+			try {
+				await Promise.all(
+					fakeReviews.map((review) =>
+						deleteReview(review._id).unwrap()
+					)
+				);
+				await refetch();
+				alert("All fake reviews deleted.");
+			} catch (error) {
+				console.error("Error deleting fake reviews", error);
+				alert("Failed to delete some or all fake reviews.");
+			}
+		}
+	};
+
 	if (productsLoading || reviewsLoading) {
 		return <div>Loading...</div>;
 	}
 
 	return (
 		<div>
-			<div className="p-4 bg-gray-50 border-b border-gray-200">
+			<div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
 				<div className="flex items-center space-x-4">
 					<span className="text-sm font-medium text-gray-700">
 						Filter:
@@ -100,52 +111,38 @@ const ReviewTable: React.FC = () => {
 						Fake
 					</Button>
 				</div>
+				<Button
+					size="sm"
+					onClick={handleDeleteAllFake}
+					className="bg-amber-500 hover:bg-amber-300 text-white"
+				>
+					Delete All Fake Reviews
+				</Button>
 			</div>
 
 			<div className="overflow-x-auto">
 				<table className="min-w-full divide-y divide-gray-200">
 					<thead className="bg-gray-50">
 						<tr>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Status
 							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Product
 							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								User
 							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Rating
 							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Comment
 							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Date
 							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
+							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Actions
 							</th>
 						</tr>
@@ -163,7 +160,7 @@ const ReviewTable: React.FC = () => {
 						) : (
 							filteredReviews.map((review) => (
 								<tr
-									key={review.id}
+									key={review._id}
 									className="hover:bg-gray-50"
 								>
 									<td className="px-6 py-4 whitespace-nowrap">
@@ -179,13 +176,13 @@ const ReviewTable: React.FC = () => {
 												: "Fake"}
 										</span>
 									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+									<td className="px-6 py-4 text-sm font-medium text-gray-900">
 										{getProductName(review.productId)}
 									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+									<td className="px-6 py-4 text-sm text-gray-500">
 										{review.userName}
 									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+									<td className="px-6 py-4 text-sm text-gray-500">
 										<StarRating
 											rating={review.rating}
 											size="sm"
@@ -194,12 +191,12 @@ const ReviewTable: React.FC = () => {
 									<td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
 										{review.comment}
 									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+									<td className="px-6 py-4 text-sm text-gray-500">
 										{new Date(
 											review.date
 										).toLocaleDateString()}
 									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+									<td className="px-6 py-4 text-right text-sm font-medium">
 										<Button
 											variant="danger"
 											size="sm"
