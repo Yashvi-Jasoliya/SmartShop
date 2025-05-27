@@ -50,7 +50,6 @@ const Orders = () => {
         (state: { userReducer: UserReducerInitialState }) => state.userReducer
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const { isLoading, isError, error, data } = useMyOrdersQuery(user?._id!);
 
     const [rows, setRows] = useState<DataType[]>([]);

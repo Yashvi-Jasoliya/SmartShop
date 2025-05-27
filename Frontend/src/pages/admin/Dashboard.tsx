@@ -16,22 +16,21 @@ import DashboardSkeleton from '../../components/admin/skeleton/DashboardSkeleton
 // import AdminNotification from '../../components/admin/AdminNotification';
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiLogOut } from 'react-icons/fi';
 import { NotificationBell } from '../../components/admin/NotificationBell';
+import { useGetNotificationsQuery } from '../../redux/api/notificationAPI';
 
 
 
 const Dashboard = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
-    // const userId = useSelector((state: any) => state.userReducer.user?.uid);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+ 
     const { data, isError, error, isLoading } = useStatsQuery(user?._id!);
 
     const stats = data?.Statistics;
     const navigate = useNavigate();
     const [showLogoutBox, setShowLogoutBox] = useState(false);
-
 
 	const handleLogout = async () => {
 		const auth = getAuth();
@@ -53,7 +52,12 @@ const Dashboard = () => {
     }
 
     if (isLoading) return <DashboardSkeleton />;
-    if (!stats) return toast.error('Error to fetch Statistics');
+   if (!stats) {
+		toast.error("Error to fetch Statistics");
+		return null;
+   }
+
+  
 
     return (
 		<div className="adminContainer">

@@ -2,8 +2,8 @@ import { useCategoriesQuery } from "../redux/api/productAPI";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom"; 
 
-// Map categories to emojis
 const categoryEmojis: Record<string, string> = {
 	fashion: "👗",
 	electronics: "📱",
@@ -17,6 +17,7 @@ const categoryEmojis: Record<string, string> = {
 	grocery: "🛍️",
 };
 
+
 const getColorClass = (index: number) => {
 	const colors = [
 		"bg-gradient-to-br from-purple-400 to-blue-400",
@@ -29,12 +30,15 @@ const getColorClass = (index: number) => {
 };
 
 const CategoryCards = () => {
+	const navigate = useNavigate(); 
+
 	const {
 		data: CategoriesResponse,
 		isLoading,
 		isError,
 		error,
 	} = useCategoriesQuery("");
+
 	const [searchTerm, setSearchTerm] = useState("");
 
 	useEffect(() => {
@@ -77,12 +81,16 @@ const CategoryCards = () => {
 							(cat: string, index: number) => {
 								const emoji =
 									categoryEmojis[cat.toLowerCase()] || "";
+
 								return (
 									<div
 										key={cat}
 										className={`rounded-xl ${getColorClass(
 											index
 										)} shadow-lg p-6 flex flex-col items-center justify-center text-white hover:scale-105 transition-transform cursor-pointer`}
+										onClick={() =>
+											navigate(`/search?category=${cat}`)
+										} 
 									>
 										<div className="text-4xl">{emoji}</div>
 										<h4 className="text-lg font-semibold mt-4 text-white text-center">

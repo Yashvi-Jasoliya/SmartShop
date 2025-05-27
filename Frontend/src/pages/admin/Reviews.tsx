@@ -24,7 +24,7 @@ const AdminPanel: React.FC = () => {
 	if (isError || !stats) return <div>Error loading stats</div>;
 
 	return (
-		<div className="adminContainer">
+		<div className="adminContainer h-full">
 			<AdminSidebar />
 			<div className="max-w-8xl px-4 sm:px-6 lg:px-8 py-10">
 				<div className="mb-8">
