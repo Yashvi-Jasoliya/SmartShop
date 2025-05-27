@@ -16,7 +16,7 @@ import {
 } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { MdOutlineRateReview } from "react-icons/md";
+import { MdOutlineRateReview, MdRateReview } from "react-icons/md";
 
 function AdminSidebar() {
     const location = useLocation();
@@ -92,7 +92,7 @@ const DivOne = ({ location }: { location: Location }) => (
 		<h5>Dashboard</h5>
 		<ul>
 			<Li
-				url="/admin/dashboard"  
+				url="/admin/dashboard"
 				text="Dashboard"
 				location={location}
 				Icon={RiDashboardFill}
@@ -120,7 +120,7 @@ const DivOne = ({ location }: { location: Location }) => (
 				url="/admin/review"
 				text="Reviews"
 				location={location}
-				Icon={MdOutlineRateReview}
+				Icon={MdRateReview}
 			/>
 		</ul>
 	</div>
