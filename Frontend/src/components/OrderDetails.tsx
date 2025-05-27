@@ -74,7 +74,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
 		const summaryStartY = finalY + 15;
 
 		doc.setFontSize(14);
-		doc.text(":", 14, summaryStartY - 8);
+		doc.text("", 14, summaryStartY - 8);
         const shippingAmount =
 			(data.order.subTotal ?? 0) >= 1000
 				? 0
@@ -224,7 +224,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
 							<td>
 								Tax (
 								{(data.order.tax / data.order.subTotal) * 100}
-								%):
+								%)  
 							</td>
 							<td>{data.order.tax}</td>
 						</tr>
