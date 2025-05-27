@@ -1,8 +1,8 @@
-// src/components/NotificationBell.tsx
+
 import React, { useState, useRef, useEffect } from "react";
 import { useNotifications } from "../../hooks/useNotifications";
 import { notificationService } from "../../services/notificationService";
-import type { Notification as AppNotification } from "../../types/types"; // ✅ Alias the app Notification type
+import type { Notification as AppNotification } from "../../types/types"; 
 import { User } from "firebase/auth";
 
 interface NotificationBellProps {
