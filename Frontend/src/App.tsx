@@ -48,36 +48,6 @@ const App = () => {
 	    return () => unsubscribe();
 	}, [dispatch]);
 
-	// useEffect(() => {
-	// 	setPersistence(auth, browserLocalPersistence)
-	// 		.then(() => {
-	// 			const unsubscribe = onAuthStateChanged(auth, async (user) => {
-	// 				try {
-	// 					if (user) {
-	// 						console.log("User is logged in:", user.uid);
-	// 						const data = await getUser(user.uid);
-	// 						if (data?.user) {
-	// 							dispatch(userExist(data.user));
-	// 						} else {
-	// 							dispatch(userNotExist());
-	// 						}
-	// 					} else {
-	// 						dispatch(userNotExist());
-	// 					}
-	// 				} catch (error) {
-	// 					console.error("Auth state error:", error);
-	// 					dispatch(userNotExist());
-	// 				}
-	// 			});
-
-	// 			// Cleanup
-	// 			return () => unsubscribe();
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error("Setting persistence failed:", error);
-	// 		});
-	// }, [dispatch]);
-
 	return loading ? (
 		<Loading />
 	) : (

@@ -5,10 +5,9 @@ import { notificationService } from '../services/notificationService';
 export const useNotifications = (userId: string) => {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
-    // const [unreadCount, setUnreadCount] = useState(0);
-
+    
     useEffect(() => {
-        if (!userId) return; // ✅ Prevent fetch with undefined userId
+        if (!userId) return; 
         notificationService.connect(userId);
         notificationService.getNotifications(userId).then((data) => {
             setNotifications(data);
@@ -33,7 +32,6 @@ export const useNotifications = (userId: string) => {
         );
     };
 
-    // inside useNotifications.ts
     const markAllAsRead = async () => {
         try {
             setLoading(true);
