@@ -228,18 +228,6 @@ const ProductManagement = () => {
                         </button>
                     </div>
 
-                    {/* <div className='product-image-container'>
-                        {Array.isArray(images) &&
-                            images.map((img, i) => (
-                                <img
-                                    key={i}
-                                    src={img}
-                                    alt={`${name}-${i}`}
-                                    className='product-image'
-                                />
-                            ))}
-                    </div> */}
-
                     <div
                         className='slider-container'
                         onTouchStart={handleTouchStart}

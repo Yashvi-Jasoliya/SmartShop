@@ -50,7 +50,7 @@ const BarCharts = () => {
                         data_1={orders}
                         data_2={[]}
                         title_1='Orders'
-                        title_2=''
+                        title_2='Return'
                         bgColor_1={`hsl(240, 50%, 40%)`}
                         bgColor_2=''
                         labels={barCharts.twelveMonths}

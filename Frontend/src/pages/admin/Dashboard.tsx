@@ -1,7 +1,6 @@
 import toast from 'react-hot-toast';
 import { BiMaleFemale } from 'react-icons/bi';
 import { BsSearch } from 'react-icons/bs';
-import { FaRegBell } from 'react-icons/fa6';
 import { HiTrendingDown, HiTrendingUp } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
@@ -13,15 +12,11 @@ import { useStatsQuery } from '../../redux/api/dashboardAPI';
 import { RootState } from '../../redux/store';
 import { CustomError } from '../../types/api-types';
 import DashboardSkeleton from '../../components/admin/skeleton/DashboardSkeleton';
-// import AdminNotification from '../../components/admin/AdminNotification';
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FiLogOut } from 'react-icons/fi';
 import { NotificationBell } from '../../components/admin/NotificationBell';
-import { useGetNotificationsQuery } from '../../redux/api/notificationAPI';
-
-
 
 const Dashboard = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
