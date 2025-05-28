@@ -8,6 +8,7 @@ import {
 } from "../../redux/api/reviewAPI";
 import Button from "../common/Button";
 import StarRating from "../common/startRating";
+import toast from "react-hot-toast";
 
 const ReviewTable: React.FC = () => {
 	const { user } = useSelector(
@@ -70,10 +71,10 @@ const ReviewTable: React.FC = () => {
 					)
 				);
 				await refetch();
-				alert("All fake reviews deleted.");
+				toast.success("All fake reviews deleted.");
 			} catch (error) {
 				console.error("Error deleting fake reviews", error);
-				alert("Failed to delete some or all fake reviews.");
+				toast.error("Failed to delete some or all fake reviews.");
 			}
 		}
 	};
@@ -114,7 +115,7 @@ const ReviewTable: React.FC = () => {
 				<Button
 					size="sm"
 					onClick={handleDeleteAllFake}
-					className="bg-amber-500 hover:bg-amber-300 text-white"
+					className="bg-yellow-500 hover:bg-yellow-400 text-white"
 				>
 					Delete All Fake Reviews
 				</Button>
