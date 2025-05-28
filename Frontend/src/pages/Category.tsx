@@ -12,7 +12,7 @@ const categoryEmojis: Record<string, string> = {
 	toys: "🎲",
 	books: "📚",
 	sports: "🏀",
-	beauty: "💄",
+	beauty: "🎀",
 	food: "🍜",
 	grocery: "🛍️",
 };
@@ -24,7 +24,9 @@ const getColorClass = (index: number) => {
 		"bg-gradient-to-br from-green-400 to-emerald-400",
 		"bg-gradient-to-br from-yellow-400 to-orange-400",
 		"bg-gradient-to-br from-pink-400 to-rose-400",
+		"bg-gradient-to-br from-green-400 to-emerald-400",
 		"bg-gradient-to-br from-indigo-400 to-violet-400",
+		"bg-gradient-to-br from-pink-400 to-rose-400",
 	];
 	return colors[index % colors.length];
 };
