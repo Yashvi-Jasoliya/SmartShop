@@ -40,6 +40,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>
 			day: 86400,
 			hour: 3600,
 			minute: 60,
+            seconds: 1,
 		};
 
 		for (const [unit, secondsInUnit] of Object.entries(intervals)) {
@@ -94,18 +95,17 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>
 							<button
 								onClick={markAllAsRead}
 								className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-								
 							>
-								{loading ? "Mark all read" : "" }
+								{loading ? "Mark all read" : ""}
 							</button>
 						)}
 					</div>
 
 					<div className="max-h-64 overflow-y-auto">
-						{loading ?  (
+						{loading ? (
 							notifications.map(
 								(notification: AppNotification) => {
-                                    console.log(notification)
+									console.log(notification);
 									const { icon, color } =
 										notificationService.getNotificationIcon(
 											notification.type
@@ -193,14 +193,11 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>
 									);
 								}
 							)
-						): (
+						) : (
 							<div className="p-4 text-center text-gray-500">
 								No notifications
 							</div>
 						)}
-
-
-
 					</div>
 				</div>
 			)}
