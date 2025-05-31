@@ -45,12 +45,13 @@ const Header = ({ user }: PropsType) => {
     }, []);
 
     const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-            setIsMenuOpen(false);
-        }
-    };
+		e.preventDefault();
+		if (searchQuery.trim()) {
+			navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+			setIsMenuOpen(false);
+			setSearchQuery("");
+		}
+	};
 
     const logoutHandler = async () => {
         try {
