@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Footer: React.FC = (): JSX.Element => {
 	const [email, setEmail] = useState("");
 
-	const handleSubscribe = (e: React.FormEvent) => {
+	const handleSubscribe = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		if (!email) {
@@ -20,21 +20,37 @@ const Footer: React.FC = (): JSX.Element => {
 			return;
 		}
 
-		// You can add API call for subscription here if needed
+		try {
+			const response = await fetch(
+				"http://localhost:3005/api/subscribe",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ email }),
+				}
+			);
 
-		toast.success("Thank you for subscribing!");
-		setEmail(""); // Clear input
+			const data = await response.json();
+
+			if (!response.ok) {
+				toast.error(data.message || "Subscription failed");
+			} else {
+				toast.success(data.message || "Thank you for subscribing!");
+				setEmail("");
+			}
+		} catch {
+			toast.error("Something went wrong. Try again.");
+		}
 	};
 
 	return (
 		<footer className="bg-gray-900 text-gray-400 py-12">
 			<div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-center space-y-8 md:space-y-0">
-				{/* Brand & Description */}
 				<div className="max-w-sm">
 					<h2 className="text-3xl font-extrabold mb-3 tracking-wide text-gray-100">
 						Smart<span className="text-gray-400">Shop</span>
 					</h2>
-					<p className="leading-relaxed text-gray-400 text-sm mr-8"    >
+					<p className="leading-relaxed text-gray-400 text-sm mr-8">
 						Read honest, genuine reviews from real customers to help
 						you make better purchasing decisions.
 					</p>
@@ -91,38 +107,10 @@ const Footer: React.FC = (): JSX.Element => {
 							Product
 						</h3>
 						<ul className="space-y-3">
-							<li>
-								<a
-									href="/features"
-									className="hover:text-gray-200"
-								>
-									Features
-								</a>
-							</li>
-							<li>
-								<a
-									href="/pricing"
-									className="hover:text-gray-200"
-								>
-									Pricing
-								</a>
-							</li>
-							<li>
-								<a
-									href="/reviews"
-									className="hover:text-gray-200"
-								>
-									Reviews
-								</a>
-							</li>
-							<li>
-								<a
-									href="/updates"
-									className="hover:text-gray-200"
-								>
-									Updates
-								</a>
-							</li>
+							<li className="hover:text-gray-50">Features</li>
+							<li className="hover:text-gray-50">Pricing</li>
+							<li className="hover:text-gray-50">Reviews</li>
+							<li className="hover:text-gray-50">Updates</li>
 						</ul>
 					</div>
 					<div>
@@ -130,78 +118,35 @@ const Footer: React.FC = (): JSX.Element => {
 							Company
 						</h3>
 						<ul className="space-y-3">
-							<li>
-								<a
-									href="/about"
-									className="hover:text-gray-200"
-								>
-									About Us
-								</a>
-							</li>
-							<li>
-								<a href="/blog" className="hover:text-gray-200">
-									Blog
-								</a>
-							</li>
-							<li>
-								<a
-									href="/careers"
-									className="hover:text-gray-200"
-								>
-									Careers
-								</a>
-							</li>
-							<li>
-								<a
-									href="/contact"
-									className="hover:text-gray-200"
-								>
-									Contact
-								</a>
-							</li>
+							<li className="hover:text-gray-50">About Us</li>
+							<li className="hover:text-gray-50">Blog</li>
+							<li className="hover:text-gray-50">Careers</li>
+							<li className="hover:text-gray-50">Contact</li>
 						</ul>
 					</div>
 					<div>
 						<h3 className="text-gray-400 font-semibold mb-4">
 							Support
 						</h3>
-						<ul className="space-y-3">
-							<li>
-								<a href="/help" className="hover:text-gray-200">
-									Help Center
-								</a>
+						<ul className="space-y-3 ">
+							<li className="hover:text-gray-50">Help Center</li>
+							<li className="hover:text-gray-50">
+								Terms of Service
 							</li>
-							<li>
-								<a
-									href="/terms"
-									className="hover:text-gray-200"
-								>
-									Terms of Service
-								</a>
+							<li className="hover:text-gray-50">
+								Privacy Policy
 							</li>
-							<li>
-								<a
-									href="/privacy"
-									className="hover:text-gray-200"
-								>
-									Privacy Policy
-								</a>
-							</li>
-							<li>
-								<a href="/faq" className="hover:text-gray-200">
-									FAQ
-								</a>
-							</li>
+							<li className="hover:text-gray-50">FAQ</li>
 						</ul>
 					</div>
 					<div>
-						<h3 className="text-gray-400 font-semibold mb-4">
+						<h3 className="text-gray-300 font-semibold mb-4">
 							Subscribe
 						</h3>
-						<p className="mb-4">
+						<h2 className="mb-4 text-gray-300">
 							Get the latest updates and offers right in your
 							inbox.
-						</p>
+						</h2>
 						<form
 							className="flex space-x-2"
 							onSubmit={handleSubscribe}
