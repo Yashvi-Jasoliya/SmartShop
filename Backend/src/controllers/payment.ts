@@ -4,6 +4,8 @@ import errorHandler from "../utils/utilityClass.js";
 import { Coupon } from "../models/coupon.js";
 import { stripe } from "../app.js";
 import { socketIO } from '../app.js';
+import { Notification } from '../models/notifications.js';
+
 
 // route "/api/v1/payment/create"
 export const createPaymentIntent = TryCatch(
@@ -18,16 +20,20 @@ export const createPaymentIntent = TryCatch(
         }
 
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(Number(amount) * 100), // Stripe expects amount in paise
+            amount: Math.round(Number(amount) * 100),
             currency: "inr",
         });
 
-
-        socketIO.emit('notification', {
-            type: 'Transaction',
-            message: `Rs. ${amount} has been received successfully.`,
-            time: new Date(),
+        const newNotif = await Notification.create({
+            userId: 'admin',
+            type: 'transaction',
+            title: 'Payment',
+            message: `Rs. ${amount} has been received successfully`,
+            timestamp: new Date(),
+            isRead: false,
         });
+
+        socketIO.emit('notification', newNotif);
 
         return res.status(201).json({
             success: true,
