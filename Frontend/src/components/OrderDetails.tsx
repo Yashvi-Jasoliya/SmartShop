@@ -29,7 +29,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
 		const doc = new jsPDF();
 
 		doc.setFontSize(18);
-		doc.text(`Order #${data.order._id}`, 14, 22);
+		doc.text(`Order #${data.order._id.slice(-10)}`, 14, 22);
 		doc.setFontSize(12);
 		doc.text(`Status: ${data.order.status}`, 14, 32);
 
@@ -119,7 +119,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
 	) : (
 		<div className="order-details" ref={contentRef}>
 			<div className="order-header">
-				<h2>Order #{data.order._id}</h2>
+				<h2>Order #{data.order._id.slice(-10)}</h2>
 				<span
 					className={`order-status status-${data.order.status.toLowerCase()}`}
 				>
@@ -215,16 +215,14 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
 							<td>
 								{(data.order.subTotal ?? 0) >= 1000
 									? "0.00"
-									: (
-											data.order.shippingCharges ?? 200
-									  )}
+									: data.order.shippingCharges ?? 200}
 							</td>
 						</tr>
 						<tr>
 							<td>
 								Tax (
 								{(data.order.tax / data.order.subTotal) * 100}
-								%)  
+								%)
 							</td>
 							<td>{data.order.tax}</td>
 						</tr>

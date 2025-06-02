@@ -9,6 +9,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import path from "path";
+import { fileURLToPath } from 'url';
 // import { Server } from 'socket.io';
 
 // Import routes
@@ -19,11 +21,13 @@ import paymentRoute from './routes/payment.js';
 import dashboardRoute from './routes/statistics.js';
 import wishlistRoute from './routes/wishlist.js';
 import reviewRoute from './routes/review.js';
-import notificationRoute from './routes/review.js';
+import notificationRoute from './routes/notifications.js';
 import { newUser } from './controllers/user.js';
+import subscribeRoute from "./routes/subscriber.js"
 
-// Load env
+
 dotenv.config();
+
 
 const app = express();
 const server = http.createServer(app);
@@ -45,6 +49,10 @@ export const socketIO = io;
 
 // DB connect
 connectDB(mongoURI);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 // Middleware
 app.use(express.json());
@@ -88,6 +96,9 @@ app.use('/api/v1/dashboard', dashboardRoute);
 app.use('/api/v1/review', reviewRoute);
 app.use('/api/v1/wishlist', wishlistRoute);
 app.use('/uploads', express.static('uploads'));
+app.use('/api/notifications/', notificationRoute)
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use('/api/subscribe', subscribeRoute);
 
 // Error Middleware
 app.use(errorMiddleware);
