@@ -5,6 +5,8 @@ import { Order } from "../models/order.js";
 import { invalidatCache, reduceStock } from "../utils/features.js";
 import errorHandler from "../utils/utilityClass.js";
 import { myCache } from "../app.js";
+import  { socketIO } from '../app.js';
+import { Notification } from '../models/notifications.js';
 
 //Get my orders
 export const myOrders = TryCatch(
@@ -121,6 +123,17 @@ export const newOrder = TryCatch(
             userId: user,
             productId: order.orderItems.map((i) => String(i.productId)),
         });
+
+        const newNotif = await Notification.create({
+            userId: 'admin',
+            type: 'order',
+            title: 'New Order',
+            message: `Received a new order with ${order.orderItems.length} item${order.orderItems.length > 1 ? 's' : ''}.`,
+            timestamp: new Date(),
+            isRead: false,
+        });
+
+        socketIO.emit('notification', newNotif);
 
         return res.status(201).json({
             success: true,
