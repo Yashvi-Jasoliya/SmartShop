@@ -239,7 +239,7 @@ export const getPieCharts = TryCatch(
                 'tax',
                 'shippingCharge',
             ]);
-           
+
             const [
                 processingOrders,
                 shippedOrders,
@@ -250,13 +250,13 @@ export const getPieCharts = TryCatch(
                 allOrders,
                 allUsers,
                 totalCustomers,
-                totalAdmins,  
+                totalAdmins,
             ] = await Promise.all([
                 Order.countDocuments({ status: 'Processing' }),
                 Order.countDocuments({ status: 'Shipped' }),
                 Order.countDocuments({ status: 'Delivered' }),
                 Product.distinct('category'),
-                Product.countDocuments(),   
+                Product.countDocuments(),
                 Product.countDocuments({ stock: { $lte: 0 } }),
                 allOrdersPromise,
                 User.find({}).select(['dob']),
@@ -324,8 +324,6 @@ export const getPieCharts = TryCatch(
                 admin: totalAdmins,
                 customer: totalCustomers,
             };
-            
-
 
             const allReviews = await Review.find({});
             let genuine = 0;
@@ -352,7 +350,7 @@ export const getPieCharts = TryCatch(
                 usersAgeGroup,
                 adminCustomers,
                 adminReviews,
-                
+
             };
 
             myCache.set(key, JSON.stringify(pieCharts));
