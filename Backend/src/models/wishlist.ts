@@ -5,15 +5,15 @@ const wishlistSchema = new mongoose.Schema(
     {
         user: {
             type: String,
-            ref: 'User', // Reference to your User model
+            ref: 'User', 
             required: [true, 'User ID is required'],
-            unique: true, // Each user has only one wishlist
+            unique: true,
         },
         items: [
             {
                 product: {
                     type: Schema.Types.ObjectId,
-                    ref: 'Product', // Reference to Product model
+                    ref: 'Product', 
                     required: [true, 'Product ID is required'],
                 },
                 addedAt: {

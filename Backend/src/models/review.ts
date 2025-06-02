@@ -8,6 +8,7 @@ export interface IReview {
     comment: string;
     date: Date;
     isGenuine?: boolean;
+    image?: string;
 }
 
 const reviewSchema = new mongoose.Schema<IReview>({
@@ -37,7 +38,11 @@ const reviewSchema = new mongoose.Schema<IReview>({
     isGenuine: {
         type: Boolean,
         default: false
-    }
-});
+    },
+        image: {
+            type: String,
+            default: null,  
+        },
+    });
 
 export const Review = model<IReview>('Review', reviewSchema);
