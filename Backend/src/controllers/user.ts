@@ -6,6 +6,7 @@ import errorHandler from "../utils/utilityClass.js";
 import bcrypt from "bcrypt";
 import admin from "firebase-admin";
 import { socketIO } from '../app.js';
+import { Notification } from '../models/notifications.js';
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
@@ -35,11 +36,17 @@ export const registerUser = async (req: Request, res: Response) => {
 
         await user.save();
 
-        socketIO.emit('notification', {
-            type: 'Transaction',
+
+        const newNotif = await Notification.create({
+            userId: 'admin',
+            type: 'register',
+            title: 'New User',
             message: `New user ${user.name} has registered`,
-            time: new Date(),
+            timestamp: new Date(),
+            isRead: false,
         });
+
+        socketIO.emit('notification', newNotif);
 
         res.status(201).json({ message: "User registered successfully", user });
     } catch (error) {
@@ -112,15 +119,21 @@ export const newUser = TryCatch(
             dob: new Date(dob),
         });
 
-        socketIO.emit('notification', {
-            type: 'Transaction',
+        const newNotif = await Notification.create({
+            userId: 'admin',
+            type: 'New User',
+            title: 'New User',
             message: `New user ${user.name} has registered 👤`,
-            time: new Date(),
+            timestamp: new Date(),
+            isRead: false,
         });
+
+        socketIO.emit('notification', newNotif);
+
 
         res.status(201).json({
             success: true,
-            message: `Welcome, ${user.name} at Ecommerce`,
+            message: `Welcome, ${user.name} at SmartShop`,
         });
     }
 );

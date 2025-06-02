@@ -3,13 +3,14 @@ import { IReview, Review } from '../models/review.js';
 import { isGenuineReview } from '../utils/reviewUtils.js';
 import { Product } from '../models/product.js';
 import { socketIO } from '../app.js';
+import { Notification } from '../models/notifications.js';
 
 // Get product reviews
 export const getProductReviews = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params;
         const reviews = await Review.find({ productId }).sort({ date: -1 });
-         res.status(200).json(reviews);
+        res.status(200).json(reviews);
         return;
     } catch (error) {
         console.error("Error getting reviews:", error);
@@ -19,27 +20,82 @@ export const getProductReviews = async (req: Request, res: Response) => {
 };
 
 // Create a new review with genuine check
+// export const createReview = async (req: Request, res: Response) => {
+//     try {
+//         const { productId, userName, rating, comment, date } = req.body;
+
+//         if (!productId || !userName || !rating || !comment) {
+//              res.status(400).json({ message: "All fields are required" });
+//             return;
+//         }
+
+//         // Get product details for genuine check
+//         const product = await Product.findById(productId);
+//         if (!product) {
+//              res.status(404).json({ message: "Product not found" });
+//             return;
+//         }
+
+//         // Run genuine review check
+//         const isGenuine = isGenuineReview(
+//             { comment, rating, date: date ? new Date(date) : new Date(), reviewer: userName },
+//             { name: product.name, brand: product.brand }
+//         );
+
+//         const newReview = new Review({
+//             productId,
+//             userName,
+//             rating,
+//             comment,
+//             date: date ? new Date(date) : new Date(),
+//             isGenuine,
+//         });
+
+//         const savedReview = await newReview.save();
+
+//         const newNotif = await Notification.create({
+//             userId: 'admin',
+//             type: 'review',
+//             title: 'New Review',
+//             message: `New review added by ${userName} on product ${product.name}`,
+//             timestamp: new Date(),
+//             isRead: false,
+//         });
+
+//         socketIO.emit('notification', newNotif);
+
+//         res.status(201).json(savedReview);
+
+//     } catch (error) {
+//         console.error("Error creating review:", error);
+//         res.status(500).json({ message: "Failed to create review" });
+//     }
+// };
+
+
 export const createReview = async (req: Request, res: Response) => {
     try {
         const { productId, userName, rating, comment, date } = req.body;
 
         if (!productId || !userName || !rating || !comment) {
-             res.status(400).json({ message: "All fields are required" });
-            return;
+            res.status(400).json({ message: "All fields are required" });
+            return
         }
 
-        // Get product details for genuine check
         const product = await Product.findById(productId);
         if (!product) {
-             res.status(404).json({ message: "Product not found" });
-            return;
+            res.status(404).json({ message: "Product not found" });
+            return
         }
 
-        // Run genuine review check
+        // Genuine review check
         const isGenuine = isGenuineReview(
             { comment, rating, date: date ? new Date(date) : new Date(), reviewer: userName },
             { name: product.name, brand: product.brand }
         );
+
+        // Handle uploaded image
+        const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
         const newReview = new Review({
             productId,
@@ -48,17 +104,24 @@ export const createReview = async (req: Request, res: Response) => {
             comment,
             date: date ? new Date(date) : new Date(),
             isGenuine,
-        });
-
-        socketIO.emit('notification', {
-            type: 'review',
-            message: `New review added by ${userName || 'a user'} on Product ${product.name} ⭐`,
-            time: new Date(),
+            image: imagePath, 
         });
 
         const savedReview = await newReview.save();
-        res.status(201).json(savedReview);
 
+        const newNotif = await Notification.create({
+            userId: "admin",
+            type: "review",
+            title: "New Review",
+            message: `New review added by ${userName} on product ${product.name}`,
+            timestamp: new Date(),
+            isRead: false,
+        });
+
+        socketIO.emit("notification", newNotif);
+        console.log("notification emmited ", newNotif)
+
+        res.status(201).json(savedReview);
     } catch (error) {
         console.error("Error creating review:", error);
         res.status(500).json({ message: "Failed to create review" });
@@ -79,7 +142,7 @@ export const updateReview = async (req: Request, res: Response) => {
         });
 
         if (!updatedReview) {
-             res.status(404).json({ message: 'Review not found' });
+            res.status(404).json({ message: 'Review not found' });
             return
         }
 
@@ -114,7 +177,7 @@ export const deleteReview = async (req: Request, res: Response) => {
         const deletedReview = await Review.findByIdAndDelete(id);
 
         if (!deletedReview) {
-             res.status(404).json({ message: 'Review not found' });
+            res.status(404).json({ message: 'Review not found' });
             return
         }
 
@@ -141,3 +204,4 @@ export const getstats = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Failed to fetch review stats' });
     }
 };
+
