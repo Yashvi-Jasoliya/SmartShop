@@ -189,6 +189,7 @@ export const updateProduct = TryCatch(
             originalPrice,
             features,
             colors,
+            existingImages
         } = req.body;
 
         const files = req.files as Express.Multer.File[];
@@ -199,6 +200,34 @@ export const updateProduct = TryCatch(
             files?.forEach((file) => fs.unlinkSync(file.path));
             return next(new errorHandler('Product not found', 404));
         }
+
+        let existingImageUrls: string[] = [];
+        if (existingImages) {
+            existingImageUrls =
+                typeof existingImages === 'string' ? JSON.parse(existingImages) : existingImages;
+        }
+
+        // Find images to delete: those in product.images but NOT in existingImageUrls
+        const imagesToDelete = product.images.filter(
+            (imgUrl) => !existingImageUrls.includes(imgUrl)
+        );
+
+        // Delete removed images from Cloudinary
+        await Promise.all(
+            imagesToDelete.map(async (imageUrl) => {
+                try {
+                    const parts = imageUrl.split('/');
+                    const publicIdWithExt = parts.slice(-2).join('/');
+                    const publicId = publicIdWithExt.replace(/\.(jpg|jpeg|png|webp)$/, '');
+                    await cloudinary.uploader.destroy(publicId);
+                } catch (error) {
+                    console.error('Failed to delete Cloudinary image:', error);
+                }
+            })
+        );
+
+        // Upload new files if any
+        let newImageUrls: string[] = [];
 
         // 🔥 Handle new image uploads
         if (files && files.length > 0) {
@@ -228,11 +257,12 @@ export const updateProduct = TryCatch(
             );
 
             // Replace images
-            product.images = uploadResults.map((result) => result.secure_url);
+            newImageUrls = uploadResults.map((result) => result.secure_url);
 
             // Delete uploaded files from server
             files.forEach((file) => fs.unlinkSync(file.path));
         }
+        product.images = [...existingImageUrls, ...newImageUrls];
 
         // ✅ Update other fields conditionally
         if (name) product.name = name;
