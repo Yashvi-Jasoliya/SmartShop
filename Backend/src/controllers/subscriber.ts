@@ -21,7 +21,7 @@ export const subscribeUser = async (req: Request, res: Response) => {
         const newSubscriber = new Subscriber({ email });
         await newSubscriber.save();
 
-        // ✅ Send confirmation email
+        // Send confirm email
         await sendSubscriptionMail(email);
 
         res.status(201).json({ message: 'Subscribed successfully' });
