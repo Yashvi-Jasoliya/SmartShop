@@ -114,7 +114,7 @@ export const newProduct = TryCatch(
 
         const images = req.files as Express.Multer.File[];
 
-        console.log("body",req.body); // Check if name, price, etc., are coming
+        console.log("body",req.body); 
         console.log(req.files);
 
         // Check required fields
@@ -129,7 +129,7 @@ export const newProduct = TryCatch(
             !images ||
             images.length === 0
         ) {
-            // Clean up uploaded files
+            
             images?.forEach((file) => fs.unlinkSync(file.path));
             return next(
                 new errorHandler(
@@ -139,7 +139,6 @@ export const newProduct = TryCatch(
             );
         }
 
-        // Upload images to Cloudinary
         const imageUploadResults = await Promise.all(
             images.map((image) =>
                 cloudinary.uploader.upload(image.path, {
@@ -149,10 +148,9 @@ export const newProduct = TryCatch(
             )
         );
 
-        // Clean up local files
+   
         images.forEach((image) => fs.unlinkSync(image.path));
 
-        // Build the product object
         const product = await Product.create({
             name,
             price,
@@ -166,7 +164,6 @@ export const newProduct = TryCatch(
             images: imageUploadResults.map((result) => result.secure_url),
         });
 
-        // Invalidate cache
         invalidatCache({ product: true, admin: true });
 
         return res.status(201).json({
@@ -175,6 +172,7 @@ export const newProduct = TryCatch(
         });
     }
 );
+
 
 export const updateProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -189,36 +187,43 @@ export const updateProduct = TryCatch(
             originalPrice,
             features,
             colors,
-            existingImages
+            existingImages,
         } = req.body;
 
         const files = req.files as Express.Multer.File[];
 
         const product = await Product.findById(id);
         if (!product) {
-            // Clean up any uploaded images
             files?.forEach((file) => fs.unlinkSync(file.path));
             return next(new errorHandler('Product not found', 404));
         }
 
         let existingImageUrls: string[] = [];
         if (existingImages) {
-            existingImageUrls =
-                typeof existingImages === 'string' ? JSON.parse(existingImages) : existingImages;
+            try {
+                existingImageUrls =
+                    typeof existingImages === 'string'
+                        ? JSON.parse(existingImages)
+                        : Array.isArray(existingImages)
+                            ? existingImages
+                            : [];
+            } catch (err) {
+                console.error('Failed to parse existingImages', err);
+                existingImageUrls = [];
+            }
         }
-
-        // Find images to delete: those in product.images but NOT in existingImageUrls
+        
+        // Delete removed images from Cloudinary
         const imagesToDelete = product.images.filter(
             (imgUrl) => !existingImageUrls.includes(imgUrl)
         );
 
-        // Delete removed images from Cloudinary
         await Promise.all(
             imagesToDelete.map(async (imageUrl) => {
                 try {
                     const parts = imageUrl.split('/');
                     const publicIdWithExt = parts.slice(-2).join('/');
-                    const publicId = publicIdWithExt.replace(/\.(jpg|jpeg|png|webp)$/, '');
+                    const publicId = publicIdWithExt.replace(/\.(jpg|jpeg|png|webp|gif)$/, '');
                     await cloudinary.uploader.destroy(publicId);
                 } catch (error) {
                     console.error('Failed to delete Cloudinary image:', error);
@@ -226,27 +231,8 @@ export const updateProduct = TryCatch(
             })
         );
 
-        // Upload new files if any
         let newImageUrls: string[] = [];
-
-        // 🔥 Handle new image uploads
         if (files && files.length > 0) {
-            // Delete previous images from Cloudinary
-            const deleteResults = await Promise.all(
-                product.images.map(async (imageUrl) => {
-                    const parts = imageUrl.split('/');
-                    const publicIdWithExt = parts.slice(-2).join('/');
-                    const publicId = publicIdWithExt.replace(
-                        /\.(jpg|jpeg|png|webp|gif)$/,
-                        ''
-                    );
-                    return cloudinary.uploader.destroy(publicId);
-                })
-            );
-
-            console.log('Deleted images from Cloudinary:', deleteResults);
-
-            // Upload new images
             const uploadResults = await Promise.all(
                 files.map((file) =>
                     cloudinary.uploader.upload(file.path, {
@@ -256,15 +242,15 @@ export const updateProduct = TryCatch(
                 )
             );
 
-            // Replace images
             newImageUrls = uploadResults.map((result) => result.secure_url);
 
-            // Delete uploaded files from server
             files.forEach((file) => fs.unlinkSync(file.path));
         }
-        product.images = [...existingImageUrls, ...newImageUrls];
 
-        // ✅ Update other fields conditionally
+        product.images = [...existingImageUrls, ...newImageUrls];
+        await product.save();
+
+        // Update other fields
         if (name) product.name = name;
         if (price) product.price = price;
         if (originalPrice) product.originalPrice = originalPrice;
@@ -272,18 +258,17 @@ export const updateProduct = TryCatch(
         if (category) product.category = category.toLowerCase();
         if (brand) product.brand = brand;
         if (description) product.description = description;
-        if (features) {
+        if (features)
             product.features = Array.isArray(features)
                 ? features
                 : features.split(',');
-        }
-        if (colors) {
-            product.colors = Array.isArray(colors) ? colors : colors.split(',');
-        }
+        if (colors)
+            product.colors = Array.isArray(colors)
+                ? colors
+                : colors.split(',');
 
         await product.save();
 
-        // Invalidate cache
         invalidatCache({
             product: true,
             productId: String(product._id),
@@ -298,6 +283,7 @@ export const updateProduct = TryCatch(
     }
 );
 
+
 export const deleteProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
@@ -308,7 +294,6 @@ export const deleteProduct = TryCatch(
             return next(new errorHandler('Product not found', 404));
         }
 
-        // 🧹 Delete images from Cloudinary
         if (product.images && product.images.length > 0) {
             await Promise.all(
                 product.images.map(async (imageUrl) => {
@@ -333,10 +318,8 @@ export const deleteProduct = TryCatch(
             );
         }
 
-        // 🗑️ Delete product from DB
         await product.deleteOne();
 
-        // 🚫 Invalidate cache
         invalidatCache({
             product: true,
             productId: String(product._id),
