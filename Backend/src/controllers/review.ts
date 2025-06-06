@@ -4,6 +4,7 @@ import { isGenuineReview } from '../utils/reviewUtils.js';
 import { Product } from '../models/product.js';
 import { socketIO } from '../app.js';
 import { Notification } from '../models/notifications.js';
+import mongoose from 'mongoose';
 
 // Get product reviews
 export const getProductReviews = async (req: Request, res: Response) => {
@@ -18,60 +19,6 @@ export const getProductReviews = async (req: Request, res: Response) => {
         return;
     }
 };
-
-// Create a new review with genuine check
-// export const createReview = async (req: Request, res: Response) => {
-//     try {
-//         const { productId, userName, rating, comment, date } = req.body;
-
-//         if (!productId || !userName || !rating || !comment) {
-//              res.status(400).json({ message: "All fields are required" });
-//             return;
-//         }
-
-//         // Get product details for genuine check
-//         const product = await Product.findById(productId);
-//         if (!product) {
-//              res.status(404).json({ message: "Product not found" });
-//             return;
-//         }
-
-//         // Run genuine review check
-//         const isGenuine = isGenuineReview(
-//             { comment, rating, date: date ? new Date(date) : new Date(), reviewer: userName },
-//             { name: product.name, brand: product.brand }
-//         );
-
-//         const newReview = new Review({
-//             productId,
-//             userName,
-//             rating,
-//             comment,
-//             date: date ? new Date(date) : new Date(),
-//             isGenuine,
-//         });
-
-//         const savedReview = await newReview.save();
-
-//         const newNotif = await Notification.create({
-//             userId: 'admin',
-//             type: 'review',
-//             title: 'New Review',
-//             message: `New review added by ${userName} on product ${product.name}`,
-//             timestamp: new Date(),
-//             isRead: false,
-//         });
-
-//         socketIO.emit('notification', newNotif);
-
-//         res.status(201).json(savedReview);
-
-//     } catch (error) {
-//         console.error("Error creating review:", error);
-//         res.status(500).json({ message: "Failed to create review" });
-//     }
-// };
-
 
 export const createReview = async (req: Request, res: Response) => {
     try {
@@ -88,11 +35,7 @@ export const createReview = async (req: Request, res: Response) => {
             return
         }
 
-        // Genuine review check
-        const isGenuine = isGenuineReview(
-            { comment, rating, date: date ? new Date(date) : new Date(), reviewer: userName },
-            { name: product.name, brand: product.brand }
-        );
+        const isGenuine = await isGenuineReview({ comment, rating }, product);
 
         // Handle uploaded image
         const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -205,3 +148,46 @@ export const getstats = async (req: Request, res: Response) => {
     }
 };
 
+export const getFilteredReviews = async (req: Request, res: Response) => {
+    try {
+        const { category, filter, page = 1, limit = 8, search = "" } = req.query;
+
+        let productFilter: any = {};
+        if (category && category !== "all") {
+            productFilter.category = category;
+        }
+
+        const productIds = await Product.find(productFilter).select("_id");
+
+        let reviewFilter: any = {
+            productId: { $in: productIds.map((p) => p._id) },
+        };
+
+        if (filter === "genuine") reviewFilter.isGenuine = true;
+        else if (filter === "fake") reviewFilter.isGenuine = false;
+
+        if (search) {
+            const matchingProducts = await Product.find({
+                name: { $regex: search, $options: "i" },
+            }).select("_id");
+
+            const matchedIds = matchingProducts.map((p) =>
+                new mongoose.Types.ObjectId(p._id)
+            );
+            reviewFilter.productId.$in = reviewFilter.productId.$in.filter((id: any) =>
+                matchedIds.some((matchId) => matchId.equals(id))
+            );
+        }
+
+        const total = await Review.countDocuments(reviewFilter);
+        const reviews = await Review.find(reviewFilter)
+            .sort({ date: 1 })
+            .skip((+page - 1) * +limit)
+            .limit(+limit);
+
+        res.status(200).json({ reviews, total });
+    } catch (error) {
+        console.error("Failed to fetch filtered reviews", error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
