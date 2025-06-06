@@ -6,15 +6,13 @@ import { stripe } from "../app.js";
 import { socketIO } from '../app.js';
 import { Notification } from '../models/notifications.js';
 
-
 // route "/api/v1/payment/create"
 export const createPaymentIntent = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { amount } = req.body;
 
-        console.log("Amount received:", amount); // Debug line
+        console.log("Amount received:", amount); 
 
-        // Validate: amount should be a number and > 0
         if (amount === undefined || isNaN(Number(amount)) || Number(amount) <= 0) {
             return next(new errorHandler("Please enter a valid amount", 400));
         }
@@ -39,8 +37,6 @@ export const createPaymentIntent = TryCatch(
             success: true,
             client_secret: paymentIntent.client_secret,
         });
-
-        // res.json({ success: true, client_secret: "mock_secret" })
     }
 );
 // route "/api/v1/payment/coupon/new"
