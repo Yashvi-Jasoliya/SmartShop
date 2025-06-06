@@ -76,7 +76,7 @@ export const toggleWishlistItem = TryCatch(
             message: existingItem
                 ? 'Removed from wishlist'
                 : 'Added to wishlist',
-            // wishlist: updatedWishlist,
+           
         });
     }
 );

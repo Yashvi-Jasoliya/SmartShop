@@ -4,9 +4,9 @@ import { NewUserRequestBody } from "../types/types.js";
 import { TryCatch } from "../middlewares/error.js";
 import errorHandler from "../utils/utilityClass.js";
 import bcrypt from "bcrypt";
-import admin from "firebase-admin";
 import { socketIO } from '../app.js';
 import { Notification } from '../models/notifications.js';
+
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
@@ -31,11 +31,10 @@ export const registerUser = async (req: Request, res: Response) => {
             password: hashedPassword,
             gender,
             dob,
-            photo: "https://example.com/default-photo.png",
+            photo: "https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?semt=ais_hybrid&w=740",
         });
 
         await user.save();
-
 
         const newNotif = await Notification.create({
             userId: 'admin',
@@ -56,7 +55,7 @@ export const registerUser = async (req: Request, res: Response) => {
     }
 };
 
-// validateTokenAndRespond.ts
+
 export const loginUser = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -90,6 +89,7 @@ export const loginUser = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 export const newUser = TryCatch(
     async (
