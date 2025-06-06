@@ -14,8 +14,8 @@ const storage = multer.diskStorage({
     },
 });
 
-// Single file upload middleware (for photos)
+// Single file upload middleware
 export const singleUpload = multer({ storage }).single('image');
 
-// Multiple files upload middleware (for images)
+// Multiple files upload middleware
 export const multipleUpload = multer({ storage }).array('images', 5); 
