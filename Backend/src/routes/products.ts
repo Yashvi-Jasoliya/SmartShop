@@ -30,6 +30,7 @@ router.get('/categories', getAllCategories);
 //To get all products of admin - /api/v1/product/admin-product
 router.get('/admin-product', isAdmin, getAdminProduct);
 
+//To get all stats of product stats - /api/v1/product/stats
 router.get('/stats', getProductStats);
 
 //To get, update and delete single product - /api/v1/product/:id

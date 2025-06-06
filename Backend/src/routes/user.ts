@@ -11,8 +11,10 @@ import { isAdmin } from "../middlewares/auth.js";
 
 const router = express.Router();
 
+// Register new user "/api/v1/user/register"
 router.post("/register", registerUser);
 
+// login user "/api/v1/user/login
 router.post("/login", loginUser);
 
 //route "/api/v1/user/new"

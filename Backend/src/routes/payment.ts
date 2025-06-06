@@ -7,7 +7,6 @@ import {
     deleteCoupon,
     newCoupon,
 } from "../controllers/payment.js";
-// import { isAdmin } from "../middlewares/auth.js";
 
 const router = express.Router();
 

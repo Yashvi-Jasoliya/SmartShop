@@ -1,25 +1,29 @@
 import express from 'express';
-import {
-    deleteUser,
-    getAllUsers,
-    getUser,
-    newUser,
-} from "../controllers/user.js";
 import { isAdmin } from "../middlewares/auth.js";
-import {createReview, deleteReview, getAllReviews, getProductReviews, getstats, updateReview } from '../controllers/review.js';
-import { singleUpload } from "../middlewares/reviewmulter.js";
+import {createReview, deleteReview, getAllReviews, getFilteredReviews, getProductReviews, getstats, updateReview } from '../controllers/review.js';
+import { multipleUpload, singleUpload } from "../middlewares/reviewmulter.js";
 
 const router = express.Router();
 
-// router.post('/', createReview);
+// create review
+router.post("/", multipleUpload, createReview);
 
-router.post("/", singleUpload, createReview);
+// update review
+router.put('/:id', isAdmin, updateReview);
 
-router.put('/:id', updateReview);
+// Get all reviews
 router.get('/all', getAllReviews);
-router.delete('/:id', deleteReview);
+
+// delete review 
+router.delete('/:id', isAdmin, deleteReview);
+
+// stats
 router.get('/stats',getstats);
 
+// get particular product review
 router.get("/:productId", getProductReviews);
+
+// filter reviews (genuine, fake)
+router.get("/", getFilteredReviews)
 
 export default router;
