@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { TryCatch } from '../middlewares/error.js';
 import { myCache } from '../app.js';
-import { da } from '@faker-js/faker';
-import { start } from 'repl';
 import { Product } from '../models/product.js';
 import { Order } from '../models/order.js';
 import { User } from '../models/user.js';
@@ -12,7 +10,6 @@ import {
     getMonthlyCounts,
     MyDocument,
 } from '../utils/features.js';
-import { KeyObject } from 'crypto';
 import { Review } from '../models/review.js';
 import { isGenuineReview } from '../utils/reviewUtils.js';
 
@@ -329,13 +326,17 @@ export const getPieCharts = TryCatch(
             let genuine = 0;
             let fake = 0;
 
-            for (const review of allReviews) {
-                const product = await Product.findById(review.productId);
-                if (product && isGenuineReview(review, product)) {
-                    genuine++;
-                } else {
-                    fake++;
-                }
+            const results = await Promise.all(
+                allReviews.map(async (review) => {
+                    const product = await Product.findById(review.productId);
+                    const isGenuine = product ? await isGenuineReview(review, product) : false;
+                    return isGenuine;
+                })
+            );
+
+            for (const result of results) {
+                if (result) genuine++;
+                else fake++;
             }
             const adminReviews = {
                 Genuine: genuine,
