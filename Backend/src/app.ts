@@ -11,7 +11,6 @@ import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import path from "path";
 import { fileURLToPath } from 'url';
-// import { Server } from 'socket.io';
 
 // Import routes
 import userRoute from './routes/user.js';
@@ -25,9 +24,7 @@ import notificationRoute from './routes/notifications.js';
 import { newUser } from './controllers/user.js';
 import subscribeRoute from "./routes/subscriber.js"
 
-
 dotenv.config();
-
 
 const app = express();
 const server = http.createServer(app);
@@ -53,7 +50,6 @@ connectDB(mongoURI);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 // Middleware
 app.use(express.json());
 app.use(morgan('dev'));
@@ -67,14 +63,6 @@ app.use(
 
 io.on('connection', (socket) => {
     console.log('Admin connected:', socket.id);
-
-    // Emit test message
-    // socket.emit('notification', {
-    //     type: 'welcome',
-    //     message: 'Check new updates!',
-    //     time: new Date(),
-    //     next();
-    // });
 
     socket.on('disconnect', () => {
         console.log('Admin disconnected:', socket.id);
@@ -105,5 +93,5 @@ app.use(errorMiddleware);
 
 // Start server
 server.listen(port, () => {
-    console.log(`✅ Server running at http://localhost:${port}`);
+    console.log(`** Server running at http://localhost:${port}`);
 });
