@@ -30,7 +30,6 @@ const wishlistSchema = new mongoose.Schema(
     }
 );
 
-// Optional: Virtual population to get product details without storing them
 wishlistSchema.virtual('products', {
     ref: 'Product',
     localField: 'items.product',
