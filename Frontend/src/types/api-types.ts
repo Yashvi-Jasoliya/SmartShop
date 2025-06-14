@@ -150,6 +150,7 @@ export type SearchProductRequest = {
     category: string;
     search: string;
     sort: string;
+    discount?: number;
 };
 
 export type NewOrderRequest = {
