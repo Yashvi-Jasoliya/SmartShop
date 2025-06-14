@@ -111,12 +111,20 @@
 }
 
 @media (max-width: 768px) {
-	.deals-category button{
+	.deals-category button {
 		padding: 5px 10px;
 	}
 }
 
-.deals{
-    max-width: 1920px;
-    margin: 0 auto;
+.deals {
+	max-width: 1920px;
+	margin: 0 auto;
 }
+
+@media (max-width: 768px) {
+	.btn-deals {
+		height: 47px;
+	}
+}
+
+

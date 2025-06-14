@@ -12,7 +12,7 @@
     width: 100%;
     max-width: 280px;
     position: relative;
-    overflow: hidden;
+    // overflow: hidden;
 
     &:hover {
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -168,8 +168,9 @@
         }
     }
 
-    @media (max-width: 425px) {
+    @media (max-width: 428px) {
         max-width: 100%;
+        padding: 0.6rem 0.5rem;
     }
 }
 
