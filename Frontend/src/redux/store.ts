@@ -20,7 +20,6 @@ export const store = configureStore({
         [wishlistAPI.reducerPath]: wishlistAPI.reducer,
         [userReducer.name]: userReducer.reducer,
         [cartReducer.name]: cartReducer.reducer,
-       
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
