@@ -33,6 +33,7 @@ export type SearchRequestQuery = {
     sort?: string;
     page?: string;
     dateSort?: string;
+    discount?: number;
 };
 
 export interface BaseQuery {
@@ -81,14 +82,6 @@ export interface NewOrderRequestBody {
     total: number;
     orderItems: OrderItemType[];
 }
-
-// export type ReviewType = {
-//     name: string,
-//     rating: number;
-//     comment: string;
-//     createdAt?: Date;
-// }
-
 
 export interface User {
     _id: string;
