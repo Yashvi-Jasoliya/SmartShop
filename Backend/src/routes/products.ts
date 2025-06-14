@@ -12,6 +12,7 @@ import {
 } from '../controllers/product.js';
 import { isAdmin } from '../middlewares/auth.js';
 import { multipleUpload } from '../middlewares/multer.js';
+import { Product } from '../models/product.js';
 
 const router = express.Router();
 

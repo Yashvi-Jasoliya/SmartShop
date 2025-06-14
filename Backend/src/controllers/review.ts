@@ -37,7 +37,6 @@ export const createReview = async (req: Request, res: Response) => {
 
         const isGenuine = await isGenuineReview({ comment, rating }, product);
 
-        // Handle uploaded image
         const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
         const newReview = new Review({
@@ -134,7 +133,7 @@ export const deleteReview = async (req: Request, res: Response) => {
     }
 };
 
-// Get review stats: total, genuine, fake counts
+// Get review stats
 export const getstats = async (req: Request, res: Response) => {
     try {
         const total = await Review.countDocuments();
@@ -180,14 +179,25 @@ export const getFilteredReviews = async (req: Request, res: Response) => {
         }
 
         const total = await Review.countDocuments(reviewFilter);
+        const totalPages = Math.ceil(total / Number(limit));
         const reviews = await Review.find(reviewFilter)
             .sort({ date: 1 })
             .skip((+page - 1) * +limit)
             .limit(+limit);
 
-        res.status(200).json({ reviews, total });
+        res.status(200).json({ reviews, total, totalPages });
     } catch (error) {
         console.error("Failed to fetch filtered reviews", error);
         res.status(500).json({ message: "Server Error" });
+    }
+};
+
+
+export const deleteAllfakereviews = async (req: Request, res: Response) => {
+    try {
+        const result = await Review.deleteMany({ isGenuine: false });
+        res.status(200).json({ message: "All fake reviews deleted", deletedCount: result.deletedCount });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to delete fake reviews" });
     }
 };

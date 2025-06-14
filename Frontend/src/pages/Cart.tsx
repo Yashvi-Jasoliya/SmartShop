@@ -102,6 +102,13 @@ const Cart = () => {
 		dispatch(calculatePrice());
 	}, [cartItems, dispatch]);
 
+	useEffect(() => {
+		if (isCouponApplied && total <= 0) {
+			toast.error("Add more products to continue.");
+			navigate("/search");
+		}
+	}, [total, isCouponApplied, navigate]);
+
 	return (
 		<div className="cart-container">
 			<div className="cart-header">
@@ -133,7 +140,7 @@ const Cart = () => {
 								Looks like you haven't added anything to your
 								cart yet
 							</p>
-							<Link to="/" className="continue-shopping">
+							<Link to="/store" className="continue-shopping">
 								Continue Shopping
 							</Link>
 						</div>
@@ -204,7 +211,7 @@ const Cart = () => {
 							Proceed to Checkout
 						</button>
 
-						<Link to="/" className="continue-shopping">
+						<Link to="/store" className="continue-shopping">
 							Continue Shopping
 						</Link>
 					</aside>

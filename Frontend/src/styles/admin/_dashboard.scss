@@ -11,9 +11,7 @@
     .bar {
         height: 4rem;
         display: flex;
-        // padding: 0rem 1rem;
         border-bottom: 1px solid rgba(0, 0, 0, 0.37);
-        // justify-content: space-between;
 
         > input {
             margin-top: 0.5rem;
@@ -94,7 +92,7 @@
         }
 
         .revenueChart {
-            width: 100%;
+            width: 80%;
             padding: 1rem 3rem;
 
             > h2 {
@@ -106,7 +104,7 @@
 
         .dashboardCategories {
             width: 100%;
-            max-width: 16rem;
+            max-width: 17rem;
             @include mixin.flex(column, center, unset, 0);
             padding-bottom: 2rem;
 

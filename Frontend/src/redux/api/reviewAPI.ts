@@ -11,6 +11,22 @@ type ReviewStats = {
     fake: number;
 };
 
+export interface ReviewFilterOptions {
+    category?: string;
+    filter?: "all" | "genuine" | "fake";
+    page?: number;
+    limit?: number;
+    search?: string;
+}
+
+export interface PaginatedReviewResponse {
+    reviews: IReview[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}
+
 export const reviewAPI = createApi({
     reducerPath: 'reviewApi',
     baseQuery: fetchBaseQuery({
@@ -61,6 +77,23 @@ export const reviewAPI = createApi({
             }),
             invalidatesTags: ['reviews'],
         }),
+
+        getFilteredReviews: builder.query<PaginatedReviewResponse, ReviewFilterOptions>({
+            query: (params) => ({
+                url: "",
+                params,
+            }),
+            providesTags: ["reviews"],
+        }),
+        
+        deleteAllFakeReviews: builder.mutation<MessageResponse, void>({
+            query: () => ({
+                url: '',
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['reviews'],
+        }),
+
     }),
 });
 
@@ -71,4 +104,6 @@ export const {
     useDeleteReviewMutation,
     useGetReviewStatsQuery,
     useGetProductReviewsQuery,
+    useGetFilteredReviewsQuery,
+    useDeleteAllFakeReviewsMutation
 } = reviewAPI;

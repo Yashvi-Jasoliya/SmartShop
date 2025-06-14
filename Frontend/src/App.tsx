@@ -10,7 +10,6 @@ import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { UserReducerInitialState } from "./types/reducer-types";
 
 import AppRoutes from "./AppRoutes";
-import { setPersistence, browserLocalPersistence } from "firebase/auth";
 
 const App = () => {
 	const { user, loading } = useSelector(
@@ -20,32 +19,29 @@ const App = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-	    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-	        try {
-	            if (user) {
-	                console.log('User is logged in:', user.uid);
-	                const data = await getUser(user.uid);
-	                if (data?.user) {
-	                    dispatch(userExist(data.user));
-	                } else {
-	                    console.warn('No user data returned from getUser API');
-	                    dispatch(userNotExist());
-	                }
-	            } else {
-	                console.log('No user is logged in');
-	                dispatch(userNotExist());
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
+			try {
+				if (user) {
+					console.log("User is logged in:", user.uid);
+					const data = await getUser(user.uid);
+					if (data?.user) {
+						dispatch(userExist(data.user));
+					} else {
+						console.warn("No user data returned from getUser API");
+						dispatch(userNotExist());
+					}
+				} else {
+					console.log("No user is logged in");
+					dispatch(userNotExist());
+				}
+			} catch (error) {
+				console.error("Error during auth state change:", error);
 
-	            }
-	        } catch (error) {
-	            console.error('Error during auth state change:', error);
-	            // Optional: dispatch an error action if your Redux store handles it
-	            // dispatch(userError(error));
-	            dispatch(userNotExist());
-	        }
-	    });
+				dispatch(userNotExist());
+			}
+		});
 
-	    // Clean up the listener on unmount
-	    return () => unsubscribe();
+		return () => unsubscribe();
 	}, [dispatch]);
 
 	return loading ? (

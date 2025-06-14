@@ -1,362 +1,374 @@
-@use 'variables' as *;
-@use './admin/mixin' as mixin;
-@use 'sass:color';
+@use "variables" as *;
+@use "./admin/mixin" as mixin;
+@use "sass:color";
 
 .header {
-    background-color: white;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.093);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    transition: all 0.3s ease;
+	background-color: white;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.093);
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	transition: all 0.3s ease;
 
-    &.scrolled {
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    }
+	&.scrolled {
+		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+	}
 
-    &-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 2rem;
-        height: 70px;
-        @include mixin.flex(row, space-between, center);
+	&-container {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 0 2rem;
+		height: 70px;
+		@include mixin.flex(row, space-between, center);
 
-        @media (max-width: 768px) {
-            height: 50px;
-        }
-        @media (max-width: 425px) {
-            height: auto;
-        }
-    }
+		@media (max-width: 768px) {
+			height: 50px;
+		}
+		@media (max-width: 425px) {
+			height: auto;
+		}
+	}
 
-    &-logo {
-        font-size: 1.5rem;
-        font-weight: 500;
-        color: rgba(0, 115, 255, 0.945);
-        text-decoration: none;
-        @include mixin.flex(row, unset, center, 0rem);
+	&-logo {
+		font-size: 1.5rem;
+		font-weight: 500;
+		color: rgba(0, 115, 255, 0.945);
+		text-decoration: none;
+		@include mixin.flex(row, unset, center, 0rem);
 
-        span {
-            color:rgba(17, 24, 39, 1);
-        }
-    }
+		span {
+			color: rgba(17, 24, 39, 1);
+		}
+	}
 
-    .mobile-menu-btn {
-        display: none;
-        @include mixin.square(2.5rem);
-        border: none;
-        outline: none;
-        cursor: pointer;
-        color: rgba(44, 104, 255);
-        font-size: 1.5rem;
-        background-color: rgba(0, 115, 255, 0.1);
-        border-radius: 50%;
+	.mobile-menu-btn {
+		display: none;
+		@include mixin.square(2.5rem);
+		border: none;
+		outline: none;
+		cursor: pointer;
+		color: rgba(44, 104, 255);
+		font-size: 1.5rem;
+		background-color: rgba(0, 115, 255, 0.1);
+		border-radius: 50%;
 
-        @media (max-width: 768px) {
-            @include mixin.flex;
-        }
-    }
+		@media (max-width: 768px) {
+			@include mixin.flex;
+		}
+	}
 
-    .nav-links {
-        @include mixin.flex(row, unset, center, 1.5rem);
+	.nav-links {
+		@include mixin.flex(row, unset, center, 1.5rem);
 
-        .mobile-search {
-            display: none;
-        }
+		.mobile-search {
+			display: none;
+		}
 
-        .main-links {
-            @include mixin.flex(row, unset, center, 1.5rem);
+		.main-links {
+			@include mixin.flex(row, unset, center, 1.5rem);
 
-            a {
-                color: rgba(0, 0, 0, 0.825);
-                text-decoration: none;
-                font-weight: 400;
-                padding: 0.5rem 0;
-                position: relative;
-                transition: all 0.3s ease;
+			a {
+				color: rgba(0, 0, 0, 0.825);
+				text-decoration: none;
+				font-weight: 400;
+				padding: 0.5rem 0;
+				position: relative;
+				transition: all 0.3s ease;
 
-                &:hover {
-                    color: rgba(0, 115, 255);
-                }
+				&:hover {
+				    color: rgb(133, 133, 133);
+                  
+				}
 
-                &::after {
-                    content: '';
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 0;
-                    height: 2px;
-                    background-color: rgba(0, 115, 255);
-                    transition: all 0.3s ease;
-                }
+				&.active {
+					color: rgba(0, 115, 255);
+					font-weight: 400;
 
-                &:hover::after {
-                    width: 100%;
-                }
-            }
-        }
+					&::after {
+						width: 100%;
+						background-color: rgba(0, 115, 255, 0.7);
+					}
+				}
 
-        .user-controls {
-            @include mixin.flex(row, unset, center, 1rem);
-            margin-left: 1rem;
+				&::after {
+					content: "";
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					width: 0;
+					height: 2px;
 
-            .icon-link {
-                position: relative;
-                color: rgba(0, 0, 0, 0.825);
-                font-size: 1.2rem;
-                transition: all 0.3s ease;
+					transition: all 0.3s ease;
+				}
 
-                &:hover {
-                    color: rgba(0, 115, 255);
-                }
+				&:hover::after {
+					width: 100%;
+				}
+			}
+		}
 
-                .badge {
-                    position: absolute;
-                    top: -8px;
-                    right: -8px;
-                    background-color: red;
-                    color: white;
-                    border-radius: 50%;
-                    @include mixin.square(20px);
-                    @include mixin.flex;
-                    font-size: 0.7rem;
-                    font-weight: bold;
-                }
-            }
+		.user-controls {
+			@include mixin.flex(row, unset, center, 1rem);
+			margin-left: 1rem;
 
-            .user-dropdown {
-                position: relative;
+			.icon-link {
+				position: relative;
+				color: rgba(0, 0, 0, 0.825);
+				font-size: 1.2rem;
+				transition: all 0.3s ease;
 
-                .user-btn {
-                    @include mixin.flex(row, unset, center, 0.5rem);
-                    background: none;
-                    border: none;
-                    color: rgba(0, 0, 0, 0.825);
-                    cursor: pointer;
-                    font-weight: 400;
-                    transition: all 0.3s ease;
+				&:hover {
+					color: rgba(0, 115, 255);
+				}
 
-                    &:hover {
-                        color: rgba(0, 115, 255);
-                    }
+				.badge {
+					position: absolute;
+					top: -8px;
+					right: -8px;
+					background-color: red;
+					color: white;
+					border-radius: 50%;
+					@include mixin.square(20px);
+					@include mixin.flex;
+					font-size: 0.7rem;
+					font-weight: bold;
+				}
+			}
 
-                    .user-name {
-                        @media (max-width: 768px) {
-                            display: none;
-                        }
-                    }
-                }
+			.user-dropdown {
+				position: relative;
 
-                .dropdown-content {
-                    position: absolute;
-                    right: 0;
-                    top: 100%;
-                    background: white;
-                    border-radius: 10px;
-                    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.093);
-                    padding: 0.5rem 0;
-                    min-width: 180px;
-                    opacity: 0;
-                    visibility: hidden;
-                    transform: translateY(10px);
-                    transition: all 0.3s ease;
-                    z-index: 1000;
+				.user-btn {
+					@include mixin.flex(row, unset, center, 0.5rem);
+					background: none;
+					border: none;
+					color: rgba(0, 0, 0, 0.825);
+					cursor: pointer;
+					font-weight: 400;
+					transition: all 0.3s ease;
 
-                    a,
-                    button {
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.5rem 1rem;
-                        color: rgba(0, 0, 0, 0.825);
-                        text-decoration: none;
-                        transition: all 0.3s ease;
-                        text-align: left;
-                        width: 100%;
-                        background: none;
-                        border: none;
-                        font-size: 0.9rem;
+					&:hover {
+						color: rgba(0, 115, 255);
+					}
 
-                        &:hover {
-                            background: rgba(0, 115, 255, 0.1);
-                            color: rgba(0, 115, 255);
-                        }
-                    }
+					.user-name {
+						@media (max-width: 768px) {
+							display: none;
+						}
+					}
+				}
 
-                    button.logout-btn {
-                        color: red;
-                        margin-top: 0.5rem;
-                        padding-top: 0.5rem;
-                        border-top: 1px solid rgba(0, 0, 0, 0.1);
-                    }
-                }
+				.dropdown-content {
+					position: absolute;
+					right: 0;
+					top: 100%;
+					background: white;
+					border-radius: 10px;
+					box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.093);
+					padding: 0.5rem 0;
+					min-width: 180px;
+					opacity: 0;
+					visibility: hidden;
+					transform: translateY(10px);
+					transition: all 0.3s ease;
+					z-index: 1000;
 
-                @media (max-width: 768px) {
-                    .dropdown-content {
-                        position: absolute;
-                        left: 0;
-                        top: 100%;
-                    }
-                }
+					a,
+					button {
+						display: flex;
+						align-items: center;
+						gap: 0.5rem;
+						padding: 0.5rem 1rem;
+						color: rgba(0, 0, 0, 0.825);
+						text-decoration: none;
+						transition: all 0.3s ease;
+						text-align: left;
+						width: 100%;
+						background: none;
+						border: none;
+						font-size: 0.9rem;
 
-                &:hover .dropdown-content {
-                    opacity: 1;
-                    visibility: visible;
-                    transform: translateY(0);
-                }
-            }
+						&:hover {
+							background: rgba(0, 115, 255, 0.1);
+							color: rgba(0, 115, 255);
+						}
+					}
 
-            .auth-link {
-                @include mixin.flex(row, unset, center, 0.5rem);
-                color: rgba(0, 0, 0, 0.825);
-                text-decoration: none;
-                font-weight: 400;
-                transition: all 0.3s ease;
+					button.logout-btn {
+						color: red;
+						margin-top: 0.5rem;
+						padding-top: 0.5rem;
+						border-top: 1px solid rgba(0, 0, 0, 0.1);
+					}
+				}
 
-                &:hover {
-                    color: rgba(0, 115, 255);
-                }
-            }
-        }
-    }
+				@media (max-width: 768px) {
+					.dropdown-content {
+						position: absolute;
+						left: 0;
+						top: 0;
+						margin-top: -120px;
+					}
+				}
 
-    .desktop-search {
-        position: relative;
-        width: 250px;
+				&:hover .dropdown-content {
+					opacity: 1;
+					visibility: visible;
+					transform: translateY(0);
+				}
+			}
 
-        input {
-            width: 100%;
-            padding: 0.6rem 1rem;
-            border-radius: 30px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            padding-right: 40px;
+			.auth-link {
+				@include mixin.flex(row, unset, center, 0.5rem);
+				color: rgba(0, 0, 0, 0.825);
+				text-decoration: none;
+				font-weight: 400;
+				transition: all 0.3s ease;
 
-            &:focus {
-                outline: none;
-                border-color: rgba(0, 115, 255);
-                box-shadow: 0 0 0 2px rgba(0, 115, 255, 0.2);
-            }
-        }
+				&:hover {
+					color: rgba(0, 115, 255);
+				}
+			}
+		}
+	}
 
-        button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(0, 0, 0, 0.6);
-            cursor: pointer;
-            transition: all 0.3s ease;
+	.desktop-search {
+		position: relative;
+		width: 250px;
 
-            &:hover {
-                color: rgba(0, 115, 255);
-            }
-        }
-    }
+		input {
+			width: 100%;
+			padding: 0.6rem 1rem;
+			border-radius: 30px;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			font-size: 0.9rem;
+			transition: all 0.3s ease;
+			padding-right: 40px;
 
-    @media (max-width: 1024px) {
-        &-container {
-            padding: 0 1.5rem;
-        }
+			&:focus {
+				outline: none;
+				border-color: rgba(0, 115, 255);
+				box-shadow: 0 0 0 2px rgba(0, 115, 255, 0.2);
+			}
+		}
 
-        .desktop-search {
-            width: 200px;
-        }
-    }
+		button {
+			position: absolute;
+			right: 10px;
+			top: 50%;
+			transform: translateY(-50%);
+			background: none;
+			border: none;
+			color: rgba(0, 0, 0, 0.6);
+			cursor: pointer;
+			transition: all 0.3s ease;
 
-    @media (max-width: 768px) {
-        &-container {
-            padding: 0 1rem;
-        }
+			&:hover {
+				color: rgba(0, 115, 255);
+			}
+		}
+	}
 
-        .desktop-search {
-            display: none;
-        }
+	@media (max-width: 1024px) {
+		&-container {
+			padding: 0 1.5rem;
+		}
 
-        .nav-links {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            width: 100%;
-            background: white;
-            @include mixin.flex(column, unset, flex-start, 0);
-            padding: 1rem;
-            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.093);
-            transform: translateY(-150%);
-            transition: transform 0.3s ease;
-            z-index: 9;
+		.desktop-search {
+			width: 200px;
+		}
+	}
 
-            &.open {
-                transform: translateY(0);
-            }
+	@media (max-width: 768px) {
+		&-container {
+			padding: 0 1rem;
+		}
 
-            .mobile-search {
-                display: block;
-                width: 100%;
-                margin-bottom: 1rem;
+		.desktop-search {
+			display: none;
+		}
 
-                form {
-                    position: relative;
-                    width: 100%;
-                }
+		.nav-links {
+			position: fixed;
+			top: 50px;
+			left: 0;
+			width: 100%;
+			background: white;
+			@include mixin.flex(column, unset, flex-start, 0);
+			padding: 1rem;
+			box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.093);
+			transform: translateY(-150%);
+			transition: transform 0.3s ease;
+			z-index: 9;
 
-                input {
-                    width: 100%;
-                    padding: 0.6rem 1rem;
-                    border-radius: 30px;
-                    border: 1px solid rgba(0, 0, 0, 0.1);
-                    font-size: 0.9rem;
-                    padding-right: 40px;
-                }
+			&.open {
+				transform: translateY(0);
+			}
 
-                button {
-                    position: absolute;
-                    right: 10px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    background: none;
-                    border: none;
-                    color: rgba(0, 0, 0, 0.6);
-                    cursor: pointer;
-                }
-            }
+			.mobile-search {
+				display: block;
+				width: 100%;
+				margin-bottom: 1rem;
 
-            .main-links {
-                @include mixin.flex(column, unset, flex-start, 0.5rem);
-                width: 100%;
-                margin-bottom: 1rem;
+				form {
+					position: relative;
+					width: 100%;
+				}
 
-                a {
-                    padding: 0.75rem 0;
-                    width: 100%;
-                }
-            }
+				input {
+					width: 100%;
+					padding: 0.6rem 1rem;
+					border-radius: 30px;
+					border: 1px solid rgba(0, 0, 0, 0.1);
+					font-size: 0.9rem;
+					padding-right: 40px;
+				}
 
-            .user-controls {
-                width: 100%;
-                justify-content: space-between;
-                margin-left: 0;
-                padding-top: 1rem;
-                border-top: 1px solid rgba(0, 0, 0, 0.1);
-            }
-        }
+				button {
+					position: absolute;
+					right: 10px;
+					top: 50%;
+					transform: translateY(-50%);
+					background: none;
+					border: none;
+					color: rgba(0, 0, 0, 0.6);
+					cursor: pointer;
+				}
+			}
 
-        @media (max-width: 425px) {
-            .nav-links {
-                position: fixed;
-                top: 40px;
-                left: 0;
-                width: 100%;
-            }
-        }
-    }
+			.main-links {
+				@include mixin.flex(column, unset, flex-start, 0.5rem);
+				width: 100%;
+				margin-bottom: 1rem;
 
-    @media (max-width: 480px) {
-        &-logo {
-            font-size: 1.3rem;
-        }
-    }
+				a {
+					padding: 0.75rem 0;
+					width: 100%;
+				}
+			}
+
+			.user-controls {
+				width: 100%;
+				justify-content: space-between;
+				margin-left: 0;
+				padding-top: 1rem;
+				border-top: 1px solid rgba(0, 0, 0, 0.1);
+			}
+		}
+
+		@media (max-width: 425px) {
+			.nav-links {
+				position: fixed;
+				top: 40px;
+				left: 0;
+				width: 100%;
+			}
+		}
+	}
+
+	@media (max-width: 480px) {
+		&-logo {
+			font-size: 1.3rem;
+		}
+	}
 }

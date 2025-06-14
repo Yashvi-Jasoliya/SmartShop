@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNotifications } from "../../hooks/useNotifications";
 import { notificationService } from "../../services/notificationService";
 import type { Notification as AppNotification } from "../../types/types"; 
-import { User } from "firebase/auth";
+
 
 interface NotificationBellProps {
 	userId: string;

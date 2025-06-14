@@ -1,13 +1,11 @@
 @use 'sass:color';
 
-// Variables
 $primary-color: #2563eb;
 $secondary-color: #f3f4f6;
 $text-color: #1f2937;
 $light-text: #6b7280;
 $transition: all 0.3s ease;
 
-// Base styles
 .not-found {
     width: 100%;
     display: flex;
@@ -97,7 +95,6 @@ $transition: all 0.3s ease;
     }
 }
 
-// Responsive adjustments
 @media (max-width: 480px) {
     .not-found {
         &__title {

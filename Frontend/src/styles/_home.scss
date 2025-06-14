@@ -1,111 +1,122 @@
-@use 'variables' as *;
-@use './admin/mixin' as mixin;
-@use 'sass:color';
+@use "variables" as *;
+@use "./admin/mixin" as mixin;
+@use "sass:color";
 
 .home {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 4rem);
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100vh - 4rem);
+	max-width: 1920px;
+	margin: 0 auto;
+	width: 100%;
+	background-color: $bg;
+	overflow: hidden;
+
+	// Hero Section
+	.hero {
+		width: 100%;
+		height: 500px;
+		background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+			url("../assets/cover.jpg") no-repeat center / cover;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: white;
+		text-align: center;
+		margin-bottom: 3rem;
+
+		.hero-content {
+			max-width: 800px;
+			padding: 0 2rem;
+
+			h2 {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+				font-weight: 700;
+			}
+
+			p {
+				font-size: 1.2rem;
+				margin-bottom: 2rem;
+				opacity: 0.9;
+			}
+
+			.shop-now-btn {
+				background-color: $primary;
+				color: white;
+				padding: 0.8rem 2rem;
+				border-radius: 30px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				transition: all 0.3s ease;
+
+				&:hover {
+					background-color: color.scale($primary, $lightness: -10%);
+
+					transform: translateY(-2px);
+					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				}
+			}
+		}
+	}
+
+	// Featured Products
+	.featured-container {
+		padding: 0 5%;
+		margin-bottom: 3rem;
+
+		.section-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 2rem;
+		}
+
+		.section-title {
+			@include mixin.heading(2px);
+
+			font-size: 2rem;
+			margin: 0;
+		}
+
+		.findmore {
+			color: $primary;
+			font-weight: 600;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			transition: all 0.3s ease;
+
+			&:hover {
+				color: color.scale($primary, $lightness: -15%);
+
+				transform: translateX(5px);
+			}
+		}
+
+		.products-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: 2rem;
+			width: 100%;
+
+			@media (max-width: 768px) {
+				grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+				gap: 1.5rem;
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.deals-category button{
+		padding: 5px 10px;
+	}
+}
+
+.deals{
     max-width: 1920px;
     margin: 0 auto;
-    width: 100%;
-    background-color: $bg;
-    overflow: hidden;
-
-    // Hero Section
-    .hero {
-        width: 100%;
-        height: 500px;
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-            url('../assets/cover.jpg') no-repeat center / cover;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
-        margin-bottom: 3rem;
-
-        .hero-content {
-            max-width: 800px;
-            padding: 0 2rem;
-
-            h2 {
-                font-size: 3rem;
-                margin-bottom: 1rem;
-                font-weight: 700;
-            }
-
-            p {
-                font-size: 1.2rem;
-                margin-bottom: 2rem;
-                opacity: 0.9;
-            }
-
-            .shop-now-btn {
-                background-color: $primary;
-                color: white;
-                padding: 0.8rem 2rem;
-                border-radius: 30px;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                transition: all 0.3s ease;
-
-                &:hover {
-                    background-color: color.scale($primary, $lightness: -10%);
-
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                }
-            }
-        }
-    }
-
-    // Featured Products
-    .featured-container {
-        padding: 0 5%;
-        margin-bottom: 3rem;
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            @include mixin.heading(2px);
-
-            font-size: 2rem;
-            margin: 0;
-        }
-
-        .findmore {
-            color: $primary;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-
-            &:hover {
-                color: color.scale($primary, $lightness: -15%);
-
-                transform: translateX(5px);
-            }
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            width: 100%;
-
-            @media (max-width: 768px) {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-                gap: 1.5rem;
-            }
-        }
-    }
 }

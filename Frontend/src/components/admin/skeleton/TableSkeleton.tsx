@@ -2,7 +2,7 @@
 const TableSkeleton = () => {
     return (
         <div className='table-skeleton-container'>
-            {/* Table Header */}
+            
             <div className='table-skeleton-header'>
                 {[...Array(5)].map((_, i) => (
                     <div
@@ -12,7 +12,7 @@ const TableSkeleton = () => {
                 ))}
             </div>
 
-            {/* Table Rows */}
+      
             {[...Array(5)].map((_, i) => (
                 <div
                     key={`row-${i}`}

@@ -1,89 +1,89 @@
-import { FaTrash } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import AdminSidebar from '../../../components/admin/AdminSidebar';
+import { FaTimes, FaTrash } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import AdminSidebar from "../../../components/admin/AdminSidebar";
 import {
-    useDeleteOrderMutation,
-    useOrderDetailsQuery,
-    useUpdateOrderMutation,
-} from '../../../redux/api/orderAPI';
-import { UserReducerInitialState } from '../../../types/reducer-types';
-import { OrderItem, OrderType } from '../../../types/types';
-import { responseToast } from '../../../utils/features';
+	useDeleteOrderMutation,
+	useOrderDetailsQuery,
+	useUpdateOrderMutation,
+} from "../../../redux/api/orderAPI";
+import { UserReducerInitialState } from "../../../types/reducer-types";
+import { OrderItem, OrderType } from "../../../types/types";
+import { responseToast } from "../../../utils/features";
 
 const defaultData: OrderType = {
-    shippingInfo: {
-        address: '',
-        city: '',
-        state: '',
-        country: '',
-        pinCode: '',
-        phoneNo: '',
-    },
-    orderItems: [],
-    status: '',
-    subTotal: 0,
-    discount: 0,
-    shippingCharges: 0,
-    tax: 0,
-    total: 0,
-    user: {
-        name: '',
-        _id: '',
-    },
-    _id: '',
+	shippingInfo: {
+		address: "",
+		city: "",
+		state: "",
+		country: "",
+		pinCode: "",
+		phoneNo: "",
+	},
+	orderItems: [],
+	status: "",
+	subTotal: 0,
+	discount: 0,
+	shippingCharges: 0,
+	tax: 0,
+	total: 0,
+	user: {
+		name: "",
+		_id: "",
+	},
+	_id: "",
 };
 
 const TransactionManagement = () => {
-    const { user } = useSelector(
-        (state: { userReducer: UserReducerInitialState }) => state.userReducer
-    );
+	const { user } = useSelector(
+		(state: { userReducer: UserReducerInitialState }) => state.userReducer
+	);
 
-    const params = useParams();
-    const navigate = useNavigate();
+	const params = useParams();
+	const navigate = useNavigate();
 
-    const { data, isError } = useOrderDetailsQuery(params.id!);
+	const { data, isError } = useOrderDetailsQuery(params.id!);
 
-    const {
-        shippingInfo: { address, city, country, pinCode, state },
-        orderItems,
-        user: { name },
-        discount,
-        shippingCharges,
-        status,
-        subTotal,
-        tax,
-        total,
-    } = data?.order || defaultData;
+	const {
+		shippingInfo: { address, city, country, pinCode, state },
+		orderItems,
+		user: { name },
+		discount,
+		shippingCharges,
+		status,
+		subTotal,
+		tax,
+		total,
+	} = data?.order || defaultData;
 
-    const [deleteOrder] = useDeleteOrderMutation();
-    const [updateOrder] = useUpdateOrderMutation();
+	const [deleteOrder] = useDeleteOrderMutation();
+	const [updateOrder] = useUpdateOrderMutation();
 
-    const updateHander = async () => {
-        const res = await updateOrder({
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            userId: user?._id!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            orderId: data?.order._id!,
-        });
+	const updateHander = async () => {
+		const res = await updateOrder({
+			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+			userId: user?._id!,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+			orderId: data?.order._id!,
+		});
 
-        responseToast(res, navigate, '/admin/transaction');
-    };
+		responseToast(res, navigate, "/admin/transaction");
+	};
 
-    const deleteHandler = async () => {
-        const res = await deleteOrder({
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            userId: user?._id!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            orderId: data?.order._id!,
-        });
+	const deleteHandler = async () => {
+		const res = await deleteOrder({
+			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+			userId: user?._id!,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+			orderId: data?.order._id!,
+		});
 
-        responseToast(res, navigate, '/admin/transaction');
-    };
+		responseToast(res, navigate, "/admin/transaction");
+	};
 
-    if (isError) return <Navigate to={'/404'} />;
+	if (isError) return <Navigate to={"/404"} />;
 
-    return (
+	return (
 		<div className="adminContainer">
 			<AdminSidebar />
 			<main className="productManagementContainer">
@@ -93,7 +93,7 @@ const TransactionManagement = () => {
 				>
 					<div className="product-header">
 						<span className="product-id">
-							ID: {data?.order._id}
+							ID: {data?.order._id.slice(-10)}
 						</span>
 						<button onClick={deleteHandler} className="delete-btn">
 							<FaTrash />
@@ -114,9 +114,19 @@ const TransactionManagement = () => {
 					))}
 				</section>
 
-				<article className="shippingInfoCard">
+				<article className="shippingInfoCard relative">
+					<button
+						type="button"
+						onClick={() => navigate("/admin/transaction")}
+						aria-label="Close transaction form"
+						className="absolute top-7 right-10 text-gray-600 hover:text-blue-400"
+						style={{ fontSize: "20px" }}
+					>
+						<FaTimes />
+					</button>
 					<div>
 						<h1>Order Info</h1>
+
 						<h5>User Info</h5>
 						<p>Name: {name}</p>
 						<p>
@@ -126,9 +136,10 @@ const TransactionManagement = () => {
 						<h5>Amount Info</h5>
 						<p>Subtotal: {subTotal}</p>
 						<p>
-							Shipping Charges: {(subTotal ?? 0) >= 1000
+							Shipping Charges:{" "}
+							{(subTotal ?? 0) >= 1000
 								? "0.00"
-								: (shippingCharges ?? 200)}
+								: shippingCharges ?? 200}
 						</p>
 						<p>Tax: {tax}</p>
 						<p>Discount: {discount}</p>

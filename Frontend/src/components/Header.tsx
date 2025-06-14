@@ -1,69 +1,67 @@
-import { signOut } from 'firebase/auth';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+declare global {
+	interface Window {
+		SpeechRecognition: typeof SpeechRecognition;
+		webkitSpeechRecognition: typeof SpeechRecognition;
+	}
+}
+
+import { signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
-    FaBars,
-    FaClipboardList,
-    FaHeart,
-    FaSearch,
-    FaShoppingCart,
-    FaSignOutAlt,
-    FaTimes,
-    FaUser,
-} from 'react-icons/fa';
-import { MdSpaceDashboard } from 'react-icons/md';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { useGetWishlistQuery } from '../redux/api/wishlistAPI';
-import { CartReducerInitialState } from '../types/reducer-types';
-import { User } from '../types/types';
+	FaBars,
+	FaClipboardList,
+	FaHeart,
+	FaShoppingCart,
+	FaSignOutAlt,
+	FaTimes,
+	FaUser,
+} from "react-icons/fa";
+import { MdSpaceDashboard } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { auth } from "../firebase";
+import { useGetWishlistQuery } from "../redux/api/wishlistAPI";
+import { CartReducerInitialState } from "../types/reducer-types";
+import { User } from "../types/types";
+import sideimg from "../assets/sideimg.png";
 
 interface PropsType {
-    user: User | null;
+	user: User | null;
 }
 
 const Header = ({ user }: PropsType) => {
+	const { cartItems } = useSelector(
+		(state: { cartReducer: CartReducerInitialState }) => state.cartReducer
+	);
 
-    const { cartItems } = useSelector(
-        (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
-    );
+	const { data: wishlistData } = useGetWishlistQuery(user?._id!);
 
-    const { data: wishlistData } = useGetWishlistQuery(user?._id!);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [scrolled, setScrolled] = useState(false);
+	const [isHovering, setIsHovering] = useState(false);
+    const isActive = (path: string) => location.pathname === path;
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const navigate = useNavigate();
+	useEffect(() => {
+		const handleScroll = () => {
+			setScrolled(window.scrollY > 10);
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 10);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    const handleSearch = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (searchQuery.trim()) {
-			navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-			setIsMenuOpen(false);
-			setSearchQuery("");
+	const logoutHandler = async () => {
+		try {
+			await signOut(auth);
+			toast.success("Sign out successfully");
+			return;
+		} catch (error) {
+			console.log("Failed to sign out", error);
+			toast.error("Failed to sign out");
 		}
 	};
 
-    const logoutHandler = async () => {
-        try {
-            await signOut(auth);
-            toast.success('Sign out successfully');
-        } catch (error) {
-            console.log('Failed to sign out', error);
-            toast.error('Failed to sign out');
-        }
-    };
-
-    return (
+	return (
 		<header className={`header ${scrolled ? "scrolled" : ""}`}>
 			<div className="header-container">
 				<button
@@ -74,43 +72,53 @@ const Header = ({ user }: PropsType) => {
 					{isMenuOpen ? <FaTimes /> : <FaBars />}
 				</button>
 
-				<Link to="/" className="header-logo">
+				<Link to="/store" className="header-logo">
 					<span>Smart</span>Shop
 				</Link>
 
 				<nav className={`nav-links ${isMenuOpen ? "open" : ""}`}>
-					<div className="mobile-search">
-						<form onSubmit={handleSearch}>
-							<input
-								type="text"
-								placeholder="Search products..."
-								value={searchQuery}
-								onChange={(e) => setSearchQuery(e.target.value)}
-							/>
-							<button type="submit">
-								<FaSearch />
-							</button>
-						</form>
-					</div>
-
 					<div className="main-links">
-						<Link to="/" onClick={() => setIsMenuOpen(false)}>
+						<Link
+							to="/store"
+							onClick={() => setIsMenuOpen(false)}
+							className={isActive("/store") ? "active" : ""}
+						>
 							Home
 						</Link>
-						<Link to="/search" onClick={() => setIsMenuOpen(false)}>
+						<Link
+							to="/search"
+							onClick={() => setIsMenuOpen(false)}
+							className={isActive("/search") ? "active" : ""}
+						>
 							Shop
 						</Link>
 						<Link
 							to="/categories"
 							onClick={() => setIsMenuOpen(false)}
+							className={isActive("/categories") ? "active" : ""}
 						>
 							Categories
 						</Link>
-						<Link to="/deals" onClick={() => setIsMenuOpen(false)}>
+						<Link
+							to="/deals"
+							onClick={() => setIsMenuOpen(false)}
+							className={isActive("/deals") ? "active" : ""}
+						>
 							Deals
 						</Link>
-						<Link to="/about" onClick={() => setIsMenuOpen(false)}>
+						<Link
+							to="/about"
+							onClick={() => setIsMenuOpen(false)}
+							className={isActive("/about") ? "active" : ""}
+						>
 							About
+						</Link>
+						<Link
+							to="/contact"
+							onClick={() => setIsMenuOpen(false)}
+							className={isActive("/contact") ? "active" : ""}
+						>
+							Contact
 						</Link>
 					</div>
 
@@ -170,8 +178,12 @@ const Header = ({ user }: PropsType) => {
 						)}
 
 						<Link
-							to="/wishlist"
-							onClick={() => setIsMenuOpen(false)}
+							to={user ? "/wishlist" : "/store"}
+							onClick={() => {
+								setIsMenuOpen(false);
+								if (!user)
+									toast.error("login to view your wishlist");
+							}}
 							className="icon-link"
 						>
 							<FaHeart />
@@ -200,17 +212,29 @@ const Header = ({ user }: PropsType) => {
 					</div>
 				</nav>
 
-				<form className="desktop-search" onSubmit={handleSearch}>
-					<input
-						type="text"
-						placeholder="Search products..."
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-					/>
-					<button type="submit">
-						<FaSearch />
-					</button>
-				</form>
+				<div
+					className="relative group"
+					onMouseEnter={() => setIsHovering(true)}
+					onMouseLeave={() => setIsHovering(false)}
+				>
+					<Link to={user ? "/orders" : "/store"}>
+						<img
+							src={sideimg}
+							alt="Orders"
+							className="w-20 h-12 object-contain cursor-pointer"
+						/>
+					</Link>
+
+					{isHovering && (
+						<div className="absolute z-10 right-0 mt-2 w-48 bg-gray-400 rounded-md shadow-lg py-1">
+							<div className="px-4 py-2 text-sm text-white">
+								{user
+									? "Check your order status"
+									: "Login to view your orders"}
+							</div>
+						</div>
+					)}
+				</div>
 			</div>
 		</header>
 	);

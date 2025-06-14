@@ -1,73 +1,75 @@
 // AppRoutes.tsx
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
-import Loading from './components/Loading';
-import Header from './components/Header';
-import ProtectedRoute from './components/ProtectedRoute';
-import AboutUs from './pages/AboutUs';
-import Wishlist from './pages/Wishlist';
-import { User } from './types/types';
-import ProductPage from './pages/ProductDetails';
+import { Routes, Route, useLocation } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import Loading from "./components/Loading";
+import Header from "./components/Header";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AboutUs from "./pages/AboutUs";
+import Wishlist from "./pages/Wishlist";
+import { User } from "./types/types";
+import ProductPage from "./pages/ProductDetails";
 
-import Category from './pages/Category';
-import DealsPage from './pages/Deals';
+import Category from "./pages/Category";
+import DealsPage from "./pages/Deals";
+import ContactPage from "./pages/ContactUs"
 
-import Signup from './pages/SignUp';
-import NotificationBell from './components/admin/NotificationBell';
+import Signup from "./pages/SignUp";
+import NotificationBell from "./components/admin/NotificationBell";
 
-
-const Login = lazy(() => import('./pages/Login'));
-const Home = lazy(() => import('./pages/Home'));
-const Cart = lazy(() => import('./pages/Cart'));
-const Search = lazy(() => import('./pages/Search'));
-const Shipping = lazy(() => import('./pages/Shipping'));
-const Orders = lazy(() => import('./pages/Orders'));
-const OrderDetails = lazy(() => import('./pages/OrderDetails'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
-const Checkout = lazy(() => import('./pages/Checkout'));
-const MyAccount = lazy(() => import('./pages/MyAccount'));
+const MainPage = lazy(() => import("./pages/mainPage"));
+const Login = lazy(() => import("./pages/Login"));
+const Home = lazy(() => import("./pages/Home"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Search = lazy(() => import("./pages/Search"));
+const Shipping = lazy(() => import("./pages/Shipping"));
+const Orders = lazy(() => import("./pages/Orders"));
+const OrderDetails = lazy(() => import("./pages/OrderDetails"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const MyAccount = lazy(() => import("./pages/MyAccount"));
 
 //Admin Routes Importing
-const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
-const Customers = lazy(() => import('./pages/admin/Customers'));
-const Transaction = lazy(() => import('./pages/admin/Transaction'));
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+const Customers = lazy(() => import("./pages/admin/Customers"));
+const Transaction = lazy(() => import("./pages/admin/Transaction"));
 const AdminPanel = lazy(() => import("./pages/admin/Reviews"));
-const Products = lazy(() => import('./pages/admin/Products'));
-const NewProduct = lazy(() => import('./pages/admin/management/NewProduct'));
+const Products = lazy(() => import("./pages/admin/Products"));
+const NewProduct = lazy(() => import("./pages/admin/management/NewProduct"));
 const ProductManagement = lazy(
-    () => import('./pages/admin/management/ProductManagement')
+	() => import("./pages/admin/management/ProductManagement")
 );
 const TransactionManagement = lazy(
-    () => import('./pages/admin/management/TransactionManagement')
+	() => import("./pages/admin/management/TransactionManagement")
 );
-const BarCharts = lazy(() => import('./pages/admin/charts/BarCharts'));
-const PieCharts = lazy(() => import('./pages/admin/charts/PieCharts'));
-const LineCharts = lazy(() => import('./pages/admin/charts/LineCharts'));
-const Stopwatch = lazy(() => import('./pages/admin/apps/Stopwatch'));
-const Coupon = lazy(() => import('./pages/admin/apps/Coupon'));
-const Toss = lazy(() => import('./pages/admin/apps/Toss'));
+const BarCharts = lazy(() => import("./pages/admin/charts/BarCharts"));
+const PieCharts = lazy(() => import("./pages/admin/charts/PieCharts"));
+const LineCharts = lazy(() => import("./pages/admin/charts/LineCharts"));
+const Stopwatch = lazy(() => import("./pages/admin/apps/Stopwatch"));
+const Coupon = lazy(() => import("./pages/admin/apps/Coupon"));
+const Toss = lazy(() => import("./pages/admin/apps/Toss"));
 
 const AppRoutes = ({ user }: { user: User | null }) => {
-    const location = useLocation();
-    const hideHeader = location.pathname.startsWith('/admin');
+	const location = useLocation();
+	const hideHeader = location.pathname.startsWith("/admin");
 
-    return (
+	return (
 		<>
 			{/* Header */}
 
 			{!hideHeader && <Header user={user} />}
-			{/* <ProductProvider>
-			<ReviewProvider> */}
+
 			<Suspense fallback={<Loading />}>
 				<Routes>
 					{/* Public Routes */}
-					<Route path="/" element={<Home />} />
+					<Route path="/" element={<MainPage />} />
+					<Route path="/store" element={<Home />} />
 					<Route path="/cart" element={<Cart />} />
 					<Route path="/search" element={<Search />} />
 					<Route path="/product/:id" element={<ProductPage />} />
 					<Route path="/about" element={<AboutUs />} />
 					<Route path="/categories" element={<Category />} />
 					<Route path="/deals" element={<DealsPage />} />
+					<Route path="/contact" element={<ContactPage />} />
 
 					{/* Not logged In Route */}
 					<Route
@@ -116,7 +118,6 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 							path="/admin/customers"
 							element={<Customers />}
 						/>
-					
 
 						<Route path="/admin/products" element={<Products />} />
 						<Route
@@ -165,8 +166,6 @@ const AppRoutes = ({ user }: { user: User | null }) => {
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</Suspense>
-			{/* </ReviewProvider> */}
-			{/* </ProductProvider> */}
 		</>
 	);
 };

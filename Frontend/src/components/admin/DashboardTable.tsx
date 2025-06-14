@@ -10,26 +10,27 @@ interface DataType {
 }
 
 const columns: Column<DataType>[] = [
-    {
-        Header: "Id",
-        accessor: "_id",
-    },
-    {
-        Header: "Quantity",
-        accessor: "quantity",
-    },
-    {
-        Header: "Discount",
-        accessor: "discount",
-    },
-    {
-        Header: "Amount",
-        accessor: "amount",
-    },
-    {
-        Header: "Status",
-        accessor: "status",
-    },
+	{
+		Header: "Id",
+		accessor: "_id",
+		Cell: ({ value }) => value.slice(-10),
+	},
+	{
+		Header: "Quantity",
+		accessor: "quantity",
+	},
+	{
+		Header: "Discount",
+		accessor: "discount",
+	},
+	{
+		Header: "Amount",
+		accessor: "amount",
+	},
+	{
+		Header: "Status",
+		accessor: "status",
+	},
 ];
 
 const DashboardTable = ({ data = [] }: { data: DataType[] }) => {

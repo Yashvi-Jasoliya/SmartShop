@@ -1,4 +1,4 @@
-// Variables
+
 $primary: rgba(39, 136, 255, 0.959);
 $dark: #1e293b;
 $light: #f8fafc;
@@ -22,7 +22,7 @@ $gray: #64748b;
         padding: 0 1.5rem;
     }
 
-    // Mission Section
+  
     .mission-section {
         padding: 4rem 0;
         background: $light;
@@ -168,7 +168,6 @@ $gray: #64748b;
     }
 }
 
-// Responsive Design
 @media (max-width: 768px) {
     .about-page {
         .hero-section {

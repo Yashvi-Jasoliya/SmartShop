@@ -8,10 +8,6 @@ function loader() {
                 <div></div>
             </div>
         </section>
-
-        // <section className="loader">
-        //   <div></div>
-        // </section>
     );
 }
 

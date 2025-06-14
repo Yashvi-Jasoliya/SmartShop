@@ -3,16 +3,20 @@ import { useOrderDetailsQuery } from "../redux/api/orderAPI";
 import Loading from "./Loading";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface OrderDetailsProps {
 	orderId: string;
 }
 
 const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
+        const { user } = useSelector((state: RootState) => state.userReducer);
 	const { data, isLoading } = useOrderDetailsQuery(orderId);
 	const contentRef = useRef<HTMLDivElement>(null);
 
 	if (!data) return null;
+    
 
 	const formatDate = (timestamp: string | Date) => {
 		const date = new Date(timestamp);
@@ -35,9 +39,11 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
 
 		doc.setFontSize(14);
 		doc.text("Shipping Information:", 14, 42);
+        doc.text("  ", 14,32)
 		doc.setFontSize(12);
 		const shipping = data.order.shippingInfo;
 		const shippingLines = [
+            `Name: ${user?.name}`,
 			shipping.address,
 			`${shipping.city}, ${shipping.state} ${shipping.pinCode}`,
 			shipping.country,
@@ -131,6 +137,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
 				<div className="shipping-info">
 					<h3>Shipping Information</h3>
 					<p>
+                        Name: {user?.name}
+                        <br />
 						{data.order.shippingInfo.address}
 						<br />
 						{data.order.shippingInfo.city},{" "}

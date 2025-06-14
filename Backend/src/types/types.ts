@@ -32,6 +32,7 @@ export type SearchRequestQuery = {
     category?: string;
     sort?: string;
     page?: string;
+    dateSort?: string;
 };
 
 export interface BaseQuery {

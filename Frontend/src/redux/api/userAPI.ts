@@ -3,11 +3,10 @@ import axios from 'axios';
 import {
     AllUsersResponse,
     DeleteUserRequest,
-    LoginResponse,
     MessageResponse,
     UserResponse,
 } from '../../types/api-types';
-import { ManualLoginRequest, User } from '../../types/types';
+import { User } from '../../types/types';
 
 export const userAPI = createApi({
     reducerPath: 'userApi',

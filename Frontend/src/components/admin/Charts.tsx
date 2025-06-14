@@ -56,8 +56,8 @@ export const BarChart = ({
         maintainAspectRatio: false,
         indexAxis: horizontal ? "y" : "x",
         animation: {
-            duration: 1000, // Specify the duration of the animation in milliseconds
-            easing: "easeOutBack", // You can choose different easing options
+            duration: 1000, 
+            easing: "easeOutBack", 
         },
         plugins: {
             legend: {

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase"; // adjust the path as needed
+import { auth } from "../firebase";
 
 import Button from "../components/common/Button";
 import {
@@ -10,6 +10,8 @@ import {
 } from "../redux/api/reviewAPI";
 import { IReview } from "../types/api-types";
 import StarRating from "../components/common/startRating";
+import { FaMicrophone, FaMicrophoneSlash, FaUpload } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 interface ReviewFormProps {
 	productId: string;
@@ -30,10 +32,99 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 	} = useGetProductReviewsQuery(productId);
 
 	const [localReviews, setLocalReviews] = useState<IReview[]>([]);
+	const [image, setImage] = useState<File | null>(null);
+	const [preview, setPreview] = useState<string | null>(null);
 
 	const [user] = useAuthState(auth);
 	const navigate = useNavigate();
 	const isLoggedIn = !!user;
+
+	const [isListening, setIsListening] = useState(false);
+	const recognitionRef = useRef<any>(null);
+
+	useEffect(() => {
+		const SpeechRecognition =
+			window.SpeechRecognition || window.webkitSpeechRecognition;
+
+		if (!SpeechRecognition) {
+			toast.error("Voice commands not supported in your browser");
+			return;
+		}
+
+		const recognition = new SpeechRecognition();
+		recognition.continuous = true;
+		recognition.interimResults = false;
+		recognition.lang = "en-US";
+		recognitionRef.current = recognition;
+
+		recognition.onresult = (event: any) => {
+			const transcript =
+				event.results[
+					event.results.length - 1
+				][0].transcript.toLowerCase();
+
+			setComment((prev) => {
+				const cleanTranscript =
+					transcript === "period" ? "." : transcript;
+				return prev ? `${prev} ${cleanTranscript}` : cleanTranscript;
+			});
+		};
+
+		recognition.onerror = (event: any) => {
+			if (event.error !== "aborted") {
+				toast.error(`Voice error: ${event.error}`);
+			}
+			setIsListening(false);
+		};
+
+		return () => {
+			recognition.stop();
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!recognitionRef.current) return;
+
+		if (isListening) {
+			recognitionRef.current.start();
+			toast.loading("Listening... Say your review", { id: "voice" });
+		} else {
+			recognitionRef.current.stop();
+			toast.dismiss("voice");
+		}
+	}, [isListening]);
+
+	const toggleListening = async () => {
+		try {
+			if (!isLoggedIn) {
+				toast.error("login to add review by voice");
+				return;
+			}
+
+			const stream = await navigator.mediaDevices.getUserMedia({
+				audio: true,
+			});
+			stream.getTracks().forEach((track) => track.stop());
+
+			setIsListening((prev) => !prev);
+		} catch (error) {
+			toast.error(
+				"Microphone access required. Enable it in your browser settings"
+			);
+			setIsListening(false);
+		}
+	};
+
+	useEffect(() => {
+		if (image) {
+			const objectUrl = URL.createObjectURL(image);
+			setPreview(objectUrl);
+
+			return () => URL.revokeObjectURL(objectUrl);
+		} else {
+			setPreview(null);
+		}
+	}, [image]);
 
 	useEffect(() => {
 		if (reviews) {
@@ -61,6 +152,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 			rating,
 			comment,
 			date: new Date(),
+			imageUrl: "/uploads",
 		};
 
 		try {
@@ -68,6 +160,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 			setLocalReviews((prev) => [result, ...prev]);
 			setRating(0);
 			setComment("");
+			setImage(image);
 			refetch();
 		} catch (error) {
 			console.error("Failed to submit review:", error);
@@ -76,7 +169,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 
 	return (
 		<div className="max-w-2xl mx-auto">
-			{/* Review Form */}
 			<div className="bg-white p-6 rounded-lg shadow-md mb-8">
 				<h2 className="text-xl font-semibold mb-4">Write a Review</h2>
 				<form onSubmit={handleSubmit}>
@@ -121,7 +213,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 						/>
 					</div>
 
-					<div className="mb-4">
+					<div className="mb-4 relative">
 						<label
 							htmlFor="comment"
 							className="block text-sm font-medium text-gray-700 mb-1"
@@ -133,10 +225,91 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 							required
 							rows={4}
 							value={comment}
-							onChange={(e) => setComment(e.target.value)}
-							placeholder="Share your thoughts about this product..."
-							className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+							onChange={(e) => {
+								const value = e.target.value.trimStart();
+								if (!/^\d+$/.test(value)) {
+									setComment(value);
+								}
+							}}
+							placeholder="Share your reviews about this product..."
+							className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
 						/>
+
+						<button
+							type="button"
+							onClick={toggleListening}
+							className={`absolute bottom-2 right-2 p-1 rounded-full ${
+								isListening
+									? "bg-red-100 text-red-600 animate-pulse"
+									: "bg-gray-100 text-gray-600"
+							}`}
+							aria-label={
+								isListening
+									? "Stop listening"
+									: "Start voice input"
+							}
+						>
+							{isListening ? (
+								<FaMicrophone />
+							) : (
+								<FaMicrophoneSlash />
+							)}
+						</button>
+					</div>
+
+					<div className="mb-4">
+						<label
+							htmlFor="image"
+							className="form-label flex items-center gap-2 cursor-pointer text-sm"
+						>
+							Image (optional)
+							<FaUpload className="text-gray-400" />
+						</label>
+						<input
+							id="image"
+							type="file"
+							accept="image/jpeg,image/jpg,image/png"
+							onChange={(e) => {
+								const file = e.target.files?.[0];
+								if (file) {
+									const validTypes = [
+										"image/jpeg",
+										"image/jpg",
+										"image/png",
+									];
+									if (!validTypes.includes(file.type)) {
+										toast.error(
+											"Only JPG, JPEG, and PNG files are allowed."
+										);
+										e.target.value = "";
+										return;
+									}
+									setImage(file);
+								}
+							}}
+							className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-sm file:text-gray-500 file:font-semibold"
+						/>
+						{preview && (
+							<div className="relative mt-2 inline-block">
+								<img
+									src={preview}
+									alt="Preview"
+									className="h-24 object-cover rounded border"
+								/>
+								<button
+									type="button"
+									onClick={() => {
+										setImage(null);
+										setPreview(null);
+									}}
+									className="absolute top-0 right-0 bg-white text-red-600 rounded-full shadow px-1.5 py-0.5 text-xs hover:bg-red-100"
+									aria-label="Remove image"
+									title="Remove image"
+								>
+									×
+								</button>
+							</div>
+						)}
 					</div>
 
 					<Button
@@ -192,9 +365,17 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 										</span>
 									</div>
 								</div>
-								<p className="text-gray-600">
+								<p className="text-gray-600 mb-2">
 									{review.comment || "No comment provided"}
 								</p>
+
+								{review.imageUrl && (
+									<img
+										src={review.imageUrl}
+										alt="Review"
+										className="h-24 object-cover rounded border"
+									/>
+								)}
 							</div>
 						))}
 					</div>

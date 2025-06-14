@@ -1,4 +1,3 @@
-import { Types } from 'mongoose'; 
 
 export interface User {
     name: string;
@@ -15,7 +14,7 @@ export interface User {
 export interface ManualLoginRequest {
     email: string;
     password?: string;
-    
+
 }
 export type NotificationType = 'new_review' | 'transaction' | 'user_login' | 'system';
 export interface Notification {
@@ -31,17 +30,6 @@ export interface Notification {
     isRead: boolean;
     timestamp: string;
 }
-
-
-// export interface Product {
-//     name: string;
-//     price: number;
-//     stock: number;
-//     category: string;
-//     photo: string;
-//     _id: string;
-// }
-
 export interface Product {
     _id: string;
     name: string;
@@ -71,7 +59,7 @@ export type ShippingInfo = {
     state: string;
     country: string;
     pinCode: string;
-    phoneNo?: string;           
+    phoneNo?: string;
 };
 
 export type CartItem = {

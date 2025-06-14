@@ -1,59 +1,69 @@
-import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import ProductCard from '../components/ProductCard';
-import ProductCardSkeleton from '../components/productSceleton';
-import { useLatestProductsQuery } from '../redux/api/productAPI';
-import { addToCart } from '../redux/reducer/cartReducer';
-import { CartItem } from '../types/types';
-import { RootState } from '../redux/store';
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import ProductCard from "../components/ProductCard";
+import ProductCardSkeleton from "../components/productSceleton";
+import { useLatestProductsQuery } from "../redux/api/productAPI";
+import { addToCart } from "../redux/reducer/cartReducer";
+import { CartItem } from "../types/types";
+import { RootState } from "../redux/store";
 import {
-    useGetWishlistQuery,
-    useToggleWishlistMutation,
-} from '../redux/api/wishlistAPI';
-import { responseToast } from '../utils/features';
-import Footer from '../components/Footer';
+	useGetWishlistQuery,
+	useToggleWishlistMutation,
+} from "../redux/api/wishlistAPI";
+import { responseToast } from "../utils/features";
+import Footer from "../components/Footer";
+import { MdArrowRightAlt } from "react-icons/md";
 
 const Home = () => {
-    const { user } = useSelector((state: RootState) => state.userReducer);
+	const { user } = useSelector((state: RootState) => state.userReducer);
 
-    const { data, isLoading, isError } = useLatestProductsQuery('');
+	const { data, isLoading, isError } = useLatestProductsQuery("");
 
-    const { data: wishlistData, isLoading: wishlistLoading } =
-        useGetWishlistQuery(user?._id || '');
+	const { data: wishlistData, isLoading: wishlistLoading } =
+		useGetWishlistQuery(user?._id || "");
 
-    const [toggleWishlist] = useToggleWishlistMutation();
+	const [toggleWishlist] = useToggleWishlistMutation();
 
-    const toggleHandler = async (productId: string) => {
-        if (!user?._id) return toast.error('Please log in to add to wishlist');
+	const toggleHandler = async (productId: string) => {
+		if (!user?._id) return toast.error("Please log in to add to wishlist");
 
-        const res = await toggleWishlist({
-            productId,
-            userId: user._id,
-        });
+		const res = await toggleWishlist({
+			productId,
+			userId: user._id,
+		});
 
-        responseToast(res, null, '');
-    };
+		responseToast(res, null, "");
+	};
 
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-    const addToCartHandler = (cartItem: CartItem) => {
-        if (cartItem.stock < 1) return toast.error('Out of Stock');
-        dispatch(addToCart(cartItem));
-        toast.success('Added to cart');
-    };
+	const addToCartHandler = (cartItem: CartItem) => {
+		if (cartItem.stock < 1) return toast.error("Out of Stock");
+		dispatch(addToCart(cartItem));
+		toast.success("Added to cart");
+	};
 
-    if (isError) toast.error('Can not fetch products');
+	if (isError) toast.error("Can not fetch products");
 
-    return (
+	return (
 		<div className="home">
 			{/* Hero Section */}
 			<section className="hero">
 				<div className="hero-content">
-					<h2>Discover Amazing Products</h2>
-					<p>Shop the latest collection with exclusive deals</p>
-					<Link to="/search" className="shop-now-btn">
+					<h2>Explore Latest Collection with Trends</h2>
+					<p>
+						Explore Today’s Top Trends with Latest Collection and
+						Enjoy Unbeatable Discounts
+					</p>
+					<Link
+						to="/search"
+						className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-blue-400 hover:text-black bg-blue-300 text-black rounded-xl"
+					>
 						Shop Now
+						<span className="text-2xl">
+							<MdArrowRightAlt />
+						</span>
 					</Link>
 				</div>
 			</section>
@@ -61,7 +71,7 @@ const Home = () => {
 			{/* Featured Products */}
 			<div className="featured-container">
 				<div className="section-header">
-					<h1 className="section-title">Latest Products</h1>
+					<h1 className="section-title">Top Products</h1>
 					<Link to="/search" className="findmore">
 						View All →
 					</Link>

@@ -23,9 +23,9 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = categoryKeywords;
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash",
+    model: "gemini-1.5-flash",
     generationConfig: {
-        maxOutputTokens: 500,
+        maxOutputTokens: 200,
         temperature: 0.5,
     }
 });
@@ -71,14 +71,14 @@ const detectCategoryFromProduct = (productName: string): string => {
     if (name.includes('table')) return 'table';
     if (name.includes('football') || name.includes('ball')) return 'football';
     if (name.includes('almond')) return 'almonds';
-    if (name.includes('pasta')) return 'pasta';
+    if (name.includes('ketchup') || name.includes('sauce')) return 'ketchup';
     return 'unknown';
 };
 
 // Generate keywords with Gemini AI
 const generateKeywords = async (productName: string): Promise<string[]> => {
     try {
-        const prompt = `Generate 50 specific keywords for "${productName}" focusing on:
+        const prompt = `Generate 20 specific keywords for "${productName}" focusing on:
         - Key features
         - Technical specifications
         - Physical attributes
@@ -100,7 +100,7 @@ const generateKeywords = async (productName: string): Promise<string[]> => {
     }
 };
 
-// Generate contrast keywords
+// Generate match keywords
 const generateContrastKeywords = async (productName: string): Promise<string[]> => {
     try {
         const prompt = `List 5 words that would NEVER describe "${productName}" 
@@ -121,7 +121,7 @@ const generateContrastKeywords = async (productName: string): Promise<string[]> 
     }
 };
 
-// Cache and get keywords and contrasts
+// Cache and get keywords and matches
 const getKeywordsForProduct = async (productName: string): Promise<{ keywords: string[], contrasts: string[] }> => {
     if (!keywordCache.has(productName)) {
         const [keywords, contrasts] = await Promise.all([
@@ -158,7 +158,6 @@ const verifyWithJsonKeywords = (review: ReviewType, product: ProductType): boole
         product.name.toLowerCase().split(/\s+/).some(word => text.includes(word));
 };
 
-
 // Gemini AI-based analysis
 const analyzeWithGemini = async (review: ReviewType, product: ProductType): Promise<boolean> => {
     const { keywords, contrasts } = await getKeywordsForProduct(product.name);
@@ -177,7 +176,6 @@ const analyzeWithGemini = async (review: ReviewType, product: ProductType): Prom
     const sentiment = sentimentAnalyzer.getSentiment(tokens);
     return Math.abs(sentiment) <= 8;
 };
-
 
 // review validation function
 export const isGenuineReview = async (review: ReviewType, product: ProductType): Promise<boolean> => {
@@ -204,7 +202,6 @@ export const analyzeReviewBatch = async (reviews: ReviewType[], product: Product
         if (new Set(texts).size !== texts.length) return false;
         if (reviews.some(r => !r.reviewer)) return false;
 
-        // Analyze all reviews
         const results = await Promise.all(
             reviews.map(r => isGenuineReview(r, product))
         );
@@ -216,3 +213,4 @@ export const analyzeReviewBatch = async (reviews: ReviewType[], product: Product
         return false;
     }
 };
+

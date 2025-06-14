@@ -21,8 +21,8 @@ import dashboardRoute from './routes/statistics.js';
 import wishlistRoute from './routes/wishlist.js';
 import reviewRoute from './routes/review.js';
 import notificationRoute from './routes/notifications.js';
-import { newUser } from './controllers/user.js';
 import subscribeRoute from "./routes/subscriber.js"
+import geminiRoutes from "./routes/aiAssistant.js"
 
 dotenv.config();
 
@@ -84,9 +84,10 @@ app.use('/api/v1/dashboard', dashboardRoute);
 app.use('/api/v1/review', reviewRoute);
 app.use('/api/v1/wishlist', wishlistRoute);
 app.use('/uploads', express.static('uploads'));
-app.use('/api/notifications/', notificationRoute)
+app.use('/api/notifications', notificationRoute)
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use('/api/subscribe', subscribeRoute);
+app.use("/api/ai", geminiRoutes);
 
 // Error Middleware
 app.use(errorMiddleware);

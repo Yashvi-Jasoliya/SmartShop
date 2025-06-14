@@ -26,6 +26,7 @@ export interface LoginResponse extends MessageResponse{
 
 
 export interface IReview {
+    _id?:string,
     id?: string;
     productId: string;
     userName: string;
@@ -33,6 +34,7 @@ export interface IReview {
     comment: string;
     date: Date;
     isGenuine?: boolean;
+    imageUrl?: string;
 }
 
 export interface ReviewResponse extends IReview {

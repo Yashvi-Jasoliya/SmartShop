@@ -1,4 +1,4 @@
-// src/services/notificationService.ts
+
 import io from 'socket.io-client';
 import type { Socket } from 'socket.io-client';
 import type { Notification } from '../types/types';
@@ -8,7 +8,7 @@ class NotificationService {
     private apiBaseUrl: string;
 
     constructor() {
-        this.apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        this.apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3005';
     }
 
     connect(userId: string) {
@@ -44,14 +44,14 @@ class NotificationService {
 
     getNotificationIcon(type: string) {
         switch (type) {
-            case 'new_review':
+            case 'review':
                 return { icon: '⭐', color: '#f59e0b' };
             case 'transaction':
-                return { icon: '💰', color: '#10b981' };
-            case 'user_registration':
+                return { icon: '💳', color: '#10b981' };
+            case 'register':
                 return { icon: '👤', color: '#3b82f6' };
-            case 'user_login':
-                return { icon: '🔑', color: '#8b5cf6' };
+            case 'New User':
+                return { icon: '👤', color: '#8b5cf6' };
             case 'system':
                 return { icon: '⚙️', color: '#64748b' };
             default:

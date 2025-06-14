@@ -2,19 +2,19 @@ import { Request, Response } from 'express';
 import Subscriber from '../models/subscriber.js';
 import { sendSubscriptionMail } from '../utils/sendMailer.js';
 
-// POST /api/subscribe
+//  /api/subscribe
 export const subscribeUser = async (req: Request, res: Response) => {
     const { email } = req.body;
 
     if (!email) {
-         res.status(400).json({ message: 'Email is required' });
+        res.status(400).json({ message: 'Email is required' });
         return
     }
 
     try {
         const existing = await Subscriber.findOne({ email });
         if (existing) {
-             res.status(400).json({ message: 'Already subscribed' });
+            res.status(400).json({ message: 'Already subscribed' });
             return
         }
 
@@ -31,7 +31,7 @@ export const subscribeUser = async (req: Request, res: Response) => {
     }
 };
 
-// GET /api/subscribe
+//  /api/subscribe
 export const getSubscribers = async (_req: Request, res: Response) => {
     try {
         const subscribers = await Subscriber.find();

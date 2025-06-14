@@ -24,7 +24,7 @@
         height: 180px;
         object-fit: contain;
         border-radius: 8px;
-        // background-color: rgb(247, 247, 247);
+        
     }
 
     p {
@@ -85,8 +85,7 @@
             @include mixin.flex(row, center, center, 0.5rem);
             margin-top: 0.5rem;
             flex-grow: 1;
-            // position: relative;
-
+           
             &:hover {
                 background-color: rgba(0, 95, 220);
             }

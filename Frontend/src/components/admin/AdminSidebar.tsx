@@ -16,7 +16,7 @@ import {
 } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { MdOutlineRateReview, MdRateReview } from "react-icons/md";
+import { MdRateReview } from "react-icons/md";
 
 function AdminSidebar() {
     const location = useLocation();
@@ -60,11 +60,8 @@ function AdminSidebar() {
                 }
             >
                 <div className='logoHamburger'>
-                    {/* <h2>
-                        <a href="/admin/dashboard">Logo.</a>
-                    </h2> */}
                     <Link
-                        to='/'
+                        to='/store'
                         className='header-logo'
                     >
                         <span>Smart</span>Shop

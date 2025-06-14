@@ -1,60 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { UserReducerInitialState } from "../../types/reducer-types";
 import { useAllProductsQuery } from "../../redux/api/productAPI";
 import {
 	useDeleteReviewMutation,
-	useGetAllReviewsQuery,
+	useGetFilteredReviewsQuery,
+	useDeleteAllFakeReviewsMutation,
 } from "../../redux/api/reviewAPI";
 import Button from "../common/Button";
 import StarRating from "../common/startRating";
 import toast from "react-hot-toast";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
+const PAGE_SIZE = 8;
 const ReviewTable: React.FC = () => {
 	const { user } = useSelector(
 		(state: { userReducer: UserReducerInitialState }) => state.userReducer
 	);
 
-	const { isLoading: productsLoading, data } = useAllProductsQuery(
-		user?._id!
-	);
+	const navigate = useNavigate();
+	const [searchQuery, setSearchQuery] = useState("");
+	const [filter, setFilter] = useState<"all" | "genuine" | "fake">("all");
+	const [selectedCategory, setSelectedCategory] = useState<string>("all");
+	const [page, setPage] = useState(1);
+
+	const { data: productsData } = useAllProductsQuery(user?._id!);
 
 	const {
-		data: reviews = [],
+		data: reviewsData,
 		isLoading: reviewsLoading,
 		refetch,
-	} = useGetAllReviewsQuery();
-
-	const [deleteReview] = useDeleteReviewMutation();
-
-	const [filter, setFilter] = useState<"all" | "genuine" | "fake">("all");
-
-	const filteredReviews = reviews.filter((review) => {
-		if (filter === "all") return true;
-		if (filter === "genuine") return review.isGenuine;
-		if (filter === "fake") return !review.isGenuine;
-		return true;
+	} = useGetFilteredReviewsQuery({
+		category: selectedCategory,
+		filter,
+		page,
+		search: searchQuery,
+		limit: 8,
 	});
 
-	const productMap = React.useMemo(() => {
+	const productMap = useMemo(() => {
 		const map: Record<string, string> = {};
-		data?.products.forEach((product) => {
+		productsData?.products.forEach((product) => {
 			map[product._id] = product.name;
 		});
 		return map;
-	}, [data?.products]);
+	}, [productsData?.products]);
 
 	const getProductName = (productId: string) =>
 		productMap[productId] || "Unknown Product";
+
+	const [deleteReview] = useDeleteReviewMutation();
+	const [deleteAllFakeReviews] = useDeleteAllFakeReviewsMutation();
+
+	const categories = [
+		"all",
+		...new Set(productsData?.products?.map((p) => p.category) || []),
+	];
+
+	useEffect(() => {
+		setPage(1);
+	}, [filter, searchQuery, selectedCategory]);
 
 	const handleDelete = async (id: string) => {
 		if (window.confirm("Are you sure you want to delete this review?")) {
 			try {
 				await deleteReview(id).unwrap();
-				await refetch();
+				toast.success("Review deleted successfully");
+				refetch();
 			} catch (error) {
-				console.error("Failed to delete review:", error);
-				alert("Failed to delete review.");
+				toast.error("Failed to delete review");
 			}
 		}
 	};
@@ -63,31 +79,29 @@ const ReviewTable: React.FC = () => {
 		if (
 			window.confirm("Are you sure you want to delete all fake reviews?")
 		) {
-			const fakeReviews = reviews.filter((r) => !r.isGenuine);
 			try {
-				await Promise.all(
-					fakeReviews.map((review) =>
-						deleteReview(review._id).unwrap()
-					)
-				);
+				await deleteAllFakeReviews().unwrap();
+				toast.success("All fake reviews deleted successfully");
+				setPage(1);
 				await refetch();
-				toast.success("All fake reviews deleted.");
-			} catch (error) {
-				console.error("Error deleting fake reviews", error);
-				toast.error("Failed to delete some or all fake reviews.");
+			} catch (error: any) {
+				toast.error(
+					error?.data?.message || "Failed to delete fake reviews"
+				);
 			}
 		}
 	};
 
-	if (productsLoading || reviewsLoading) {
+	if (reviewsLoading || !reviewsData) {
 		return <div>Loading...</div>;
 	}
 
 	return (
-		<div>
-			<div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-				<div className="flex items-center space-x-4">
-					<span className="text-sm font-medium text-gray-700">
+		<div className="max-w-full mx-auto p-4 bg-white rounded shadow">
+			<div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between mb-4">
+				{/* Filter buttons */}
+				<div className="flex flex-wrap items-center gap-2">
+					<span className="font-semibold text-gray-700 mr-2">
 						Filter:
 					</span>
 					<Button
@@ -112,16 +126,56 @@ const ReviewTable: React.FC = () => {
 						Fake
 					</Button>
 				</div>
-				<Button
-					size="sm"
-					onClick={handleDeleteAllFake}
-					className="bg-yellow-500 hover:bg-yellow-400 text-white"
-				>
-					Delete All Fake Reviews
-				</Button>
+
+				{/* Category dropdown */}
+				<div className="w-full sm:w-auto">
+					<select
+						value={selectedCategory}
+						onChange={(e) => {
+							setSelectedCategory(e.target.value);
+							setPage(1);
+						}}
+						className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
+					>
+						<option value="all">All Categories</option>
+						{categories
+							.filter((category) => category !== "all")
+							.map((category) => (
+								<option key={category} value={category}>
+									{category}
+								</option>
+							))}
+					</select>
+				</div>
+
+				{/* Search input */}
+				<div className="w-full sm:w-auto">
+					<input
+						type="text"
+						placeholder="Search products..."
+						className="w-full sm:w-72 px-3 py-2 border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out placeholder-gray-400 text-sm"
+						value={searchQuery}
+						onChange={(e) => {
+							setSearchQuery(e.target.value);
+							setPage(1);
+						}}
+					/>
+				</div>
+
+				{/* Delete button */}
+				<div className="w-full sm:w-auto">
+					<Button
+						size="sm"
+						onClick={handleDeleteAllFake}
+						className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-400 text-white"
+					>
+						Delete All Fake Reviews
+					</Button>
+				</div>
 			</div>
 
-			<div className="overflow-x-auto">
+			{/* Reviews Table */}
+			<div className="overflow-x-auto border rounded">
 				<table className="min-w-full divide-y divide-gray-200">
 					<thead className="bg-gray-50">
 						<tr>
@@ -149,7 +203,7 @@ const ReviewTable: React.FC = () => {
 						</tr>
 					</thead>
 					<tbody className="bg-white divide-y divide-gray-200">
-						{filteredReviews.length === 0 ? (
+						{reviewsData?.reviews?.length === 0 ? (
 							<tr>
 								<td
 									colSpan={7}
@@ -159,12 +213,17 @@ const ReviewTable: React.FC = () => {
 								</td>
 							</tr>
 						) : (
-							filteredReviews.map((review) => (
+							reviewsData?.reviews?.map((review) => (
 								<tr
 									key={review._id}
-									className="hover:bg-gray-50"
+									className="hover:bg-gray-50 cursor-pointer"
+									onClick={() =>
+										navigate(
+											`/product/${review.productId}?reviewId=${review._id}`
+										)
+									}
 								>
-									<td className="px-6 py-4 whitespace-nowrap">
+									<td className="px-6 py-3 whitespace-nowrap">
 										<span
 											className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
 												review.isGenuine
@@ -177,33 +236,34 @@ const ReviewTable: React.FC = () => {
 												: "Fake"}
 										</span>
 									</td>
-									<td className="px-6 py-4 text-sm font-medium text-gray-900">
+									<td className="px-6 py-3 text-sm font-medium text-gray-900">
 										{getProductName(review.productId)}
 									</td>
-									<td className="px-6 py-4 text-sm text-gray-500">
+									<td className="px-6 py-3 text-sm text-gray-500">
 										{review.userName}
 									</td>
-									<td className="px-6 py-4 text-sm text-gray-500">
+									<td className="px-6 py-3 text-sm text-gray-500">
 										<StarRating
 											rating={review.rating}
 											size="sm"
 										/>
 									</td>
-									<td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+									<td className="px-6 py-3 text-sm text-gray-500 max-w-xs truncate">
 										{review.comment}
 									</td>
-									<td className="px-6 py-4 text-sm text-gray-500">
+									<td className="px-6 py-3 text-sm text-gray-500">
 										{new Date(
 											review.date
 										).toLocaleDateString()}
 									</td>
-									<td className="px-6 py-4 text-right text-sm font-medium">
+									<td className="px-6 py-3 text-right text-sm font-medium">
 										<Button
 											variant="danger"
 											size="sm"
-											onClick={() =>
-												handleDelete(review._id)
-											}
+											onClick={(e) => {
+												e.stopPropagation();
+												handleDelete(review._id || "");
+											}}
 										>
 											Delete
 										</Button>
@@ -214,6 +274,26 @@ const ReviewTable: React.FC = () => {
 					</tbody>
 				</table>
 			</div>
+
+			{/* Pagination */}
+			{reviewsData && reviewsData.total > PAGE_SIZE && (
+				<Stack
+					spacing={2}
+					direction="row"
+					justifyContent="center"
+					className="mt-6"
+				>
+					<Pagination
+						count={reviewsData.totalPages}
+						page={page}
+						onChange={(_, value) => setPage(value)}
+						color="primary"
+						shape="rounded"
+						siblingCount={1}
+						boundaryCount={1}
+					/>
+				</Stack>
+			)}
 		</div>
 	);
 };

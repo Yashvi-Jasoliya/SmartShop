@@ -326,17 +326,13 @@ export const getPieCharts = TryCatch(
             let genuine = 0;
             let fake = 0;
 
-            const results = await Promise.all(
-                allReviews.map(async (review) => {
-                    const product = await Product.findById(review.productId);
-                    const isGenuine = product ? await isGenuineReview(review, product) : false;
-                    return isGenuine;
-                })
-            );
-
-            for (const result of results) {
-                if (result) genuine++;
-                else fake++;
+            for (const review of allReviews){
+                const product = await Product.findById(review.productId);
+                if (product && await isGenuineReview(review, product)) {
+                    genuine++;
+                } else {
+                    fake++;
+                }
             }
             const adminReviews = {
                 Genuine: genuine,

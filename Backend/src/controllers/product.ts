@@ -114,7 +114,7 @@ export const newProduct = TryCatch(
 
         const images = req.files as Express.Multer.File[];
 
-        console.log("body",req.body); 
+        console.log("body", req.body);
         console.log(req.files);
 
         // Check required fields
@@ -129,7 +129,7 @@ export const newProduct = TryCatch(
             !images ||
             images.length === 0
         ) {
-            
+
             images?.forEach((file) => fs.unlinkSync(file.path));
             return next(
                 new errorHandler(
@@ -148,7 +148,7 @@ export const newProduct = TryCatch(
             )
         );
 
-   
+
         images.forEach((image) => fs.unlinkSync(image.path));
 
         const product = await Product.create({
@@ -212,7 +212,7 @@ export const updateProduct = TryCatch(
                 existingImageUrls = [];
             }
         }
-        
+
         // Delete removed images from Cloudinary
         const imagesToDelete = product.images.filter(
             (imgUrl) => !existingImageUrls.includes(imgUrl)
@@ -361,9 +361,16 @@ export const getAllProducts = TryCatch(
 
         if (category) baseQuery.category = category;
 
-        // Fetch paginated products based on the query, sort, limit, and skip parameters
+        let sortOption = {};
+
+        if (sort === 'asc') sortOption = { price: 1 };
+        else if (sort === 'dsc') sortOption = { price: -1 };
+
+        if (sort === 'newest') sortOption = { createdAt: -1 };
+        else if (sort === 'oldest') sortOption = { createdAt: 1 };
+
         const productPromise = Product.find(baseQuery)
-            .sort(sort && { price: sort === 'asc' ? 1 : -1 })
+            .sort(sortOption)
             .limit(limit)
             .skip(skip);
 

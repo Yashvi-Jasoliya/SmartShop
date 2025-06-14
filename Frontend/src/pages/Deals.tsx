@@ -1,48 +1,54 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
-const dummyDeals = [
+const Deals = [
 	{
 		id: 1,
 		name: "Summer Sale",
 		discount: "30%",
-		expires: "2025-06-30",
+		start: "2025-06-01",
+		startOn: "2025-08-30",
 		category: "seasonal",
+		gradient: "from-blue-400 to-green-400",
 	},
 	{
 		id: 2,
 		name: "Festival Offer",
 		discount: "50%",
-		expires: "2025-11-27",
+		startOn: "2025-11-27",
 		category: "event",
+		gradient: "from-indigo-500 to-purple-500",
 	},
 	{
 		id: 3,
 		name: "New Year Offer",
 		discount: "20%",
-		expires: "2026-01-10",
+		startOn: "2026-01-10",
 		category: "holiday",
+		gradient: "from-green-400 to-blue-500",
 	},
 	{
 		id: 4,
 		name: "Flash Sale",
 		discount: "15%",
-		expires: "2025-05-30",
+		startOn: "2025-09-30",
 		category: "limited",
+		gradient: "from-purple-500 to-indigo-500",
 	},
 ];
 
 const DealsPage = () => {
-	const [deals, setDeals] = useState<typeof dummyDeals>([]);
+	const [deals, setDeals] = useState<typeof Deals>([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeCategory, setActiveCategory] = useState("all");
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setTimeout(() => {
-			setDeals(dummyDeals);
+			setDeals(Deals);
 			setIsLoading(false);
 		}, 300);
 	}, []);
@@ -59,9 +65,8 @@ const DealsPage = () => {
 	const categories = ["all", "seasonal", "event", "holiday", "limited"];
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
+		<div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 deals">
 			<div className="container mx-auto px-4 py-12">
-				{/* Header with animated gradient */}
 				<motion.div
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -77,7 +82,6 @@ const DealsPage = () => {
 					</p>
 				</motion.div>
 
-				{/* Search and filter bar */}
 				<div className="max-w-4xl mx-auto mb-12">
 					<div className="flex flex-col md:flex-row gap-4">
 						<div className="relative flex-grow">
@@ -121,7 +125,6 @@ const DealsPage = () => {
 					</div>
 				</div>
 
-				{/* Deals grid */}
 				{isLoading ? (
 					<div className="flex justify-center">
 						<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
@@ -137,7 +140,9 @@ const DealsPage = () => {
 								whileHover={{ y: -5 }}
 								className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
 							>
-								<div className="relative h-40 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center">
+								<div
+									className={`relative h-40 bg-gradient-to-r ${deal.gradient} flex items-center justify-center`}
+								>
 									<div className="absolute inset-0 bg-black/10"></div>
 									<span className="text-6xl text-white/90">
 										{deal.category === "seasonal" && "☀️"}
@@ -167,9 +172,13 @@ const DealsPage = () => {
 												d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 											/>
 										</svg>
-										<span>Expires: {deal.expires}</span>
+
+										<span>Starts: {deal.startOn}</span>
 									</div>
-									<button className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-[1.02]">
+									<button
+										className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-[1.02]"
+										onClick={() => navigate("/search")}
+									>
 										Claim Offer
 									</button>
 								</div>

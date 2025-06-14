@@ -43,10 +43,6 @@
     box-sizing: border-box;
 }
 
-body {
-    user-select: none;
-}
-
 a {
     text-decoration: none;
     color: black;
@@ -77,7 +73,6 @@ a {
 }
 
 //home page
-
 // Admin Dashboard
 
 .adminContainer {
@@ -161,7 +156,6 @@ a {
         }
 
         td {
-            // padding: 0.5rem 1rem 0.5rem 1rem;
             padding: 0.7rem;
 
             img {

@@ -35,7 +35,7 @@ const PieCharts = () => {
 		<div className="adminContainer">
 			<AdminSidebar />
 			<main className="pieChartContainer">
-				<h1>Pie & Doughnut Charts</h1>
+				<h1 className="text-xl">Pie & Doughnut Charts</h1>
 
 				{/* First row */}
 				<div className="chart-row">

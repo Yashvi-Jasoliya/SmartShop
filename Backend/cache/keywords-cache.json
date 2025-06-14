@@ -1,0 +1,94 @@
+{
+  "chocolate": {
+    "keywords": [
+      "cocoa",
+      "cacao",
+      "bitter",
+      "sweet",
+      "creamy",
+      "melting point",
+      "texture",
+      "flavor profile",
+      "baking",
+      "confectionery"
+    ],
+    "contrasts": [
+      "salty",
+      "savory",
+      "sour",
+      "metallic",
+      "earthy"
+    ],
+    "timestamp": 1749294656276,
+    "productName": "Chocolate"
+  },
+  "watch": {
+    "keywords": [
+      "water resistant",
+      "chronograph",
+      "gps",
+      "sapphire crystal",
+      "titanium case",
+      "heart rate monitor",
+      "smartwatch",
+      "timekeeping",
+      "fitness tracker",
+      "daily wear"
+    ],
+    "contrasts": [
+      "edible",
+      "intangible",
+      "inanimate",
+      "smelly",
+      "porous"
+    ],
+    "timestamp": 1749294677239,
+    "productName": "watch"
+  },
+  "headphone": {
+    "keywords": [
+      "noise cancellation",
+      "bluetooth",
+      "wireless",
+      "over-ear",
+      "in-ear",
+      "microphone",
+      "battery life",
+      "water resistant",
+      "sound quality",
+      "bass"
+    ],
+    "contrasts": [
+      "portable",
+      "camera",
+      "toothpaste",
+      "cucumber",
+      "skyscraper"
+    ],
+    "timestamp": 1749294692337,
+    "productName": "HeadPhone"
+  },
+  "purse": {
+    "keywords": [
+      "leather",
+      "zipper",
+      "shoulder strap",
+      "size",
+      "material",
+      "color",
+      "compartments",
+      "handbag",
+      "everyday carry",
+      "wallet"
+    ],
+    "contrasts": [
+      "heavy",
+      "rectangular",
+      "fragile",
+      "edible",
+      "transparent"
+    ],
+    "timestamp": 1749294710906,
+    "productName": "Purse"
+  }
+}

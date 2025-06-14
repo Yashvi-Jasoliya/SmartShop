@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiLogOut } from "react-icons/fi";
 import NotificationBell from "./admin/NotificationBell";
 import { useSelector } from "react-redux";
@@ -16,7 +16,7 @@ const HeaderBar = () => {
 	const { isError, error } = useStatsQuery(user?._id!);
 
 	const navigate = useNavigate();
-	
+
 	const [showLogoutBox, setShowLogoutBox] = useState(false);
 
 	const handleLogout = async () => {
@@ -45,7 +45,6 @@ const HeaderBar = () => {
 			}}
 		>
 			<div className="flex justify-between items-center">
-			
 				<div>
 					<h1 className="text-gray-400 p-2 text-lg font-semibold flex items-center gap-2">
 						<MdManageSearch className="text-2xl text-gray-400" />
@@ -55,7 +54,6 @@ const HeaderBar = () => {
 
 				<div className="flex justify-end items-center gap-4">
 					{/* Notification Bell */}
-
 					{user?._id && <NotificationBell userId={user._id} />}
 
 					<div className="header-bar relative">

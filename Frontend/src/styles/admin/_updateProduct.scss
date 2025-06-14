@@ -58,25 +58,13 @@
             }
         }
 
-        // .product-image-container {
-        //     margin: 0 auto;
-        //     background: $bg-light;
-        //     border-radius: 0.5rem;
-
-        //     .product-image {
-        //         border-radius: 10px;
-        //         width: 100%;
-        //         height: 100%;
-        //         object-fit: contain;
-        //     }
-        // }
         .slider-container {
             margin: 0 auto;
             background: $bg-light;
             border-radius: 0.5rem;
             overflow: hidden;
             width: 100%;
-            max-width: 500px; // adjust size if needed
+            max-width: 500px; 
             height: 250px;
             position: relative;
             display: flex;
