@@ -1,7 +1,11 @@
 
 import { Request, Response } from 'express';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
+import { Product } from '../models/product.js';
+interface DisplayProduct extends Product {
+    displayText: string;
+    discountPercentage?: number;
+}
 
 interface Product {
     _id: string;
@@ -62,119 +66,111 @@ export const geminiShoppingAssistant = async (req: Request, res: Response) => {
             }
         });
 
-        const limitedProducts = (currentProducts || []).slice(0, 20);
-        console.log('Using products:', limitedProducts.length);
+        const discountMatch = query.match(/(\d+)% off|\b(\d+) percent|\b(\d+)%/i);
+        const requestedDiscount = discountMatch ?
+            parseInt(discountMatch[1] || discountMatch[2] || discountMatch[3]) :
+            null;
 
+
+        const limitedProducts = (currentProducts || []).slice(0, 20);
+
+        const productsWithDiscounts = limitedProducts.map((product: Product): DisplayProduct => {
+            let discountPercentage: number | undefined;
+            let discountInfo = '';
+            let priceInfo = `Rs.${product.price}`;
+
+            if (product.originalPrice && product.originalPrice > product.price) {
+                discountPercentage = Math.round(
+                    ((product.originalPrice - product.price) / product.originalPrice * 100)
+                );
+                discountInfo = ` Discount: (${discountPercentage}% OFF)`;
+                priceInfo = `Rs.${product.price}${discountInfo}`;
+            }
+
+            return {
+                ...product,
+                discountPercentage,
+                displayText: `*${product.name}* - ${priceInfo}`
+            };
+        });
+
+        const filteredProducts = requestedDiscount ?
+            productsWithDiscounts.filter((p: DisplayProduct) => p.discountPercentage && p.discountPercentage >= requestedDiscount) :
+            productsWithDiscounts;
+
+        const categories: Record<string, string[]> = {};
+        filteredProducts.forEach((product: DisplayProduct) => {
+            if (!categories[product.category]) {
+                categories[product.category] = [];
+            }
+            categories[product.category].push(product.displayText);
+        });
+
+        const categoryText = Object.entries(categories)
+            .map(([category, products]) => `${category}: ${products.join(', ')}`)
+            .join(' | ');
 
         const prompt = `You are a shopping assistant for Smartshop with these strict rules:
+1. Greeting Rules:
+- For greetings (reply only once, not in all response) "welcome To SmartShop" then never show with reply
+- For farewells: Reply with "Thank you! Visit us again."
 
-        1. Greeting Rules:
-        - FIRST MESSAGE ONLY: Start with "Welcome to Smartshop!" 
-        - NEVER repeat this greeting in subsequent messages
-        - For "ok thanks" or similar: ONLY reply "Okk thanks! See you next time."
-        
-        2. Response Formatting:
-        - ALWAYS use this exact structure:
-        Categories => Category1: Product1, Product2 | Category2: Product3, Product4
-        Suggested Products: RandomProduct1, RandomProduct2
-        
-        3. Product Display Rules:
-        - When showing categories: 
-          * List ALL available products per category
-          * Format: "CategoryName: Product1, Product2, Product3 |"
-          * One line per category
-          * End with "|" separator
-        - For suggestions: Pick 2-3 random products across categories
-        
-        4. Current Inventory:
-        Grocery: Salt, Almonds |
-        Electronics: HeadPhone, Laptop, SmartFire Tv, Phone |
-        Fashion: Purse, Kurti Set, Watch, Shoes |
-        Food: Biscuits, Noodles, Chocolate, Chips |
-        Garden: Indoor Plants |
-        Furniture: Table, Sofa set |
-        Sports: Football|
-        
-        5. Behavior Rules:
-        - Keep responses under 100 words
-        - Be conversational but professional
-        - NEVER invent products - only use listed items
-        - For product questions: Include ID (last 4 chars) and price
-        
-        Example Responses:
-        First message:
-        "Welcome to Smartshop!
-        Categories => Grocery: Salt, Almonds | Electronics: HeadPhone, Laptop
-        Suggested Products: Almonds (ID: x3aF), Laptop (ID: 9bK2)"
-        
-        Subsequent message:
-        "Categories => Fashion: Purse, Kurti Set | Food: Biscuits, Noodles
-        Suggested Products: Kurti Set (ID: pQ7m), Biscuits (ID: yT4n)"
-        
-        Now respond to: "${query}"`;
+2. Discount Handling:
+${requestedDiscount ? `- ONLY show products with ${requestedDiscount}% or higher discounts` : '- Show all available discounts'}
+- Always display: *Product Name* - Rs.Price Discount: (X% OFF)
+- Never show products that don't match the requested discount filter
 
-        console.log('Sending request to Gemini...');
-        console.log('Prompt length:', prompt.length);
+3. Current ${requestedDiscount ? `${requestedDiscount}%+ OFF ` : ''}Inventory:
+${categoryText}
 
-        // Call Gemini API
-        let result;
-        let response;
-        let aiResponse;
+4. Response Format:
+Categories => [category]: [products] | [other category]: [products]
+Suggested Products: [2-3 most relevant products]
 
-        try {
-            result = await model.generateContent(prompt);
-            response = await result.response;
-            aiResponse = response.text();
-            console.log('Gemini response received:', aiResponse.substring(0, 100) + '...');
-        } catch (geminiError) {
-            console.error('Gemini API call failed:', geminiError);
-            res.status(500).json({
-                success: false,
-                response: "I'm having trouble processing your request right now. Please try again.",
-                products: [],
-            });
-            return;
+5. Example Response:
+"Categories => Electronics: *Laptop* - Rs.750 Discount: (25% OFF) | Fashion: *Watch* - Rs.50 Discount: (30% OFF)
+Suggested Products: *Laptop* (25% OFF), *Watch* (30% OFF)"
 
-        }
+Now respond to: "${query}"`;
 
-        const suggestedProducts: Product[] = [];
+     
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const aiResponse = response.text();
 
-        if (limitedProducts && limitedProducts.length > 0) {
-            limitedProducts.forEach((product: Product) => {
+        const suggestedProducts = filteredProducts
+            .filter((product: DisplayProduct) => {
+                const responseLower = aiResponse.toLowerCase();
+                return responseLower.includes(product.name.toLowerCase()) ||
+                    responseLower.includes(product._id.slice(-4).toLowerCase());
+            })
+            .slice(0, 1); 
 
-                const productNameWords = product.name.toLowerCase().split(' ');
-                const responseText = aiResponse.toLowerCase();
-
-                const hasMatch = productNameWords.some(word =>
-                    word.length > 3 && responseText.includes(word)
-                ) || responseText.includes(product._id);
-
-                if (hasMatch && suggestedProducts.length < 1) {
-                    suggestedProducts.push(product);
-                }
-            });
-        }
-
-        console.log('Suggested products:', suggestedProducts.length);
-
-        const finalResponse = {
+        res.status(200).json({
             success: true,
             response: aiResponse,
             products: suggestedProducts,
-        };
+            discountFilter: requestedDiscount || 'none',
+            discountDetails: suggestedProducts.map((p: DisplayProduct) => ({
+                id: p._id,
+                name: p.name,
+                currentPrice: p.price,
+                originalPrice: p.originalPrice,
+                discountPercent: p.discountPercentage || 0
+            }))
 
-        console.log('Sending successful response');
-        res.status(200).json(finalResponse);
+        });
 
     } catch (error) {
+        console.error('Error:', error);
         res.status(500).json({
             success: false,
-            response: "I'm experiencing technical difficulties. Please try again in a moment.",
-            products: [],
-            error: process.env.NODE_ENV === 'development'
+            response: "I'm experiencing technical difficulties.",
+            products: []
         });
     }
 };
+
 
 export const testEndpoint = async (req: Request, res: Response) => {
     console.log('Test endpoint hit');
