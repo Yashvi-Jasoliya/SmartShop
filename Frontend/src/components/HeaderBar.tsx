@@ -60,7 +60,7 @@ const HeaderBar = () => {
 						<img
 							src={user?.photo || user?.name}
 							alt="User"
-							className="cursor-pointer w-8 h-8 sm:w-7 sm:h-7 rounded-full object-cover border border-gray-300"
+							className="cursor-pointer w-8 h-6 md:w-7 md:h-7 rounded-full object-cover border border-gray-300"
 							onClick={() => setShowLogoutBox((prev) => !prev)}
 						/>
 
