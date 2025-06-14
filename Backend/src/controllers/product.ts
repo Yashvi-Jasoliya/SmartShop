@@ -333,13 +333,14 @@ export const deleteProduct = TryCatch(
     }
 );
 
+
 export const getAllProducts = TryCatch(
     async (
         req: Request<{}, {}, {}, SearchRequestQuery>,
         res: Response,
         next: NextFunction
     ) => {
-        const { search, price, category, sort } = req.query;
+        const { search, price, category, sort, discount } = req.query;
 
         const page = Number(req.query.page) || 1;
         const limit = Number(process.env.PRODUCT_PER_PAGE) || 8;
@@ -360,6 +361,31 @@ export const getAllProducts = TryCatch(
             };
 
         if (category) baseQuery.category = category;
+
+        // ONLY ADDITION: Discount filter
+        if (discount) {
+            const discountValue = Number(discount);
+            (baseQuery as any).$expr = {
+                $eq: [
+                    {
+                        $round: [
+                            {
+                                $multiply: [
+                                    {
+                                        $divide: [
+                                            { $subtract: ["$originalPrice", "$price"] },
+                                            "$originalPrice"
+                                        ]
+                                    },
+                                    100
+                                ]
+                            }
+                        ]
+                    },
+                    discountValue
+                ]
+            };
+        }
 
         let sortOption = {};
 
@@ -388,6 +414,7 @@ export const getAllProducts = TryCatch(
         });
     }
 );
+
 
 
 export const getProductStats = async (req: Request, res: Response) => {
