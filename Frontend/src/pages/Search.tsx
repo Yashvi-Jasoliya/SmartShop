@@ -32,8 +32,9 @@ const Search = () => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state: RootState) => state.userReducer);
 
-	const [searchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useSearchParams();
 	const initialCategory = searchParams.get("category") || "";
+	const discountFilter = searchParams.get("discount");
 
 	const {
 		data: CategoriesResponse,
@@ -68,7 +69,10 @@ const Search = () => {
 		search,
 		sort,
 		price: maxPrice,
+		discount: discountFilter ? parseInt(discountFilter) : undefined, // Add this line
 	});
+
+    const productsToShow = searchedData?.products || [];
 
 	const { data: wishlistData, isLoading: wishlistLoading } =
 		useGetWishlistQuery(user?._id || "", {
@@ -218,7 +222,11 @@ const Search = () => {
 
 				<main className="products-main">
 					<div className="search-header">
-						<h1 className="page-title">All Products</h1>
+						<h1 className="page-title">
+							{discountFilter
+								? `Products with ${discountFilter}% Off`
+								: "All Products"}
+						</h1>
 						<input
 							type="text"
 							placeholder="Search by name..."
@@ -228,13 +236,31 @@ const Search = () => {
 						/>
 					</div>
 
+					{discountFilter && (
+						<div className="mb-4 p-4 bg-purple-50 rounded-lg">
+							<h3 className="text-lg font-semibold text-purple-800">
+								Showing products with {discountFilter}% discount
+							</h3>
+							<button
+								onClick={() => {
+									// Remove discount filter
+									searchParams.delete("discount");
+									setSearchParams(searchParams);
+								}}
+								className="mt-2 text-purple-600 hover:text-purple-800 text-sm"
+							>
+								Clear discount filter
+							</button>
+						</div>
+					)}
+
 					<div className="product-grid">
 						{productLoading
 							? [...Array(6)].map((_, i) => (
 									<ProductCardSkeleton key={i} />
 							  ))
 							: !wishlistLoading &&
-							  searchedData?.products.map((product) => (
+                            productsToShow?.map((product) => (
 									<ProductCard
 										key={product._id}
 										productId={product._id}

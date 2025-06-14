@@ -7,8 +7,7 @@ const Deals = [
 	{
 		id: 1,
 		name: "Summer Sale",
-		discount: "30%",
-		start: "2025-06-01",
+		discount: "60%",
 		startOn: "2025-08-30",
 		category: "seasonal",
 		gradient: "from-blue-400 to-green-400",
@@ -23,8 +22,8 @@ const Deals = [
 	},
 	{
 		id: 3,
-		name: "New Year Offer",
-		discount: "20%",
+		name: "New Offers",
+		discount: "70%",
 		startOn: "2026-01-10",
 		category: "holiday",
 		gradient: "from-green-400 to-blue-500",
@@ -32,7 +31,7 @@ const Deals = [
 	{
 		id: 4,
 		name: "Flash Sale",
-		discount: "15%",
+		discount: "40%",
 		startOn: "2025-09-30",
 		category: "limited",
 		gradient: "from-purple-500 to-indigo-500",
@@ -61,6 +60,11 @@ const DealsPage = () => {
 			activeCategory === "all" || deal.category === activeCategory;
 		return matchesSearch && matchesCategory;
 	});
+
+	const handleDealClick = (discount: string) => {
+		const discountValue = parseInt(discount.replace("%", ""));
+		navigate(`/search?discount=${discountValue}`);
+	};
 
 	const categories = ["all", "seasonal", "event", "holiday", "limited"];
 
@@ -106,7 +110,7 @@ const DealsPage = () => {
 								/>
 							</svg>
 						</div>
-						<div className="flex overflow-x-auto pb-2 md:pb-0 gap-2">
+						<div className="flex overflow-x-auto pb-2 md:pb-0 gap-2 btn-deals">
 							{categories.map((category) => (
 								<button
 									key={category}
@@ -130,7 +134,7 @@ const DealsPage = () => {
 						<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
 					</div>
 				) : filteredDeals.length > 0 ? (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 card-deals">
 						{filteredDeals.map((deal) => (
 							<motion.div
 								key={deal.id}
@@ -138,7 +142,8 @@ const DealsPage = () => {
 								animate={{ opacity: 1, scale: 1 }}
 								transition={{ duration: 0.3 }}
 								whileHover={{ y: -5 }}
-								className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+								className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+								onClick={() => handleDealClick(deal.discount)}
 							>
 								<div
 									className={`relative h-40 bg-gradient-to-r ${deal.gradient} flex items-center justify-center`}
@@ -147,7 +152,7 @@ const DealsPage = () => {
 									<span className="text-6xl text-white/90">
 										{deal.category === "seasonal" && "☀️"}
 										{deal.category === "event" && "🎪"}
-										{deal.category === "holiday" && "🎄"}
+										{deal.category === "holiday" && "✨"}
 										{deal.category === "limited" && "⚡"}
 									</span>
 									<div className="absolute bottom-4 right-4 bg-white text-purple-600 px-3 py-1 rounded-full text-sm font-bold">
@@ -172,14 +177,16 @@ const DealsPage = () => {
 												d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 											/>
 										</svg>
-
-										<span>Starts: {deal.startOn}</span>
+										<span>Limited Time Deal</span>
 									</div>
 									<button
 										className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-[1.02]"
-										onClick={() => navigate("/search")}
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDealClick(deal.discount);
+										}}
 									>
-										Claim Offer
+										View Products
 									</button>
 								</div>
 							</motion.div>
