@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Deals = [
 	{
 		id: 1,
-		name: "Summer Sale",
+		name: "Monsoon Sale",
 		discount: "60%",
 		startOn: "2025-08-30",
 		category: "seasonal",
@@ -150,7 +150,7 @@ const DealsPage = () => {
 								>
 									<div className="absolute inset-0 bg-black/10"></div>
 									<span className="text-6xl text-white/90">
-										{deal.category === "seasonal" && "☀️"}
+										{deal.category === "seasonal" && "☂️"}
 										{deal.category === "event" && "🎪"}
 										{deal.category === "holiday" && "✨"}
 										{deal.category === "limited" && "⚡"}
