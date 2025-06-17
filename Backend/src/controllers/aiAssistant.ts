@@ -24,16 +24,6 @@ export const geminiShoppingAssistant = async (req: Request, res: Response) => {
 
         const { query, currentProducts, userId } = req.body;
 
-        if (!userId) {
-            console.log('Unauthorized access attempt - no userId');
-            res.status(401).json({
-                success: false,
-                response: "I can't help you right now. Please login first to use the shopping assistant.",
-                products: [],
-            });
-            return;
-        }
-
         if (!query || typeof query !== 'string') {
             console.log('Invalid query:', query);
             res.status(400).json({
@@ -112,7 +102,7 @@ export const geminiShoppingAssistant = async (req: Request, res: Response) => {
 
         const prompt = `You are a shopping assistant for Smartshop with these strict rules:
 1. Greeting Rules:
-- For greetings (reply only once, not in all response) "welcome To SmartShop" then never show with reply
+- For greetings like hi(reply only once, not in all response) "welcome To SmartShop" then never show with reply
 - For farewells: Reply with "Thank you! Visit us again."
 
 2. Discount Handling:
@@ -133,7 +123,7 @@ Suggested Products: *Laptop* (25% OFF), *Watch* (30% OFF)"
 
 Now respond to: "${query}"`;
 
-     
+
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const aiResponse = response.text();
@@ -144,7 +134,7 @@ Now respond to: "${query}"`;
                 return responseLower.includes(product.name.toLowerCase()) ||
                     responseLower.includes(product._id.slice(-4).toLowerCase());
             })
-            .slice(0, 1); 
+            .slice(0, 1);
 
         res.status(200).json({
             success: true,

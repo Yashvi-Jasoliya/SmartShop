@@ -70,8 +70,6 @@ io.on('connection', (socket) => {
     return;
 });
 
-
-// Routes
 app.get('/', (req, res) => {
     res.send(`Server running at http://localhost:${port}`);
 });

@@ -5,10 +5,10 @@ import { Order } from "../models/order.js";
 import { invalidatCache, reduceStock } from "../utils/features.js";
 import errorHandler from "../utils/utilityClass.js";
 import { myCache } from "../app.js";
-import  { socketIO } from '../app.js';
+import { socketIO } from '../app.js';
 import { Notification } from '../models/notifications.js';
 
-//Get my orders
+
 export const myOrders = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { id: user } = req.query;
@@ -30,7 +30,6 @@ export const myOrders = TryCatch(
     }
 );
 
-//Get all orders
 export const allOrders = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const key = `all-orders`;
@@ -50,7 +49,6 @@ export const allOrders = TryCatch(
     }
 );
 
-//Get single order
 export const getSingleOrder = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
@@ -75,7 +73,6 @@ export const getSingleOrder = TryCatch(
     }
 );
 
-//Create new order
 export const newOrder = TryCatch(
     async (
         req: Request<{}, {}, NewOrderRequestBody>,
@@ -142,7 +139,6 @@ export const newOrder = TryCatch(
     }
 );
 
-//Process order
 export const processOrder = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
@@ -187,7 +183,6 @@ export const processOrder = TryCatch(
     }
 );
 
-// Delete order
 export const deleteOrder = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;

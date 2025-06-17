@@ -6,12 +6,12 @@ import { stripe } from "../app.js";
 import { socketIO } from '../app.js';
 import { Notification } from '../models/notifications.js';
 
-// route "/api/v1/payment/create"
+
 export const createPaymentIntent = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { amount } = req.body;
 
-        console.log("Amount received:", amount); 
+        console.log("Amount received:", amount);
 
         if (amount === undefined || isNaN(Number(amount)) || Number(amount) <= 0) {
             return next(new errorHandler("Please enter a valid amount", 400));
@@ -39,7 +39,7 @@ export const createPaymentIntent = TryCatch(
         });
     }
 );
-// route "/api/v1/payment/coupon/new"
+
 export const newCoupon = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { couponCode, amount } = req.body;
@@ -56,7 +56,6 @@ export const newCoupon = TryCatch(
     }
 );
 
-// route "/api/v1/payment/discount"
 export const applyDiscount = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { couponCode } = req.body;
@@ -78,7 +77,6 @@ export const applyDiscount = TryCatch(
     }
 );
 
-// route "/api/v1/payment/coupon/all"
 export const allCoupons = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const coupons = await Coupon.find({});
@@ -90,7 +88,6 @@ export const allCoupons = TryCatch(
     }
 );
 
-// route "/api/v1/payment/coupon/delete/:couponCode"
 export const deleteCoupon = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         const { couponCode } = req.params;

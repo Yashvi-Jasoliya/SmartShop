@@ -55,7 +55,6 @@ export const registerUser = async (req: Request, res: Response) => {
     }
 };
 
-
 export const loginUser = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -89,7 +88,6 @@ export const loginUser = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
-
 
 export const newUser = TryCatch(
     async (

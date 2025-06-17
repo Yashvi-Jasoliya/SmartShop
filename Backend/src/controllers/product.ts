@@ -8,12 +8,10 @@ import {
 } from '../types/types.js';
 import fs from 'fs';
 import errorHandler from '../utils/utilityClass.js';
-import { rm } from 'fs';
 import { myCache } from '../app.js';
 import { invalidatCache } from '../utils/features.js';
 import cloudinary from '../utils/cloudinary.js';
 
-//Revalidate the cache on new, updated, or deleted products and on New orders
 export const getLatestProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         let products;
@@ -32,7 +30,6 @@ export const getLatestProduct = TryCatch(
     }
 );
 
-//Revalidate the cache on new, updated, or deleted products and on New orders
 export const getAllCategories = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         let categories;
@@ -51,7 +48,6 @@ export const getAllCategories = TryCatch(
     }
 );
 
-//Revalidate the cache on new, updated, or deleted products and on New orders
 export const getAdminProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         let products;
@@ -70,7 +66,7 @@ export const getAdminProduct = TryCatch(
     }
 );
 
-//Revalidate the cache on new, updated, or deleted products and on New orders
+
 export const getSingleProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         let product;
@@ -117,7 +113,7 @@ export const newProduct = TryCatch(
         console.log("body", req.body);
         console.log(req.files);
 
-        // Check required fields
+
         if (
             !name ||
             !price ||
@@ -213,7 +209,6 @@ export const updateProduct = TryCatch(
             }
         }
 
-        // Delete removed images from Cloudinary
         const imagesToDelete = product.images.filter(
             (imgUrl) => !existingImageUrls.includes(imgUrl)
         );
@@ -414,8 +409,6 @@ export const getAllProducts = TryCatch(
         });
     }
 );
-
-
 
 export const getProductStats = async (req: Request, res: Response) => {
     try {

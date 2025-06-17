@@ -147,7 +147,7 @@ const CONFIG = {
     DEBUG_MODE: true
 };
 
-
+// vrify Json
 const verifyWithJsonKeywords = (review: ReviewType, product: ProductType): boolean => {
     const category = detectCategoryFromProduct(product.name);
     const keywords = CATEGORY_KEYWORDS[category] || [];
@@ -194,7 +194,7 @@ export const isGenuineReview = async (review: ReviewType, product: ProductType):
     return verifyWithJsonKeywords(review, product);
 };
 
-
+// analyze review
 export const analyzeReviewBatch = async (reviews: ReviewType[], product: ProductType): Promise<boolean> => {
     try {
         const texts = reviews.map(r => r.comment.trim().toLowerCase());
