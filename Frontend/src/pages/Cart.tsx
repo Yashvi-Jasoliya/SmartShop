@@ -206,10 +206,20 @@ const Cart = () => {
 
 						<button
 							onClick={proceedToCheckoutHandler}
-							className="checkout-button"
+							className={`checkout-button ${
+								total <= 0 ? "disabled" : ""
+							}`}
+							disabled={total <= 0}
 						>
 							Proceed to Checkout
 						</button>
+
+						{total <= 0 && (
+							<p className="text-sm text-red-600 mt-2">
+								Add more products to proceed — total amount is
+								not sufficient.
+							</p>
+						)}
 
 						<Link to="/store" className="continue-shopping">
 							Continue Shopping

@@ -71,7 +71,6 @@ const Dashboard = () => {
 				<section className="graphContainer">
 					<div className="revenueChart">
 						<h2>Revenue & Transaction</h2>
-						{/* Graph here */}
 						<BarChart
 							data_2={stats.chart.orders.map((val) => val * 10)}
 							data_1={stats.chart.revenue}
@@ -130,7 +129,6 @@ const Dashboard = () => {
 	);
 };
 
-//Widget Items
 interface WidgetItemProps {
 	heading: string;
 	value: number;

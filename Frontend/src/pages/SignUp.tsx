@@ -240,7 +240,6 @@ const Signup = () => {
 							)}
 						</div>
 
-						{/* Gender and DOB Row */}
 						<div className="grid grid-cols-2 gap-4">
 							{/* Gender Field */}
 							<div className="space-y-2">
@@ -276,7 +275,6 @@ const Signup = () => {
 							</div>
 						</div>
 
-						{/* Submit Button */}
 						<button
 							onClick={handleSignup}
 							disabled={isLoading}

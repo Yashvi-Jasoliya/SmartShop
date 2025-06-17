@@ -1,4 +1,3 @@
-// DashboardSkeleton.tsx
 
 import AdminSidebar from "../AdminSidebar";
 

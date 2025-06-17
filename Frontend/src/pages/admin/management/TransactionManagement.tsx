@@ -61,9 +61,7 @@ const TransactionManagement = () => {
 
 	const updateHander = async () => {
 		const res = await updateOrder({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 			userId: user?._id!,
-			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 			orderId: data?.order._id!,
 		});
 
@@ -72,9 +70,7 @@ const TransactionManagement = () => {
 
 	const deleteHandler = async () => {
 		const res = await deleteOrder({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 			userId: user?._id!,
-			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 			orderId: data?.order._id!,
 		});
 

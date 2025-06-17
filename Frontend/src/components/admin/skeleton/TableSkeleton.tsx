@@ -1,4 +1,4 @@
-// TableSkeleton.tsx
+
 const TableSkeleton = () => {
     return (
         <div className='table-skeleton-container'>

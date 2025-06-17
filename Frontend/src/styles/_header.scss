@@ -76,8 +76,7 @@
 				transition: all 0.3s ease;
 
 				&:hover {
-				    color: rgb(133, 133, 133);
-                  
+					color: rgb(133, 133, 133);
 				}
 
 				&.active {
@@ -370,5 +369,22 @@
 		&-logo {
 			font-size: 1.3rem;
 		}
+	}
+}
+
+@media (max-width: 768px) {
+	.header .nav-links .main-links a {
+		padding: 9px 0;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+@media (max-width: 768px) {
+	.header .nav-links .main-links a.active::after {
+		width: 0px;
+		background-color: rgba(0, 115, 255, 0.7);
 	}
 }

@@ -5,9 +5,7 @@ import {
 	FaInstagram,
 	FaLinkedinIn,
 } from "react-icons/fa";
-
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const Footer: React.FC = (): JSX.Element => {
 	const [email, setEmail] = useState("");
@@ -100,7 +98,6 @@ const Footer: React.FC = (): JSX.Element => {
 					</div>
 				</div>
 
-				{/* Navigation Links */}
 				<div className="grid grid-cols-2 gap-10 sm:grid-cols-4 text-sm">
 					<div>
 						<h3 className="text-gray-400 font-semibold mb-4">

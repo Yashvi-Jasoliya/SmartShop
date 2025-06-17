@@ -4,7 +4,6 @@ $dark: #1e293b;
 $light: #f8fafc;
 $gray: #64748b;
 
-// Mixins
 @mixin flex-center {
     display: flex;
     align-items: center;
@@ -72,7 +71,6 @@ $gray: #64748b;
         }
     }
 
-    // Team Section
     .team-section {
         padding: 4rem 0;
         text-align: center;
@@ -126,7 +124,6 @@ $gray: #64748b;
         }
     }
 
-    // Values Section
     .values-section {
         padding: 4rem 0;
         background: $light;

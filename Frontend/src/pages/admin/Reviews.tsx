@@ -37,7 +37,6 @@ const AdminPanel: React.FC = () => {
 					</p>
 				</section>
 
-				{/* Stats Grid */}
 				<section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mt-5 mr-5">
 					{[
 						{
@@ -74,7 +73,6 @@ const AdminPanel: React.FC = () => {
 					))}
 				</section>
 
-				{/* Tabs */}
 				<section className="border-b border-gray-200 mt-5">
 					<div className="flex gap-3">
 						<Button

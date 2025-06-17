@@ -78,7 +78,7 @@ const Login = () => {
 			<div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-r from-cyan-400/10 to-blue-400/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
 			<div className="max-w-md w-full space-y-8 relative">
 				<div className="bg-white/90 backdrop-blur-sm py-8 px-8 shadow-xl rounded-3xl border border-white/20">
-					{/* Header */}
+					
 					<div className="text-center mb-8">
 						<div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
 							<svg
@@ -104,7 +104,7 @@ const Login = () => {
 					</div>
 
 					<div className="space-y-6">
-						{/* Email */}
+					
 						<div>
 							<label
 								htmlFor="email"
@@ -123,7 +123,6 @@ const Login = () => {
 							/>
 						</div>
 
-						{/* Password */}
 						<div>
 							<label
 								htmlFor="password"
@@ -189,7 +188,6 @@ const Login = () => {
 							</div>
 						</div>
 
-						{/* Gender */}
 						<div>
 							<label
 								htmlFor="gender"
@@ -210,7 +208,6 @@ const Login = () => {
 							</select>
 						</div>
 
-						{/* Date */}
 						<div>
 							<label
 								htmlFor="date"
@@ -228,8 +225,7 @@ const Login = () => {
 								required
 							/>
 						</div>
-
-						{/* Login Button */}
+					
 						<button
 							onClick={handleManualLogin}
 							disabled={isLoading}
@@ -264,7 +260,6 @@ const Login = () => {
 							)}
 						</button>
 
-						{/* Divider */}
 						<div className="relative my-6">
 							<div className="absolute inset-0 flex items-center">
 								<div className="w-full border-t border-gray-200" />
@@ -275,8 +270,7 @@ const Login = () => {
 								</span>
 							</div>
 						</div>
-
-						{/* Google Button */}
+					
 						<button
 							onClick={loginHandler}
 							className="w-full flex justify-center items-center px-4 py-3 border border-gray-200 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
@@ -302,7 +296,6 @@ const Login = () => {
 							Continue with Google
 						</button>
 
-						{/* Footer */}
 						<p className="text-center text-sm text-gray-600 mt-6">
 							Don't have an account?{" "}
 							<Link to="/signup">

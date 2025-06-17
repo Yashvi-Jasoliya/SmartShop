@@ -32,7 +32,6 @@ const ChatWindow = ({
 
 	return (
 		<div className="flex flex-col h-[70vh] w-50 max-w-xl mx-auto rounded-lg shadow-lg border border-gray-200">
-			{/* Header */}
 			<div className="flex justify-between items-center p-4 bg-blue-600 text-white rounded-t-lg">
 				<h3 className="text-lg font-semibold">AI Shopping Assistant</h3>
 				<button
@@ -43,7 +42,6 @@ const ChatWindow = ({
 				</button>
 			</div>
 
-			{/* Messages */}
 			<div className="flex-1 p-3 sm:p-4 overflow-y-auto bg-gray-50">
 				{messages.map((msg, i) => (
 					<div
@@ -71,8 +69,12 @@ const ChatWindow = ({
 												key={product._id}
 												className="p-2 bg-white rounded border border-gray-200"
 											>
-												<p className="font-medium">{product.name}</p>
-												<p className="text-sm">₹{product.price}</p>
+												<p className="font-medium">
+													{product.name}
+												</p>
+												<p className="text-sm">
+													₹{product.price}
+												</p>
 												{product.originalPrice && (
 													<p className="text-xs text-gray-500 line-through">
 														₹{product.originalPrice}
@@ -87,7 +89,6 @@ const ChatWindow = ({
 					</div>
 				))}
 
-				{/* Typing Indicator */}
 				{isTyping && (
 					<div className="flex items-center space-x-1">
 						<div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
@@ -103,7 +104,6 @@ const ChatWindow = ({
 				)}
 			</div>
 
-			{/* Input */}
 			<form
 				onSubmit={handleSubmit}
 				className="p-3 sm:p-4 border-t border-gray-200 bg-white"

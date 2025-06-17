@@ -31,7 +31,7 @@ const AboutUs = () => {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ duration: 0.8 }}
-					className="bg-gradient-to-br from-purple-400 via-indigo-500 to-blue-400 to-purple-600 py-24"
+					className="bg-gradient-to-br from-purple-400 via-indigo-500 to-purple-500 py-24"
 				>
 					<div className="container mx-auto px-6 text-center">
 						<motion.div

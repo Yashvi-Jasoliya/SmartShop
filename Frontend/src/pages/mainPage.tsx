@@ -36,7 +36,7 @@ const MainPage = () => {
 	const chatEndRef = useRef<HTMLDivElement>(null);
 	const recognitionRef = useRef<any>(null);
 
-	// Initialize speech recognition
+	
 	useEffect(() => {
 		if ("webkitSpeechRecognition" in window) {
 			const recognition = new (window as any).webkitSpeechRecognition();
@@ -164,7 +164,7 @@ const MainPage = () => {
 								),
 								label: "Voice Reviews",
 								description:
-									"Leave feedback hands-free with our voice recognition system",
+									"Leave product reviews hands-free with our voice recognition system",
 								delay: "1s",
 							},
 							{
@@ -247,7 +247,7 @@ const MainPage = () => {
 						{
 							title: "Voice Product Reviews",
 							description:
-								"Leave hands-free feedback with our voice recognition system - no typing required.",
+								"Leave hands-free reviews with our voice recognition system - no typing required.",
 							icon: <Mic className="w-8 h-8 text-pink-600" />,
 							color: "from-pink-500 to-rose-500",
 						},

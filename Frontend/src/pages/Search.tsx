@@ -21,6 +21,7 @@ import Footer from "../components/Footer";
 import Pagination from "@mui/material/Pagination";
 import ChatWindow from "../components/ChatWindow";
 import { Product } from "../types/types";
+import { IoFilterSharp } from "react-icons/io5";
 
 type ChatMessage = {
 	text: string;
@@ -51,6 +52,7 @@ const Search = () => {
 	const [chatbotOpen, setChatbotOpen] = useState(false);
 	const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 	const [isBotTyping, setIsBotTyping] = useState(false);
+	const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
 	useEffect(() => {
 		const urlCategory = searchParams.get("category") || "";
@@ -69,10 +71,10 @@ const Search = () => {
 		search,
 		sort,
 		price: maxPrice,
-		discount: discountFilter ? parseInt(discountFilter) : undefined, // Add this line
+		discount: discountFilter ? parseInt(discountFilter) : undefined,
 	});
 
-    const productsToShow = searchedData?.products || [];
+	const productsToShow = searchedData?.products || [];
 
 	const { data: wishlistData, isLoading: wishlistLoading } =
 		useGetWishlistQuery(user?._id || "", {
@@ -159,7 +161,116 @@ const Search = () => {
 	return (
 		<>
 			<div className="search-page">
-				<aside className="filters-sidebar">
+				{mobileFiltersOpen && (
+					<div className="mobile-filters-overlay md:hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+						<div className="mobile-filters-sidebar bg-white h-full w-4/5 max-w-sm p-4 overflow-y-auto">
+							<div className="flex justify-between items-center mb-4">
+								<h2 className="text-xl font-bold">Filters</h2>
+								<button
+									onClick={() => setMobileFiltersOpen(false)}
+									className="text-gray-500 hover:text-gray-700"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-6 w-6"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M6 18L18 6M6 6l12 12"
+										/>
+									</svg>
+								</button>
+							</div>
+
+							<div className="filter-group mb-4">
+								<label className="block mb-2 font-medium">
+									Sort By
+								</label>
+								<select
+									value={sort}
+									onChange={(e) => setSort(e.target.value)}
+									className="w-full p-2 border rounded"
+								>
+									<option value="">Default</option>
+									<option value="asc">
+										Price (Low to High)
+									</option>
+									<option value="dsc">
+										Price (High to Low)
+									</option>
+								</select>
+							</div>
+
+							<div className="filter-group mb-4">
+								<label className="block mb-2 font-medium">
+									Max Price: ₹{maxPrice}
+								</label>
+								<input
+									type="range"
+									min={100}
+									max={200000}
+									value={maxPrice}
+									onChange={(e) =>
+										setMaxPrice(Number(e.target.value))
+									}
+									className="w-full"
+								/>
+							</div>
+
+							<div className="filter-group mb-4">
+								<label className="block mb-2 font-medium">
+									Category
+								</label>
+								<select
+									value={category}
+									onChange={(e) =>
+										setCategory(e.target.value)
+									}
+									className="w-full p-2 border rounded"
+								>
+									<option value="">All Categories</option>
+									{!LoadingCategories &&
+										CategoriesResponse?.categories.map(
+											(i) => (
+												<option key={i} value={i}>
+													{i.toUpperCase()}
+												</option>
+											)
+										)}
+								</select>
+							</div>
+
+							<div className="filter-group mb-4">
+								<label className="block mb-2 font-medium">
+									Sort By
+								</label>
+								<select
+									value={sort}
+									onChange={(e) => setSort(e.target.value)}
+									className="w-full p-2 border rounded"
+								>
+									<option value="">Default</option>
+									<option value="newest">Newest</option>
+									<option value="oldest">Oldest</option>
+								</select>
+							</div>
+
+							<button
+								onClick={() => setMobileFiltersOpen(false)}
+								className="w-full bg-blue-600 text-white py-2 rounded mt-4"
+							>
+								Apply Filters
+							</button>
+						</div>
+					</div>
+				)}
+                
+				<aside className="filters-sidebar hidden md:block">
 					<h2 className="filters-title">Filters</h2>
 
 					<div className="filter-group">
@@ -227,23 +338,32 @@ const Search = () => {
 								? `Products with ${discountFilter}% Off`
 								: "All Products"}
 						</h1>
-						<input
-							type="text"
-							placeholder="Search by name..."
-							value={search}
-							onChange={(e) => setSearch(e.target.value)}
-							className="search-input"
-						/>
+						<div className="search-and-filter">
+							<input
+								type="text"
+								placeholder="Search by name..."
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+								className="search-input"
+							/>
+
+							<button
+								onClick={() => setMobileFiltersOpen(true)}
+								className="mobile-filter-button md:hidden flex items-center gap-1 bg-blue-600 text-white px-3 py-2 rounded-lg mt-5"
+							>
+								<IoFilterSharp />
+								<span>Filters</span>
+							</button>
+						</div>
 					</div>
 
 					{discountFilter && (
 						<div className="mb-4 p-4 bg-purple-50 rounded-lg">
 							<h3 className="text-lg font-semibold text-purple-800">
-								Showing products with {discountFilter}% discount
+								Products with {discountFilter}% discount
 							</h3>
 							<button
 								onClick={() => {
-									// Remove discount filter
 									searchParams.delete("discount");
 									setSearchParams(searchParams);
 								}}
@@ -260,7 +380,7 @@ const Search = () => {
 									<ProductCardSkeleton key={i} />
 							  ))
 							: !wishlistLoading &&
-                            productsToShow?.map((product) => (
+							  productsToShow?.map((product) => (
 									<ProductCard
 										key={product._id}
 										productId={product._id}

@@ -72,9 +72,6 @@ a {
     }
 }
 
-//home page
-// Admin Dashboard
-
 .adminContainer {
     @include mixin.grid(1fr 4fr, 2rem);
     height: 100vh;

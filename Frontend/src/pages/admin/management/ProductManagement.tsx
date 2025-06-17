@@ -93,7 +93,6 @@ const ProductManagement = () => {
 		);
 	};
 
-	// Swipe handler
 	const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
 		setTouchStartX(e.touches[0].clientX);
 	};

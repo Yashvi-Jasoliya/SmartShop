@@ -275,7 +275,6 @@ const ReviewTable: React.FC = () => {
 				</table>
 			</div>
 
-			{/* Pagination */}
 			{reviewsData && reviewsData.total > PAGE_SIZE && (
 				<Stack
 					spacing={2}

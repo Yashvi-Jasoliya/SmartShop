@@ -15,7 +15,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const Wishlist = () => {
 	const { user } = useSelector((state: RootState) => state.userReducer);
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const { data, isLoading, isError, error } = useGetWishlistQuery(
 		user?._id!,
@@ -30,7 +30,6 @@ const Wishlist = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-
 		if (isError && error) {
 			toast.error("Failed to fetch wishlist");
 			console.log(error);

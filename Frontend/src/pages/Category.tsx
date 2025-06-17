@@ -17,7 +17,7 @@ const categoryEmojis: Record<string, string> = {
 	grocery: "🛍️",
 };
 
-// List of gradient classes
+
 const colorClasses = [
 	"bg-gradient-to-br from-purple-400 to-blue-400",
 	"bg-gradient-to-br from-green-400 to-emerald-400",
@@ -50,7 +50,6 @@ const CategoryCards = () => {
 
 	const allCategories: string[] = CategoriesResponse?.categories || [];
 
-	// Filtered categories based on search
 	const filteredCategories = allCategories.filter((cat) =>
 		cat.toLowerCase().includes(searchTerm.toLowerCase())
 	);

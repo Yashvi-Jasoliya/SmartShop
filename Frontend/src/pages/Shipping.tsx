@@ -50,21 +50,20 @@ const Shipping = () => {
 				}));
 			}
 		} else if (name === "city" || name === "state") {
-			const onlyLetters = trimmed.replace(/[^A-Za-z\s]/g, ""); 
+			const onlyLetters = trimmed.replace(/[^A-Za-z\s]/g, "");
 			setShippingInfo((prev) => ({
 				...prev,
 				[name]: onlyLetters,
 			}));
 		} else {
-		
 			setShippingInfo((prev) => ({
 				...prev,
 				[name]: trimmed,
 			}));
 		}
 	};
-    
-    const isValidAddress = (value: string) =>
+
+	const isValidAddress = (value: string) =>
 		/^[a-zA-Z0-9\s,.-]+$/.test(value) && /[a-zA-Z]/.test(value);
 
 	const isAlphaString = (value: string) =>

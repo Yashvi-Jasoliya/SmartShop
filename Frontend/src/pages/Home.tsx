@@ -68,12 +68,11 @@ const Home = () => {
 				</div>
 			</section>
 
-			{/* Featured Products */}
 			<div className="featured-container">
 				<div className="section-header">
 					<h1 className="section-title">Top Products</h1>
 					<Link to="/search" className="findmore">
-						View All →
+						See more →
 					</Link>
 				</div>
 

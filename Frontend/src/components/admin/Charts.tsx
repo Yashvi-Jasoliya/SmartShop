@@ -195,7 +195,7 @@ export const PieChart = ({
     return <Pie data={pieChartData} options={pieChartOptions} />;
 };
 
-//--------------------------Line Chart----------------------------
+// Line Chart
 
 interface LineChartProps {
     data: number[];
@@ -216,8 +216,8 @@ export const LineChart = ({
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-            duration: 1000, // Specify the duration of the animation in milliseconds
-            easing: "easeOutBack", // You can choose different easing options
+            duration: 1000, 
+            easing: "easeOutBack", 
         },
         plugins: {
             legend: {

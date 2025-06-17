@@ -20,6 +20,7 @@
 		height: fit-content;
 		position: sticky;
 		top: 5.5rem;
+        // height: 100%;
 
 		.filters-title {
 			font-size: 1.5rem;
@@ -174,7 +175,7 @@
 		.product-grid {
 			grid-template-columns: repeat(
 				auto-fill,
-				minmax(160px, 1fr)
+				minmax(200, 1fr)
 			) !important;
 		}
 	}
@@ -371,5 +372,3 @@
 		height: 500px;
 	}
 }
-
-

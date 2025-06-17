@@ -152,3 +152,12 @@
         }
     }
 }
+
+@media (max-width: 427px) {
+.order-details .order-items-table th, .order-details .order-items-table td {
+    padding: 1rem 5px;
+    text-align: left;
+    border-bottom: 1px solid #e1e1e1;
+    font-size: 10px;
+}
+}

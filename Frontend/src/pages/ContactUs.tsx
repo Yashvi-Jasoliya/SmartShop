@@ -145,7 +145,6 @@ export default function ContactPage() {
 						</div>
 					</div>
 
-					{/* Right Side: Form */}
 					<div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl">
 						{isSubmitted ? (
 							<div className="text-center py-8">
@@ -230,7 +229,6 @@ export default function ContactPage() {
 											value={formData.message}
 											onChange={(e) => {
 												const value = e.target.value;
-												// Accept anything but prevent only-numeric values
 												if (!/^\d+$/.test(value)) {
 													setFormData({
 														...formData,
@@ -257,7 +255,6 @@ export default function ContactPage() {
 					</div>
 				</div>
 
-				{/* FAQ Section (Collapsible) */}
 				<div className="mt-16 max-w-3xl mx-auto">
 					<h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">
 						Frequently Asked Questions
