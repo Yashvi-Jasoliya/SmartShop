@@ -36,8 +36,8 @@ const AdminPanel: React.FC = () => {
 						Manage reviews and products
 					</p>
 				</section>
-
-				<section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mt-5 mr-5">
+                
+				<section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 pl-1">
 					{[
 						{
 							label: "Total Products",
@@ -57,9 +57,9 @@ const AdminPanel: React.FC = () => {
 					].map(({ label, value, color }, i) => (
 						<div
 							key={i}
-							className="bg-white rounded-2xl p-6 shadow flex flex-col justify-between"
+							className="bg-white rounded-xl p-6 shadow-md flex flex-col justify-between h-full min-h-[120px]"
 						>
-							<span className="text-sm text-gray-500">
+							<span className="text-sm text-gray-500 font-medium">
 								{label}
 							</span>
 							<span
