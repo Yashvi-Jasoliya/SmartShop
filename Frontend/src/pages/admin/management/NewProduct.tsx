@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { responseToast } from "../../../utils/features";
 import { useNavigate } from "react-router-dom";
 import { FaTimes, FaUpload } from "react-icons/fa";
+import { IoCloseOutline } from "react-icons/io5";
 
 const NewProduct = () => {
 	const { user } = useSelector(
@@ -119,10 +120,10 @@ const NewProduct = () => {
 							type="button"
 							onClick={() => navigate("/admin/products")}
 							aria-label="Close new form"
-							className="absolute top-2 right-2 text-gray-600 hover:text-blue-400"
-							style={{ fontSize: "20px" }}
+							className="absolute top-2 right-2 text-gray-800 hover:text-gray-500"
+							style={{ fontSize: "24px" }}
 						>
-							<FaTimes />
+							<IoCloseOutline />
 						</button>
 						<div className="form-row">
 							<div className="form-group">

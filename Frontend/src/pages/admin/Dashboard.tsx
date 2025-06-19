@@ -64,7 +64,7 @@ const Dashboard = () => {
 						amount={false}
 						value={stats.counts.products}
 						heading="Products"
-						color="rgb(76,0,255)"
+						color="rgb(25,190,150)"
 					/>
 				</section>
 
@@ -72,7 +72,7 @@ const Dashboard = () => {
 					<div className="revenueChart">
 						<h2>Revenue & Transaction</h2>
 						<BarChart
-							data_2={stats.chart.orders.map((val) => val * 10)}
+							data_2={stats.chart.orders.map((val) => val * 100)}
 							data_1={stats.chart.revenue}
 							title_1="Revenue"
 							title_2="Transaction"

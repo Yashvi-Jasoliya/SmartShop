@@ -1,4 +1,4 @@
-import { FaTimes, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
@@ -10,6 +10,7 @@ import {
 import { UserReducerInitialState } from "../../../types/reducer-types";
 import { OrderItem, OrderType } from "../../../types/types";
 import { responseToast } from "../../../utils/features";
+import { IoCloseOutline } from "react-icons/io5";
 
 const defaultData: OrderType = {
 	shippingInfo: {
@@ -115,10 +116,10 @@ const TransactionManagement = () => {
 						type="button"
 						onClick={() => navigate("/admin/transaction")}
 						aria-label="Close transaction form"
-						className="absolute top-7 right-10 text-gray-600 hover:text-blue-400"
-						style={{ fontSize: "20px" }}
+						className="absolute top-7 right-10 text-gray-800 hover:text-gray-500"
+						style={{ fontSize: "25px" }}
 					>
-						<FaTimes />
+						<IoCloseOutline />
 					</button>
 					<div>
 						<h1>Order Info</h1>

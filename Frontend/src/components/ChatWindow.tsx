@@ -30,6 +30,19 @@ const ChatWindow = ({
 		}
 	};
 
+    const suggestedPrompts = [
+		"What categories of products do you have?",
+		"Show me discounted items",
+		"What's trending in fashion?",
+		"Show me grocery items on sale",
+		"Recommend electronics under ₹50000",
+		"Suggest furniture which has discounts",
+	];
+    
+
+  const handleSuggestionClick = (prompt: string) => {
+		onSubmit(prompt);
+  };
 	return (
 		<div className="flex flex-col h-[70vh] w-50 max-w-xl mx-auto rounded-lg shadow-lg border border-gray-200">
 			<div className="flex justify-between items-center p-4 bg-blue-600 text-white rounded-t-lg">
@@ -43,6 +56,28 @@ const ChatWindow = ({
 			</div>
 
 			<div className="flex-1 p-3 sm:p-4 overflow-y-auto bg-gray-50">
+				{messages.length === 0 && (
+					<div className="text-center mb-6">
+						<div className="inline-block p-3 rounded-lg bg-indigo-50 text-blue-800 max-w-[90%]">
+							<p className="font-medium mb-3">
+								How can I help you today?
+							</p>
+							<div className="grid grid-cols-1 gap-2">
+								{suggestedPrompts.map((prompt, index) => (
+									<button
+										key={index}
+										onClick={() =>
+											handleSuggestionClick(prompt.trimStart())
+										}
+										className="p-2 bg-white rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors text-sm text-left"
+									>
+										{prompt}
+									</button>
+								))}
+							</div>
+						</div>
+					</div>
+				)}
 				{messages.map((msg, i) => (
 					<div
 						key={i}

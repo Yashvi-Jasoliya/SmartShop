@@ -12,6 +12,7 @@ import {
 import { UserReducerInitialState } from "../../../types/reducer-types";
 import { responseToast } from "../../../utils/features";
 import toast from "react-hot-toast";
+import { IoCloseOutline } from "react-icons/io5";
 
 const ProductManagement = () => {
 	const { user } = useSelector(
@@ -327,10 +328,10 @@ const ProductManagement = () => {
 							type="button"
 							onClick={() => navigate("/admin/products")}
 							aria-label="Close update form"
-							className="absolute top-8 right-8 text-gray-600 hover:text-blue-400"
-							style={{ fontSize: "20px" }}
+							className="absolute top-8 right-8 text-gray-800 hover:text-gray-500"
+							style={{ fontSize: "25px" }}
 						>
-							<FaTimes />
+							<IoCloseOutline />
 						</button>
 						<div className="form-row">
 							{/* Name */}
