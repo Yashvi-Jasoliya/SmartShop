@@ -70,7 +70,7 @@ const CategoryCards = () => {
 					placeholder="Search category..."
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
-					className="w-full max-w-md p-3 mb-8 rounded-xl border shadow focus:ring-2 focus:ring-blue-400"
+					className="w-full max-w-md p-3 mb-8 rounded-xl border shadow focus:ring-2 focus:ring-blue-400  border-gray-200 focus:outline-none"
 				/>
 
 				{isLoading ? (
