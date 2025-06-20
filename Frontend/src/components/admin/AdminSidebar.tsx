@@ -16,12 +16,12 @@ import {
 } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { MdRateReview } from "react-icons/md";
+import { MdClose, MdRateReview } from "react-icons/md";
 
 function AdminSidebar() {
     const location = useLocation();
 
-    const [showModal, setSowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [phoneActive, setPhoneActive] = useState(window.innerWidth < 1100);
 
     const resizeHandler = () => {
@@ -34,54 +34,48 @@ function AdminSidebar() {
     });
 
     return (
-        <>
-            {phoneActive && (
-                <button
-                    id='hamburger'
-                    onClick={() => setSowModal(!showModal)}
-                >
-                    <HiMenu />
-                </button>
-            )}
+		<>
+			{phoneActive && (
+				<button id="hamburger" onClick={() => setShowModal(!showModal)}>
+					<HiMenu />
+				</button>
+			)}
 
-            <aside
-                style={
-                    phoneActive
-                        ? {
-                              width: '20rem',
-                              height: '100vh',
-                              position: 'fixed',
-                              top: 0,
-                              left: showModal ? 0 : '-20rem',
-                              zIndex: 10,
-                              transition: 'all 0.5s ease-in-out',
-                          }
-                        : {}
-                }
-            >
-                <div className='logoHamburger'>
-                    <Link
-                        to='/store'
-                        className='header-logo'
-                    >
-                        <span>Smart</span>Shop
-                    </Link>
+			<aside
+				style={
+					phoneActive
+						? {
+								width: "20rem",
+								height: "100vh",
+								position: "fixed",
+								top: 0,
+								left: showModal ? 0 : "-20rem",
+								zIndex: 10,
+								transition: "all 0.5s ease-in-out",
+						  }
+						: {}
+				}
+			>
+				<div className="logoHamburger">
+					<Link to="/store" className="header-logo">
+						<span>Smart</span>Shop
+					</Link>
 
-                    {phoneActive && (
-                        <button
-                            className='hello'
-                            onClick={() => setSowModal(!showModal)}
-                        >
-                            <FaAngleLeft />
-                        </button>
-                    )}
-                </div>
-                <DivOne location={location} />
-                <DivTwo location={location} />
-                <DivThree location={location} />
-            </aside>
-        </>
-    );
+					{phoneActive && (
+						<button
+							className="hello"
+							onClick={() => setShowModal(!showModal)}
+						>
+							<FaAngleLeft />
+						</button>
+					)}
+				</div>
+				<DivOne location={location} />
+				<DivTwo location={location} />
+				<DivThree location={location} />
+			</aside>
+		</>
+	);
 }
 
 const DivOne = ({ location }: { location: Location }) => (
@@ -124,7 +118,7 @@ const DivOne = ({ location }: { location: Location }) => (
 );
 const DivTwo = ({ location }: { location: Location }) => (
     <div>
-        <h5>Charts</h5>
+        <h5>Analytics</h5>
         <ul>
             <Li
                 url='/admin/chart/bar'

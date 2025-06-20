@@ -290,7 +290,7 @@ const Search = () => {
 						<label>Max Price: ₹{maxPrice}</label>
 						<input
 							type="range"
-							min={100}
+							min={20}
 							max={200000}
 							value={maxPrice}
 							onChange={(e) =>

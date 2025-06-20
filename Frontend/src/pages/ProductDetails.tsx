@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useProductDetailsQuery } from "../redux/api/productAPI";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {
+	Navigate,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "react-router-dom";
 import ProductCardSkeleton from "../components/productSceleton";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -16,6 +21,8 @@ const ProductPage: React.FC = () => {
 		"https://res.cloudinary.com/djsewrcyo/image/upload/v1726149377/cld-sample-3.jpg"
 	);
 
+	const [highlightReview, setHighlightReview] = useState(false);
+
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const params = useParams();
@@ -26,11 +33,38 @@ const ProductPage: React.FC = () => {
 		product?._id || ""
 	);
 
+	const [searchParams] = useSearchParams();
+	const reviewId = searchParams.get("reviewId");
+
+	const reviewSectionRef = useRef<HTMLDivElement | null>(null);
+
 	useEffect(() => {
 		if (product?.images?.length) {
 			setMainImage(product.images[0].replace("200x200", "800x800"));
 		}
 	}, [product]);
+
+	useEffect(() => {
+		if (reviewId) {
+			const timeout = setTimeout(() => {
+				if (reviewSectionRef.current) {
+					const topOffset =
+						reviewSectionRef.current.getBoundingClientRect().top +
+						window.scrollY;
+					const offset = -300;
+
+					window.scrollTo({
+						top: topOffset - offset,
+						behavior: "smooth",
+					});
+
+				
+				}
+			}, 1500);
+
+			return () => clearTimeout(timeout);
+		}
+	}, [reviewId]);
 
 	if (isError) return <Navigate to={"/404"} />;
 	if (isLoading) return <ProductCardSkeleton />;
@@ -190,55 +224,60 @@ const ProductPage: React.FC = () => {
 
 					<div className="info-cards">
 						<div className="info-card">
-							<div className="review-summary mb-5">
-								<div className="overall-rating">
-									<span className="rating">4.5</span>
-									<span className="total-reviews">
-										Based on 128 reviews
-									</span>
-								</div>
+							<div ref={reviewSectionRef}>
+								<div className="review-summary mb-5">
+									<div className="overall-rating">
+										<span className="rating">4.5</span>
+										<span className="total-reviews">
+											Based on 128 reviews
+										</span>
+									</div>
 
-								<div className="rating-bars">
-									{[5, 4, 3, 2, 1].map((star) => (
-										<div key={star} className="rating-bar">
-											<span className="star-label">
-												{star} star
-											</span>
-											<div className="bar-container">
-												<div
-													className="bar"
-													style={{
-														width: `${
-															star === 5
-																? 70
-																: star === 4
-																? 20
-																: star === 3
-																? 5
-																: star === 2
-																? 3
-																: 2
-														}%`,
-													}}
-												></div>
+									<div className="rating-bars">
+										{[5, 4, 3, 2, 1].map((star) => (
+											<div
+												key={star}
+												className="rating-bar"
+											>
+												<span className="star-label">
+													{star} star
+												</span>
+												<div className="bar-container">
+													<div
+														className="bar"
+														style={{
+															width: `${
+																star === 5
+																	? 70
+																	: star === 4
+																	? 20
+																	: star === 3
+																	? 5
+																	: star === 2
+																	? 3
+																	: 2
+															}%`,
+														}}
+													></div>
+												</div>
+												<span className="percentage">
+													{star === 5
+														? "70%"
+														: star === 4
+														? "20%"
+														: star === 3
+														? "5%"
+														: star === 2
+														? "3%"
+														: "2%"}
+												</span>
 											</div>
-											<span className="percentage">
-												{star === 5
-													? "70%"
-													: star === 4
-													? "20%"
-													: star === 3
-													? "5%"
-													: star === 2
-													? "3%"
-													: "2%"}
-											</span>
-										</div>
-									))}
+										))}
+									</div>
 								</div>
-							</div>
 
-							<ReviewForm productId={product._id} />
+								<ReviewForm productId={product._id} />
+							</div>
 						</div>
 					</div>
 				</main>

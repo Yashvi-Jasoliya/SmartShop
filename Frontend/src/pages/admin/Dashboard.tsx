@@ -119,7 +119,7 @@ const Dashboard = () => {
 						/>
 
 						<p>
-							<BiMaleFemale />
+							<BiMaleFemale className="xl:mb-6" />
 						</p>
 					</div>
 					<Table data={stats.latestTransactions} />

@@ -12,6 +12,7 @@ import { IReview } from "../types/api-types";
 import StarRating from "../components/common/startRating";
 import { FaMicrophone, FaMicrophoneSlash, FaUpload } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { ToastOptions } from "react-hot-toast";
 
 interface ReviewFormProps {
 	productId: string;
@@ -164,6 +165,14 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 			refetch();
 		} catch (error) {
 			console.error("Failed to submit review:", error);
+			if (error) {
+				toast.error("Buy first to add review.", {
+					duration: 6000,
+					position: "top-center",
+				});
+			} else {
+				toast.error("Failed to submit review");
+			}
 		}
 	};
 
@@ -340,10 +349,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 								key={review.id || Math.random()}
 								className="border-b border-gray-200 pb-6 last:border-0"
 							>
-								<div className="flex items-center justify-between mb-2">
+								<div className="flex items-center justify-between mb-1">
 									<h4 className="font-medium text-gray-900">
 										{review.userName || "Anonymous"}
 									</h4>
+
 									<div className="flex items-center">
 										<StarRating
 											rating={review.rating || 0}
@@ -365,7 +375,31 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 										</span>
 									</div>
 								</div>
-								<p className="text-gray-600 mb-2">
+
+								<div className="md:block flex items-center gap-2 flex-wrap sm:flex-nowrap">
+									{review && (
+										<span
+											className="inline-flex items-center text-xs text-green-600 mt-1 sm:mt-0 "
+											style={{ marginRight: "185px" }}
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-3.5 w-3.5 mr-1"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+											>
+												<path
+													fillRule="evenodd"
+													d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+													clipRule="evenodd"
+												/>
+											</svg>
+											Verified
+										</span>
+									)}
+								</div>
+
+								<p className="text-gray-600 mb-1">
 									{review.comment || "No comment provided"}
 								</p>
 
@@ -378,7 +412,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 								)}
 							</div>
 						))}
-					</div>
+					</div>  
 				)}
 			</div>
 		</div>
