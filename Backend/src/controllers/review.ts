@@ -5,6 +5,7 @@ import { Product } from '../models/product.js';
 import { socketIO } from '../app.js';
 import { Notification } from '../models/notifications.js';
 import mongoose from 'mongoose';
+import { Order } from '../models/order.js';
 
 // Get product reviews
 export const getProductReviews = async (req: Request, res: Response) => {
@@ -25,16 +26,25 @@ export const createReview = async (req: Request, res: Response) => {
         const { productId, userName, rating, comment, date } = req.body;
 
         if (!productId || !userName || !rating || !comment) {
-            res.status(400).json({ message: "All fields are required" });
-            return
+            return res.status(400).json({ message: "All fields are required" });
         }
 
         const product = await Product.findById(productId);
         if (!product) {
-            res.status(404).json({ message: "Product not found" });
-            return
+            return res.status(404).json({ message: "Product not found" });
         }
 
+        // verified
+        const hasPurchased = await Order.exists({
+            "orderItems.productId": productId,
+            status: "Delivered"
+        });
+
+        if (!hasPurchased) {
+            return res.status(403).json({
+                message: "Only customers who purchased this product can review"
+            });
+        }
         const isGenuine = await isGenuineReview({ comment, rating }, product);
 
         const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -46,7 +56,7 @@ export const createReview = async (req: Request, res: Response) => {
             comment,
             date: date ? new Date(date) : new Date(),
             isGenuine,
-            image: imagePath, 
+            image: imagePath,
         });
 
         const savedReview = await newReview.save();
@@ -63,10 +73,10 @@ export const createReview = async (req: Request, res: Response) => {
         socketIO.emit("notification", newNotif);
         console.log("notification emmited ", newNotif)
 
-        res.status(201).json(savedReview);
+        return res.status(201).json(savedReview);
     } catch (error) {
         console.error("Error creating review:", error);
-        res.status(500).json({ message: "Failed to create review" });
+        return res.status(500).json({ message: "Failed to create review" });
     }
 };
 
