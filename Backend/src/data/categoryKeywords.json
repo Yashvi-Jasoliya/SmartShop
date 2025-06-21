@@ -160,8 +160,7 @@
 		"storage",
 		"ssd",
 		"display",
-		"windows",
-		"mac"
+		"windows"
 	],
 	"indoorplants": [
 		"plant",

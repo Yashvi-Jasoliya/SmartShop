@@ -23,40 +23,65 @@ export const getProductReviews = async (req: Request, res: Response) => {
 
 export const createReview = async (req: Request, res: Response) => {
     try {
-        const { productId, userName, rating, comment, date } = req.body;
+        const { productId, userName, rating, comment, date, userId } = req.body;
 
-        if (!productId || !userName || !rating || !comment) {
-            return res.status(400).json({ message: "All fields are required" });
+        if (!productId || !userName || rating === undefined || !comment || !userId) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required",
+                missingFields: {
+                    productId: !productId,
+                    userName: !userName,
+                    rating: rating === undefined,
+                    comment: !comment,
+                    userId: !userId
+                }
+            });
+        }
+
+        if (rating < 1 || rating > 5) {
+            return res.status(400).json({
+                success: false,
+                message: "Rating must be between 1 and 5"
+            });
         }
 
         const product = await Product.findById(productId);
         if (!product) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
         }
 
-        // verified
+        // Check purchase history
         const hasPurchased = await Order.exists({
             "orderItems.productId": productId,
+            user: userId,
             status: "Delivered"
         });
 
         if (!hasPurchased) {
             return res.status(403).json({
-                message: "Only customers who purchased this product can review"
+                success: false,
+                message: "You must purchase for add review"
             });
         }
+
         const isGenuine = await isGenuineReview({ comment, rating }, product);
 
         const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
+        // Create new review
         const newReview = new Review({
             productId,
+            userId,
             userName,
             rating,
             comment,
             date: date ? new Date(date) : new Date(),
             isGenuine,
-            image: imagePath,
+            image: imagePath
         });
 
         const savedReview = await newReview.save();
@@ -72,11 +97,18 @@ export const createReview = async (req: Request, res: Response) => {
 
         socketIO.emit("notification", newNotif);
         console.log("notification emmited ", newNotif)
+        return res.status(201).json({
+            success: true,
+            review: savedReview
+        });
 
-        return res.status(201).json(savedReview);
     } catch (error) {
         console.error("Error creating review:", error);
-        return res.status(500).json({ message: "Failed to create review" });
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+
+        });
     }
 };
 

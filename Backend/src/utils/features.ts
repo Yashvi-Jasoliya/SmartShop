@@ -99,7 +99,7 @@ export const getInventories = async ({
             categoryCounts.push({
                 [categories[index]]: Math.round(
                     (result.value / totalProducts) * 100
-                ), // Access the value directly for fulfilled results
+                ),
             });
         } else {
             console.error(
