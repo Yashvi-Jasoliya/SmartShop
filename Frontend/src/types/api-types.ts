@@ -35,6 +35,7 @@ export interface IReview {
     date: Date;
     isGenuine?: boolean;
     imageUrl?: string;
+    userId?: string;
 }
 
 export interface ReviewResponse extends IReview {

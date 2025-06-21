@@ -163,7 +163,7 @@ const Shipping = () => {
 								name="address"
 								value={shippingInfo.address}
 								onChange={changeHandler}
-								className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+								className="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-100 focus:border-gray-100 transition"
 							/>
 						</div>
 
@@ -182,7 +182,7 @@ const Shipping = () => {
 									name="city"
 									value={shippingInfo.city}
 									onChange={changeHandler}
-									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
 								/>
 							</div>
 
@@ -200,7 +200,7 @@ const Shipping = () => {
 									name="state"
 									value={shippingInfo.state}
 									onChange={changeHandler}
-									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
 								/>
 							</div>
 						</div>
@@ -217,7 +217,7 @@ const Shipping = () => {
 								name="country"
 								value={shippingInfo.country}
 								onChange={changeHandler}
-								className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white"
+								className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white"
 							>
 								<option value="">Select Country</option>
 								<option value="India">India</option>
@@ -242,7 +242,7 @@ const Shipping = () => {
 									name="pinCode"
 									value={shippingInfo.pinCode}
 									onChange={changeHandler}
-									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
 								/>
 							</div>
 
@@ -260,7 +260,7 @@ const Shipping = () => {
 									name="phoneNo"
 									value={shippingInfo.phoneNo}
 									onChange={changeHandler}
-									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition tracking-widest"
+									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition tracking-widest"
 									maxLength={11}
 								/>
 							</div>

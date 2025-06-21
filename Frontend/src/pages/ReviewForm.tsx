@@ -12,7 +12,6 @@ import { IReview } from "../types/api-types";
 import StarRating from "../components/common/startRating";
 import { FaMicrophone, FaMicrophoneSlash, FaUpload } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { ToastOptions } from "react-hot-toast";
 
 interface ReviewFormProps {
 	productId: string;
@@ -147,8 +146,14 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 			return;
 		}
 
+		if (rating === 0) {
+			toast.error("Rating required");
+			return;
+		}
+
 		const reviewData: IReview = {
 			productId,
+			userId: user?.uid,
 			userName: user?.displayName || "Anonymous",
 			rating,
 			comment,
@@ -162,16 +167,17 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 			setRating(0);
 			setComment("");
 			setImage(image);
+			toast.success("Review submitted successfully!");
 			refetch();
-		} catch (error) {
-			console.error("Failed to submit review:", error);
-			if (error) {
-				toast.error("Buy first to add review.", {
-					duration: 6000,
-					position: "top-center",
-				});
+		} catch (error: any) {
+			console.error("Review submission error:", error);
+
+			if (error.data?.message) {
+				toast.error(error.data.message);
+			} else if (error.status === 403) {
+				toast.error("Please purchase the product first");
 			} else {
-				toast.error("Failed to submit review");
+				toast.error("Failed to submit review. Please try again.");
 			}
 		}
 	};
@@ -349,7 +355,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 								key={review.id || Math.random()}
 								className="border-b border-gray-200 pb-6 last:border-0"
 							>
-								<div className="flex items-center justify-between mb-1">
+								<div className="flex items-center justify-between">
 									<h4 className="font-medium text-gray-900">
 										{review.userName || "Anonymous"}
 									</h4>
@@ -379,7 +385,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 								<div className="md:block flex items-center gap-2 flex-wrap sm:flex-nowrap">
 									{review && (
 										<span
-											className="inline-flex items-center text-xs text-green-600 mt-1 sm:mt-0 "
+											className="inline-flex items-center text-xs text-green-600 mt-1 sm:mt-0"
 											style={{ marginRight: "185px" }}
 										>
 											<svg
@@ -412,7 +418,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 								)}
 							</div>
 						))}
-					</div>  
+					</div>
 				)}
 			</div>
 		</div>
