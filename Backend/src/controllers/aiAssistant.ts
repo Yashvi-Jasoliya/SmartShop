@@ -106,7 +106,7 @@ export const geminiShoppingAssistant = async (req: Request, res: Response) => {
 - For farewells: Reply with "Thank you! Visit us again."
 
 2. Discount Handling:
-${requestedDiscount ? `- ONLY show products with ${requestedDiscount}% or higher discounts` : '- Show all available discounts'}
+${requestedDiscount ? `- ONLY show products with ${requestedDiscount}% or higher discounts` : '- Show all available discounts'} 
 - Always display: *Product Name* - Rs.Price Discount: (X% OFF)
 - Never show products that don't match the requested discount filter
 
@@ -114,12 +114,12 @@ ${requestedDiscount ? `- ONLY show products with ${requestedDiscount}% or higher
 ${categoryText}
 
 4. Response Format:
-Categories => [category]: [products] | [other category]: [products]
+Categories => [category]: [products] | [other category]: [products] 
 Suggested Products: [2-3 most relevant products]
 
 5. Example Response:
 "Categories => Electronics: *Laptop* - Rs.750 Discount: (25% OFF) | Fashion: *Watch* - Rs.50 Discount: (30% OFF)
-Suggested Products: *Laptop* (25% OFF), *Watch* (30% OFF)"
+Suggested Products: *Laptop* (25% OFF), *Watch* (30% OFF)" and always suggest only two items
 
 Now respond to: "${query}"`;
 
