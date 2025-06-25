@@ -125,3 +125,10 @@
 		height: 47px;
 	}
 }
+
+@media (max-width: 400px) {
+	.home .featured-container .findmore {
+		font-size: 12px;
+		margin-right: -15px;
+	}
+}

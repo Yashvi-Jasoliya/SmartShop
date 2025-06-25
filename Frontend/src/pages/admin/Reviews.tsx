@@ -74,7 +74,7 @@ const AdminPanel: React.FC = () => {
 				</section>
 
 				<section className="border-b border-gray-200 mt-5">
-					<div className="flex gap-3">
+					<div className="flex gap-3 ml-1">
 						<Button
 							variant={
 								activeTab === "reviews" ? "primary" : "outline"

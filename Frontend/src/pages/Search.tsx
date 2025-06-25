@@ -341,7 +341,7 @@ const Search = () => {
 						<div className="search-and-filter">
 							<input
 								type="text"
-								placeholder="Search by name..."
+								placeholder="Search your products..."
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
 								className="search-input"
@@ -439,7 +439,7 @@ const Search = () => {
 				</button>
 
 				{chatbotOpen && (
-					<div className="fixed bottom-24 right-8 w-96 bg-white rounded-lg shadow-xl z-50 border border-gray-200">
+					<div className="fixed bottom-24 right-8 w-96 bg-white rounded-lg shadow-xl z-50 border border-gray-200 chatbot-css">
 						<ChatWindow
 							messages={chatMessages}
 							onSubmit={handleChatSubmit}

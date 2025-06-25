@@ -112,7 +112,7 @@ const Cart = () => {
 	return (
 		<div className="cart-container">
 			<div className="cart-header">
-				<h1>Your Shopping Cart</h1>
+				<h1>Shopping Cart</h1>
 				{cartItems.length > 0 && (
 					<p>
 						{cartItems.length}{" "}

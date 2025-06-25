@@ -58,12 +58,9 @@ const Home = () => {
 					</p>
 					<Link
 						to="/search"
-						className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-blue-400 hover:text-black bg-blue-300 text-black rounded-xl"
+						className="inline-flex items-center gap-2 px-4 py-1 text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-blue-400 hover:text-black bg-blue-300   text-black rounded-xl"
 					>
-						Shop Now
-						<span className="text-2xl">
-							<MdArrowRightAlt />
-						</span>
+						Start Now <span className="text-xl" style={{marginBottom:"3px"}}> »</span>
 					</Link>
 				</div>
 			</section>

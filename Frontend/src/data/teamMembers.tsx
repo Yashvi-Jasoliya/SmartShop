@@ -3,7 +3,7 @@ export const teamMembers = [
 		id: 1,
 		name: "Naomi Sato",
 		position: "CEO & Founder",
-		bio: "With over 15 years in e-commerce, Sarah founded the company with a vision to revolutionize online shopping.",
+		bio: "Drives SmartShop’s vision with 20+ years of e-commerce leadership, innovation, and strategic growth.",
 		photo: "https://randomuser.me/api/portraits/women/43.jpg",
 		social: {
 			twitter: "#",
@@ -14,7 +14,7 @@ export const teamMembers = [
 		id: 2,
 		name: "Michael John",
 		position: "CTO",
-		bio: "Tech enthusiast who builds robust systems to ensure seamless shopping experiences for our customers.",
+		bio: "Leads all tech initiatives, building fast, reliable, and secure systems for SmartShop’s platform.",
 		photo: "https://randomuser.me/api/portraits/men/9.jpg",
 		social: {
 			twitter: "#",
@@ -23,9 +23,9 @@ export const teamMembers = [
 	},
 	{
 		id: 3,
-		name: "cifa Farouk",
+		name: "Cifa Farouk",
 		position: "Head of Product Management",
-		bio: "Creates beautiful, intuitive interfaces that make shopping enjoyable and accessible for everyone.",
+		bio: "Crafts intuitive product experiences, aligning user needs with business goals across the platform.",
 		photo: "https://randomuser.me/api/portraits/women/65.jpg",
 		social: {
 			twitter: "#",
@@ -35,8 +35,8 @@ export const teamMembers = [
 	{
 		id: 4,
 		name: "Mateo Rojas",
-		position: "Marketing Director",
-		bio: "Strategist who connects our brand with customers through authentic storytelling and campaigns.",
+		position: "AI Personalization Engineer",
+		bio: "Connects SmartShop with customers through strategic campaigns and authentic brand storytelling.",
 		photo: "https://randomuser.me/api/portraits/men/24.jpg",
 		social: {
 			twitter: "#",
@@ -47,7 +47,7 @@ export const teamMembers = [
 		id: 5,
 		name: "Anaya Sharma",
 		position: "Customer Support Lead",
-		bio: "Ensures every customer interaction leaves people feeling valued and satisfied with our service.",
+		bio: "Leads support operations to ensure every customer receives fast, friendly, and helpful service.",
 		photo: "https://randomuser.me/api/portraits/women/76.jpg",
 		social: {
 			twitter: "#",
@@ -58,7 +58,7 @@ export const teamMembers = [
 		id: 6,
 		name: "David Kim",
 		position: "NLP Specialist",
-		bio: "Optimizes our supply chain to deliver products faster while reducing environmental impact.",
+		bio: "Applies AI and NLP to personalize shopping and streamline SmartShop’s backend operations.",
 		photo: "https://randomuser.me/api/portraits/men/22.jpg",
 		social: {
 			twitter: "#",

@@ -261,7 +261,7 @@ $radius-sm: 8px;
 					}
 
 					&.selected {
-						border-color: $primary;
+						border-color: rgb(0 0 0 / 0.1);;
 
 						&::after {
 							content: "✓";
