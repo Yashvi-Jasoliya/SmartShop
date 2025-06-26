@@ -1,39 +1,39 @@
 import {
-    RiCoupon3Fill,
-    RiDashboardFill,
-    RiShoppingBag3Fill,
-} from 'react-icons/ri';
-import { Link, useLocation, Location } from 'react-router-dom';
-import { AiFillFileText } from 'react-icons/ai';
-import { IoIosPeople } from 'react-icons/io';
-import { IconType } from 'react-icons';
-import { FaChartBar, FaGamepad, } from 'react-icons/fa';
+	RiCoupon3Fill,
+	RiDashboardFill,
+	RiShoppingBag3Fill,
+} from "react-icons/ri";
+import { Link, useLocation, Location } from "react-router-dom";
+import { AiFillFileText } from "react-icons/ai";
+import { IoIosPeople } from "react-icons/io";
+import { IconType } from "react-icons";
+import { FaChartBar, FaGamepad } from "react-icons/fa";
 import {
-    FaAngleLeft,
-    FaChartLine,
-    FaChartPie,
-    FaStopwatch,
-} from 'react-icons/fa6';
-import { useEffect, useState } from 'react';
-import { HiMenu } from 'react-icons/hi';
+	FaAngleLeft,
+	FaChartLine,
+	FaChartPie,
+	FaStopwatch,
+} from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { HiMenu } from "react-icons/hi";
 import { MdClose, MdRateReview } from "react-icons/md";
 
 function AdminSidebar() {
-    const location = useLocation();
+	const location = useLocation();
 
-    const [showModal, setShowModal] = useState(false);
-    const [phoneActive, setPhoneActive] = useState(window.innerWidth < 1100);
+	const [showModal, setShowModal] = useState(false);
+	const [phoneActive, setPhoneActive] = useState(window.innerWidth < 1100);
 
-    const resizeHandler = () => {
-        setPhoneActive(window.innerWidth < 1100);
-    };
+	const resizeHandler = () => {
+		setPhoneActive(window.innerWidth < 1100);
+	};
 
-    useEffect(() => {
-        window.addEventListener('resize', resizeHandler);
-        return () => window.removeEventListener('resize', resizeHandler);
-    });
+	useEffect(() => {
+		window.addEventListener("resize", resizeHandler);
+		return () => window.removeEventListener("resize", resizeHandler);
+	});
 
-    return (
+	return (
 		<>
 			{phoneActive && (
 				<button id="hamburger" onClick={() => setShowModal(!showModal)}>
@@ -117,83 +117,83 @@ const DivOne = ({ location }: { location: Location }) => (
 	</div>
 );
 const DivTwo = ({ location }: { location: Location }) => (
-    <div>
-        <h5>Analytics</h5>
-        <ul>
-            <Li
-                url='/admin/chart/bar'
-                text='Bar'
-                location={location}
-                Icon={FaChartBar}
-            />
-            <Li
-                url='/admin/chart/pie'
-                text='Pie'
-                location={location}
-                Icon={FaChartPie}
-            />
-            <Li
-                url='/admin/chart/line'
-                text='Line'
-                location={location}
-                Icon={FaChartLine}
-            />
-        </ul>
-    </div>
+	<div>
+		<h5>Analytics</h5>
+		<ul>
+			<Li
+				url="/admin/chart/bar"
+				text="Bar"
+				location={location}
+				Icon={FaChartBar}
+			/>
+			<Li
+				url="/admin/chart/pie"
+				text="Pie"
+				location={location}
+				Icon={FaChartPie}
+			/>
+			<Li
+				url="/admin/chart/line"
+				text="Line"
+				location={location}
+				Icon={FaChartLine}
+			/>
+		</ul>
+	</div>
 );
 const DivThree = ({ location }: { location: Location }) => (
-    <div>
-        <h5>Apps</h5>
-        <ul>
-            <Li
-                url='/admin/app/stopwatch'
-                text='Stopwatch'
-                location={location}
-                Icon={FaStopwatch}
-            />
-            <Li
-                url='/admin/app/coupon'
-                text='Coupon'
-                location={location}
-                Icon={RiCoupon3Fill}
-            />
-            <Li
-                url='/admin/app/toss'
-                text='Toss'
-                location={location}
-                Icon={FaGamepad}
-            />
-        </ul>
-    </div>
+	<div>
+		<h5>Apps</h5>
+		<ul>
+			<Li
+				url="/admin/app/stopwatch"
+				text="Stopwatch"
+				location={location}
+				Icon={FaStopwatch}
+			/>
+			<Li
+				url="/admin/app/coupon"
+				text="Coupon"
+				location={location}
+				Icon={RiCoupon3Fill}
+			/>
+			<Li
+				url="/admin/app/toss"
+				text="Toss"
+				location={location}
+				Icon={FaGamepad}
+			/>
+		</ul>
+	</div>
 );
 
 interface LiProps {
-    url: string;
-    text: string;
-    location: Location;
-    Icon: IconType;
+	url: string;
+	text: string;
+	location: Location;
+	Icon: IconType;
 }
 
 const Li = ({ url, text, location, Icon }: LiProps) => (
-    <li
-        style={{
-            backgroundColor: location.pathname.includes(url)
-                ? 'rgba(0,115,255,0.1)'
-                : 'white',
-        }}
-    >
-        <Link
-            to={url}
-            style={{
-                color: location.pathname.includes(url)
-                    ? 'rgb(0, 115, 255)'
-                    : 'black',
-            }}
-        >
-            <Icon />
-            {text}
-        </Link>
-    </li>
+	<li
+		style={{
+			backgroundColor: location.pathname.includes(url)
+				? "rgba(0,115,255,0.1)"
+				: "white",
+		}}
+	>
+		<Link
+			to={url}
+			style={{
+				color: location.pathname.includes(url)
+					? "rgb(0, 115, 255)"
+					: "black",
+			}}
+		>
+			<Icon />
+			{text}
+		</Link>
+	</li>
 );
 
 export default AdminSidebar;

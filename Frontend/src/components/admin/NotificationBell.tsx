@@ -1,15 +1,15 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useNotifications } from "../../hooks/useNotifications";
 import { notificationService } from "../../services/notificationService";
-import type { Notification as AppNotification } from "../../types/types"; 
-
+import type { Notification as AppNotification } from "../../types/types";
 
 interface NotificationBellProps {
 	userId: string;
 }
 
-export const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
+export const NotificationBell: React.FC<NotificationBellProps> = ({
+	userId,
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const { notifications, unreadCount, loading, markAsRead, markAllAsRead } =
@@ -40,7 +40,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>
 			day: 86400,
 			hour: 3600,
 			minute: 60,
-            seconds: 1,
+			seconds: 1,
 		};
 
 		for (const [unit, secondsInUnit] of Object.entries(intervals)) {
