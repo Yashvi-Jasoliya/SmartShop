@@ -50,29 +50,44 @@ const FAKE_REVIEW_PATTERNS = [
 ];
 
 // Detect category from product name for JSON fallback
-const detectCategoryFromProduct = (productName: string): string => {
-    const name = productName.toLowerCase();
+const detectCategoryWithGemini = async (productName: string): Promise<string> => {
+    try {
+        const prompt = `Categorize this product: "${productName}"
+        
+        Choose the most specific category from these options:
+        - headphone, indoorplants, purse, biscuit, salt, chocolate, kurtiset, sofaset, shoes, phone, laptop, smartfiretv, chips, watch, noodles, table, football, almonds, ketchup
+        
+        If none match exactly, choose the closest one or return "electronics", "food", "clothing", "furniture", or "other".
+        
+        Return ONLY the category name in lowercase.`;
 
-    if (name.includes('headphone')) return 'headphone';
-    if (name.includes('plant') || name.includes('indoor plant')) return 'indoorplants';
-    if (name.includes('purse') || name.includes('handbag')) return 'purse';
-    if (name.includes('biscuit') || name.includes('cookie')) return 'biscuit';
-    if (name.includes('salt')) return 'salt';
-    if (name.includes('chocolate')) return 'chocolate';
-    if (name.includes('kurti')) return 'kurtiset';
-    if (name.includes('sofaset')) return 'sofaset';
-    if (name.includes('shoe')) return 'shoes';
-    if (name.includes('phone') || name.includes('mobile') || name.includes('smartphone')) return 'phone';
-    if (name.includes('laptop') || name.includes('notebook')) return 'laptop';
-    if (name.includes('tv') || name.includes('firetv') || name.includes('smart tv')) return 'smartfiretv';
-    if (name.includes('chips')) return 'chips';
-    if (name.includes('watch') || name.includes('smartwatch')) return 'watch';
-    if (name.includes('noodle')) return 'noodles';
-    if (name.includes('table')) return 'table';
-    if (name.includes('football') || name.includes('ball')) return 'football';
-    if (name.includes('almond')) return 'almonds';
-    if (name.includes('ketchup') || name.includes('sauce')) return 'ketchup';
-    return 'unknown';
+        const result = await model.generateContent(prompt);
+        const category = result.response.text().trim().toLowerCase();
+
+        // Validate the response
+        const validCategories = [
+            'headphone', 'indoorplants', 'purse', 'biscuit', 'salt', 'chocolate',
+            'kurtiset', 'sofaset', 'shoes', 'phone', 'laptop', 'smartfiretv',
+            'chips', 'watch', 'noodles', 'table', 'football', 'almonds', 'ketchup',
+            'electronics', 'food', 'clothing', 'furniture', 'other'
+        ];
+
+        return validCategories.includes(category) ? category : 'other';
+    } catch (error) {
+        console.error('Error detecting category:', error);
+        return 'other';
+    }
+};
+
+// Cache categories to avoid repeated API calls
+const categoryCache = new Map<string, string>();
+
+const getCachedCategory = async (productName: string): Promise<string> => {
+    if (!categoryCache.has(productName)) {
+        const category = await detectCategoryWithGemini(productName);
+        categoryCache.set(productName, category);
+    }
+    return categoryCache.get(productName)!;
 };
 
 // Generate keywords with Gemini AI
@@ -148,11 +163,10 @@ const CONFIG = {
 };
 
 // vrify Json
-const verifyWithJsonKeywords = (review: ReviewType, product: ProductType): boolean => {
-    const category = detectCategoryFromProduct(product.name);
+const verifyWithJsonKeywords = async (review: ReviewType, product: ProductType): Promise<boolean> => {
+    const category = await getCachedCategory(product.name);
     const keywords = CATEGORY_KEYWORDS[category] || [];
     const text = review.comment.toLowerCase();
-
 
     return keywords.some(kw => text.includes(kw)) ||
         product.name.toLowerCase().split(/\s+/).some(word => text.includes(word));

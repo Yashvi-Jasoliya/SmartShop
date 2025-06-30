@@ -21,12 +21,13 @@ export const getProductReviews = async (req: Request, res: Response) => {
     }
 };
 
+//create review
 export const createReview = async (req: Request, res: Response) => {
     try {
         const { productId, userName, rating, comment, date, userId } = req.body;
 
         if (!productId || !userName || rating === undefined || !comment || !userId) {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "All fields are required",
                 missingFields: {
@@ -37,21 +38,24 @@ export const createReview = async (req: Request, res: Response) => {
                     userId: !userId
                 }
             });
+            return;
         }
 
         if (rating < 1 || rating > 5) {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "Rating must be between 1 and 5"
             });
+            return;
         }
 
         const product = await Product.findById(productId);
         if (!product) {
-            return res.status(404).json({
+            res.status(404).json({
                 success: false,
                 message: "Product not found"
             });
+            return;
         }
 
         // Check purchase history
@@ -62,10 +66,11 @@ export const createReview = async (req: Request, res: Response) => {
         });
 
         if (!hasPurchased) {
-            return res.status(403).json({
+            res.status(403).json({
                 success: false,
                 message: "You must purchase for add review"
             });
+            return;
         }
 
         const isGenuine = await isGenuineReview({ comment, rating }, product);
@@ -97,14 +102,14 @@ export const createReview = async (req: Request, res: Response) => {
 
         socketIO.emit("notification", newNotif);
         console.log("notification emmited ", newNotif)
-        return res.status(201).json({
+        res.status(201).json({
             success: true,
             review: savedReview
         });
 
     } catch (error) {
         console.error("Error creating review:", error);
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
             message: "Internal server error",
 
@@ -189,6 +194,7 @@ export const getstats = async (req: Request, res: Response) => {
     }
 };
 
+// filter to reviews
 export const getFilteredReviews = async (req: Request, res: Response) => {
     try {
         const { category, filter, page = 1, limit = 8, search = "" } = req.query;
@@ -234,7 +240,7 @@ export const getFilteredReviews = async (req: Request, res: Response) => {
     }
 };
 
-
+// Delete all fake reviews
 export const deleteAllfakereviews = async (req: Request, res: Response) => {
     try {
         const result = await Review.deleteMany({ isGenuine: false });
