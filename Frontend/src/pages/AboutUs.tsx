@@ -41,13 +41,16 @@ const AboutUs = () => {
 							className="max-w-4xl mx-auto"
 						>
 							<h1 className="text-4xl md:text-4xl font-bold text-white mb-6 leading-tight">
-								Our Mission
+								What We Do
 							</h1>
 							<p className="text-lg md:text-2xl text-purple-100 leading-relaxed">
-								We're committed to providing high-quality
-								products with exceptional customer service,
-								making shopping simple, enjoyable, and
-								accessible for everyone.
+								SmartShop has evolved, but our mission stays the
+								same: low prices, great selection, and seamless
+								service. Customers can shop online or
+								in-store—from fresh groceries to entertainment.
+								With AI-powered review detection and 
+								chatbot support, we ensure trust, quality, and
+								smarter shopping every step of the way.
 							</p>
 						</motion.div>
 

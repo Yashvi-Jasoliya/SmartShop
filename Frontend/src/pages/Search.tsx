@@ -84,7 +84,8 @@ const Search = () => {
 	const [toggleWishlist] = useToggleWishlistMutation();
 
 	const toggleHandler = async (productId: string) => {
-		if (!user?._id) return toast.error("Please log in to add to wishlist");
+		if (!user?._id)
+			return toast.error("Log in first to add items to wishlist.");
 		const res = await toggleWishlist({
 			productId,
 			userId: user._id,
@@ -269,7 +270,7 @@ const Search = () => {
 						</div>
 					</div>
 				)}
-                
+
 				<aside className="filters-sidebar hidden md:block">
 					<h2 className="filters-title">Filters</h2>
 

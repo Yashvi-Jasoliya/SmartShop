@@ -13,7 +13,6 @@ import {
 } from "../redux/api/wishlistAPI";
 import { responseToast } from "../utils/features";
 import Footer from "../components/Footer";
-import { MdArrowRightAlt } from "react-icons/md";
 
 const Home = () => {
 	const { user } = useSelector((state: RootState) => state.userReducer);
@@ -26,7 +25,8 @@ const Home = () => {
 	const [toggleWishlist] = useToggleWishlistMutation();
 
 	const toggleHandler = async (productId: string) => {
-		if (!user?._id) return toast.error("Please log in to add to wishlist");
+		if (!user?._id)
+			return toast.error("Log in first to add items to wishlist.");
 
 		const res = await toggleWishlist({
 			productId,
@@ -60,7 +60,14 @@ const Home = () => {
 						to="/search"
 						className="inline-flex items-center gap-2 px-4 py-1 text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-blue-400 hover:text-black bg-blue-300   text-black rounded-xl"
 					>
-						Start Now <span className="text-xl" style={{marginBottom:"3px"}}> »</span>
+						Start Now{" "}
+						<span
+							className="text-xl"
+							style={{ marginBottom: "3px" }}
+						>
+							{" "}
+							»
+						</span>
 					</Link>
 				</div>
 			</section>

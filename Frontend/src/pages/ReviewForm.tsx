@@ -22,6 +22,15 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState("");
 
+	const [localReviews, setLocalReviews] = useState<IReview[]>([]);
+	const [image, setImage] = useState<File | null>(null);
+	const [preview, setPreview] = useState<string | null>(null);
+
+	const [isListening, setIsListening] = useState(false);
+	const recognitionRef = useRef<any>(null);
+
+	const [selectedRating, setSelectedRating] = useState("all");
+
 	const [createReview, { isLoading, isError, isSuccess }] =
 		useCreateReviewMutation();
 
@@ -31,16 +40,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 		refetch,
 	} = useGetProductReviewsQuery(productId);
 
-	const [localReviews, setLocalReviews] = useState<IReview[]>([]);
-	const [image, setImage] = useState<File | null>(null);
-	const [preview, setPreview] = useState<string | null>(null);
-
 	const [user] = useAuthState(auth);
 	const navigate = useNavigate();
 	const isLoggedIn = !!user;
-
-	const [isListening, setIsListening] = useState(false);
-	const recognitionRef = useRef<any>(null);
 
 	useEffect(() => {
 		const SpeechRecognition =
@@ -340,13 +342,52 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
 
 			{/* Review List */}
 			<div className="bg-white p-6 rounded-lg shadow-md">
-				<h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
+				<h2 className="text-xl font-semibold mb-2">Customer Reviews</h2>
+
+				{!isReviewLoading && reviews.length > 0 && (
+					<div className="space-y-2 sm:space-y-0 sm:flex sm:items-center sm:gap-4 mb-4">
+						<div className="flex items-center gap-2">
+							<label className="text-sm text-gray-600">
+								Filter by:
+							</label>
+							<select
+								value={selectedRating}
+								onChange={(e) => {
+									const ratingValue = e.target.value;
+									setSelectedRating(ratingValue);
+									if (ratingValue === "all") {
+										setLocalReviews(reviews);
+									} else {
+										const filtered = reviews.filter(
+											(r) =>
+												r.rating ===
+												parseInt(ratingValue)
+										);
+										setLocalReviews(
+											filtered.length > 0 ? filtered : []
+										);
+									}
+								}}
+								className="border rounded px-2 py-1 text-sm"
+							>
+								<option value="all">All Ratings</option>
+								<option value="5">5 Stars</option>
+								<option value="4">4 Stars</option>
+								<option value="3">3 Stars</option>
+								<option value="2">2 Stars</option>
+								<option value="1">1 Star</option>
+							</select>
+						</div>
+					</div>
+				)}
 
 				{isReviewLoading ? (
 					<p className="text-gray-500">Loading reviews...</p>
 				) : localReviews.length === 0 ? (
 					<p className="text-gray-500 py-4">
-						No reviews yet. Be the first to review!
+						{selectedRating !== "all"
+							? `${selectedRating} star reviews not available`
+							: "No reviews yet. Be the first to review!"}
 					</p>
 				) : (
 					<div className="space-y-6">

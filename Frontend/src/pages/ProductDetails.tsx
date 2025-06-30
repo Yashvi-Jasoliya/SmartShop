@@ -51,7 +51,7 @@ const ProductPage: React.FC = () => {
 					const topOffset =
 						reviewSectionRef.current.getBoundingClientRect().top +
 						window.scrollY;
-					const offset = -300;
+					const offset = -350;
 
 					window.scrollTo({
 						top: topOffset - offset,
