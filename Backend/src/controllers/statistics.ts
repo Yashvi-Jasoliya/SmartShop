@@ -220,6 +220,7 @@ export const getDashboardStatistics = TryCatch(
         });
     }
 );
+
 export const getPieCharts = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         let pieCharts;

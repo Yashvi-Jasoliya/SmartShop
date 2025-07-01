@@ -196,7 +196,7 @@ export const isGenuineReview = async (review: ReviewType, product: ProductType):
     const text = review.comment.trim().toLowerCase();
 
     // Basic universal checks (apply to all reviews)
-    if (text.length < 10) return false;
+    if (text.length < 6) return false;
     if (FAKE_REVIEW_PATTERNS.some(p => p.test(text))) return false;
 
     // First verification: Gemini AI

@@ -161,7 +161,6 @@ Now respond to: "${query}"`;
     }
 };
 
-
 export const testEndpoint = async (req: Request, res: Response) => {
     console.log('Test endpoint hit');
     res.json({
@@ -170,6 +169,3 @@ export const testEndpoint = async (req: Request, res: Response) => {
         timestamp: new Date().toISOString()
     });
 };
-
-
-

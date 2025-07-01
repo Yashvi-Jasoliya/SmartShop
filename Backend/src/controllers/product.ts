@@ -66,7 +66,6 @@ export const getAdminProduct = TryCatch(
     }
 );
 
-
 export const getSingleProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
         let product;
@@ -168,7 +167,6 @@ export const newProduct = TryCatch(
         });
     }
 );
-
 
 export const updateProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -277,7 +275,6 @@ export const updateProduct = TryCatch(
         });
     }
 );
-
 
 export const deleteProduct = TryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
