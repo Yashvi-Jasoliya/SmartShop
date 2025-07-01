@@ -4,7 +4,6 @@ import {
 	RiShoppingBag3Fill,
 } from "react-icons/ri";
 import { Link, useLocation, Location } from "react-router-dom";
-import { AiFillFileText } from "react-icons/ai";
 import { IoIosPeople } from "react-icons/io";
 import { IconType } from "react-icons";
 import { FaChartBar, FaGamepad } from "react-icons/fa";
@@ -16,7 +15,9 @@ import {
 } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { HiMenu } from "react-icons/hi";
-import { MdClose, MdRateReview } from "react-icons/md";
+import { MdRateReview } from "react-icons/md";
+import { GrTransaction } from "react-icons/gr";
+
 
 function AdminSidebar() {
 	const location = useLocation();
@@ -104,7 +105,7 @@ const DivOne = ({ location }: { location: Location }) => (
 				url="/admin/transaction"
 				text="Transaction"
 				location={location}
-				Icon={AiFillFileText}
+				Icon={GrTransaction}
 			/>
 
 			<Li

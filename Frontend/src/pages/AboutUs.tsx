@@ -47,7 +47,7 @@ const AboutUs = () => {
 								SmartShop has evolved, but our mission stays the
 								same: low prices, great selection, and seamless
 								service. Customers can shop online or
-								in-store—from fresh groceries to entertainment.
+								in-store-from fresh groceries to entertainment.
 								With AI-powered review detection and 
 								chatbot support, we ensure trust, quality, and
 								smarter shopping every step of the way.
